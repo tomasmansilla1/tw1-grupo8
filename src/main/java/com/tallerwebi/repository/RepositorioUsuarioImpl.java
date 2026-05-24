@@ -1,7 +1,7 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.repository;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.model.Usuario;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
   @Override
   public Usuario buscarUsuario(String email, String password) {
-    /* Se utiliza sessionFactory.getCurrentSession() directamente para que el recurso sea gestionado por Spring y PMD no exija cerrarlo manualmente */
+    /* Se utiliza sessionFactory.getCurrentSession() directamente para que 
+    el recurso sea gestionado por Spring y PMD no exija cerrarlo manualmente */
     return (Usuario) sessionFactory
       .getCurrentSession()
       .createCriteria(Usuario.class)

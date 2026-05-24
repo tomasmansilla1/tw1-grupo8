@@ -6,9 +6,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
+import com.tallerwebi.model.Usuario;
+import com.tallerwebi.repository.RepositorioUsuario;
+import com.tallerwebi.repository.RepositorioUsuarioImpl;
+
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import org.hibernate.SessionFactory;
