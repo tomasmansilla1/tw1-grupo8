@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Panel Admin </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-4">
+        <h1> Panel de Admin </h1>
+
+        <!-- mensaje principal -->
+        <div th:if="${mensaje}" class="alert alert-success">
+            <span th:text="${mensaje}"> </span>
+        </div>
+
+        <!-- mensaje ok -->
+        <div th:if="${ok}" class="alert alert-success">
+            <span th:text="${ok}"> </span>
+        </div>
+
+        <!-- mensaje error -->
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"> </span>
+        </div>
+
+        <div class="row mt-4">
+            <!-- gestionar preguntas -->
+            <div class="col-md-4 mb-3">
+                <a th:href="@{/admin/preguntas}" class="btn btn-primary w-100">
+                    Gestionar Preguntas
+                </a>
+            </div>
+
+            <!-- crear pregunta -->
+            <div class="col-md-4 mb-3">
+                <a th:href="@{/admin/crearPregunta}" class="btn btn-success w-100">
+                    Crear Una Pregunta
+                </a>
+            </div>
+
+            <!-- importar API -->
+            <div class="col-md-4 mb-3">
+                <a th:href="@{/admin/importarAPI}" class="btn btn-warning w-100">
+                    Importar API
+                </a>
+            </div>
+
+            <!-- categoría del día -->
+            <div class="col-md-4 mb-3">
+                <a th:href="@{/admin/categoriaDia}" class="btn btn-info w-100">
+                    Elegir Categoría del Día
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"> </div>
+
+</body>
+</html>
