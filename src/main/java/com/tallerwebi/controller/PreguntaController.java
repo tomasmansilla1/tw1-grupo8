@@ -17,6 +17,7 @@ import com.tallerwebi.config.SessionUtil;
 import com.tallerwebi.model.Pregunta;
 import com.tallerwebi.service.PreguntasService;
 
+
 @Controller
 
 @RequestMapping ("/admin")
@@ -47,7 +48,7 @@ public class PreguntaController {
             return "redirect:/login";
         }
         // guardar en bd
-        PreguntasService.guardar(pregunta);
+        preguntaService.guardar(pregunta);
 
         // mensaje de éxito
         session.setAttribute("ok", "Pregunta creada correctamente");
@@ -63,7 +64,7 @@ public class PreguntaController {
             return "redirect:/login";
         }
         // traer preguntas de bd
-        List<Pregunta> preguntas = PreguntasService.listar();
+        List<Pregunta> preguntas = preguntaService.listar();
 
         // enviar a la vista
         model.addAttribute("preguntas", preguntas);
@@ -95,7 +96,7 @@ public class PreguntaController {
         }
 
         // buscar pregunta
-        Pregunta pregunta = PreguntasService.obtenerPorId(id);
+        Pregunta pregunta = preguntaService.obtenerPorId(id);
         // verificar si existe
         if (pregunta == null) {
             session.setAttribute("error", "Pregunta no encontrada");
@@ -116,7 +117,7 @@ public class PreguntaController {
             return "redirect:/login";
         }
         // actualizar en bd
-        PreguntasService.guardar(pregunta);
+        preguntaService.guardar(pregunta);
 
         // mensaje éxito
         session.setAttribute("ok", "Pregunta actualizada");
@@ -140,10 +141,11 @@ public class PreguntaController {
         }
 
         // eliminar pregunta
-        PreguntasService.eliminar(id);
+        preguntaService.eliminar(id);
 
         // mensaje éxito
         session.setAttribute("ok", "Pregunta eliminada correctamente");
         return "redirect:/admin/preguntas";
     }
+    
 }
