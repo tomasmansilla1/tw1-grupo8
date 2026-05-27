@@ -5,9 +5,11 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.lang.NonNull;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.hibernate.SessionFactory;
 
 @Configuration
 @EnableTransactionManagement
@@ -23,26 +25,27 @@ public class HibernateInfraestructuraTestConfig {
     return dataSource;
   }
 
+  @SuppressWarnings("null")
   @Bean
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
+    sessionFactory.setPackagesToScan("com.tallerwebi.model");
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }
 
   @Bean
-  public HibernateTransactionManager transactionManager() {
-    return new HibernateTransactionManager(sessionFactory(dataSource()).getObject());
-  }
+  public HibernateTransactionManager transactionManager(@NonNull SessionFactory sessionFactory) {
+    return new HibernateTransactionManager(sessionFactory);
+}
 
   private Properties hibernateProperties() {
     Properties properties = new Properties();
     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
     properties.setProperty("hibernate.show_sql", "true");
     properties.setProperty("hibernate.format_sql", "true");
-    properties.setProperty("hibernate.hbm2ddl.auto", "create");
+    properties.setProperty("hibernate.hbm2ddl.auto", "update");
     return properties;
   }
 }
