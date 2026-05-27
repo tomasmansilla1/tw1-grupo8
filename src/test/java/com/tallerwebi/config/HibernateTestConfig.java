@@ -1,4 +1,4 @@
-package com.tallerwebi.integracion.config;
+package com.tallerwebi.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;

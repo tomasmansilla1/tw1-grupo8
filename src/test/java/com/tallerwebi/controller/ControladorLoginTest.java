@@ -1,4 +1,4 @@
-package com.tallerwebi.integracion;
+package com.tallerwebi.controller;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -8,8 +8,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tallerwebi.integracion.config.HibernateTestConfig;
-import com.tallerwebi.integracion.config.SpringWebTestConfig;
+import com.tallerwebi.config.HibernateTestConfig;
+import com.tallerwebi.config.SpringWebTestConfig;
 import com.tallerwebi.model.Usuario;
 
 import java.util.Objects;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,6 +34,7 @@ public class ControladorLoginTest {
 
   private Usuario usuarioMock;
 
+  @NonNull
   @Autowired
   private WebApplicationContext wac;
 

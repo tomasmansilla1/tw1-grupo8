@@ -1,4 +1,4 @@
-package com.tallerwebi.punta_a_punta.vistas;
+package com.tallerwebi.integracion.punta_a_punta.vistas;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

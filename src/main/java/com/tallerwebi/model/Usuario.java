@@ -16,6 +16,7 @@ public class Usuario {
   private String password;
   private String rol;
   private Boolean activo = false;
+  private Integer respuestasAcertadasSeguidas = 0;
 
   public Long getId() {
     return id;
@@ -59,5 +60,12 @@ public class Usuario {
 
   public void activar() {
     activo = true;
+  }
+
+  public Integer getRespuestasAcertadasSeguidas() {
+    return respuestasAcertadasSeguidas;
+  }
+  public void setRespuestasAcertadasSeguidas(Integer respuestasAcertadasSeguidas) {
+    this.respuestasAcertadasSeguidas = respuestasAcertadasSeguidas;
   }
 }

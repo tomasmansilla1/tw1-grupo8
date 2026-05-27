@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,9 +8,6 @@ import static org.mockito.Mockito.*;
 import com.tallerwebi.exception.UsuarioExistente;
 import com.tallerwebi.model.Usuario;
 import com.tallerwebi.repository.RepositorioUsuario;
-import com.tallerwebi.service.ServicioLogin;
-import com.tallerwebi.service.ServicioLoginImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

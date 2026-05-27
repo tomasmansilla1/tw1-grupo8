@@ -1,4 +1,4 @@
-package com.tallerwebi.punta_a_punta;
+package com.tallerwebi.integracion.punta_a_punta;
 
 import java.io.IOException;
 
