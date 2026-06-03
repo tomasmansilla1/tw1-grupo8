@@ -1,4 +1,4 @@
-package com.tallerwebi.presentacion.admin;
+package com.tallerwebi.integracion;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -8,9 +8,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tallerwebi.config.HibernateTestConfig;
-import com.tallerwebi.config.SpringWebTestConfig;
 import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.integracion.config.HibernateTestConfig;
+import com.tallerwebi.integracion.config.SpringWebTestConfig;
 
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;

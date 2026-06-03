@@ -1,4 +1,4 @@
-package com.tallerwebi.config;
+package com.tallerwebi.integracion.config;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.tallerwebi.config.SessionUtil;
 
 public class SessionUtilTest {
     private SessionUtil sessionUtil;
