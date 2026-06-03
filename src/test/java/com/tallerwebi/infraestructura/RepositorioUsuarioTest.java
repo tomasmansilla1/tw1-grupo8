@@ -38,6 +38,41 @@ public class RepositorioUsuarioTest {
   @Test
   @Transactional
   @Rollback
+  public void deberiaGuardarUnUsuarioCon150Puntos() {
+    // DADO (Preparación)
+    Usuario usuario = this.dadoQueTengoUnUsuarioCon150Puntos("test@puntos.com", "123", "USER");
+
+    // CUANDO (Ejecución )
+    repositorioUsuario.guardar(usuario);
+    Usuario obtenido = repositorioUsuario.buscar("test@puntos.com");
+
+    // ENTONCES (Validación)
+    this.elUsuarioObtenidoTiene150Puntos(obtenido, usuario);
+  }
+
+  // LOS AYUDANTES PARA EL TEST DE USUARIOS CON PUNTAJE
+  private Usuario dadoQueTengoUnUsuarioCon150Puntos(String email, String password, String rol) {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(email);
+    usuario.setPassword(password);
+    usuario.setRol(rol);
+    usuario.setPuntaje(150);
+    return usuario;
+  }
+
+  // EL AYUDANTE PARA VALIDAR QUE EL USUARIO OBTENIDO TIENE LOS 150 PUNTOS QUE LE
+  // ASIGNAMOS
+  private void elUsuarioObtenidoTiene150Puntos(Usuario usuarioObtenido, Usuario usuarioEsperado) {
+    assertThat(usuarioObtenido.getEmail(), is(equalTo(usuarioEsperado.getEmail())));
+    assertThat(usuarioObtenido.getPassword(), is(equalTo(usuarioEsperado.getPassword())));
+    assertThat(usuarioObtenido.getActivo(), is(equalTo(usuarioEsperado.getActivo())));
+    assertThat(usuarioObtenido.getRol(), is(equalTo(usuarioEsperado.getRol())));
+    assertThat(usuarioObtenido.getPuntaje(), is(equalTo(usuarioEsperado.getPuntaje())));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
   public void deberiaGuardarUnNuevoUsuario() {
     String emailNuevoUsuario = "nuevo.usuario@test.com";
     // preparacion
