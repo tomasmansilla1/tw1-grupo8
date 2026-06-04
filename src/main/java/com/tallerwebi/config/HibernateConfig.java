@@ -2,9 +2,12 @@ package com.tallerwebi.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
+
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.lang.NonNull;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -25,9 +28,15 @@ public class HibernateConfig {
 
     if (dbHost == null) dbHost = "localhost";
     if (dbPort == null) dbPort = "3306";
+
     if (dbName == null) dbName = "preguntados_db";
     if (dbUser == null) dbUser = "root";
     if (dbPassword == null) dbPassword = "";
+
+    if (dbName == null) dbName = "tallerwebi";
+    if (dbUser == null) dbUser = "root";
+    if (dbPassword == null) dbPassword = "1234";
+
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
@@ -43,18 +52,19 @@ public class HibernateConfig {
     return dataSource;
   }
 
+  @SuppressWarnings("null")
   @Bean
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
+    sessionFactory.setPackagesToScan("com.tallerwebi.model");
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }
 
   @Bean
-  public HibernateTransactionManager transactionManager() {
-    return new HibernateTransactionManager(sessionFactory(dataSource()).getObject());
+  public HibernateTransactionManager transactionManager(@NonNull SessionFactory sessionFactory) {
+    return new HibernateTransactionManager(sessionFactory);
   }
 
   private Properties hibernateProperties() {
@@ -62,7 +72,7 @@ public class HibernateConfig {
     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
     properties.setProperty("hibernate.show_sql", "true");
     properties.setProperty("hibernate.format_sql", "true");
-    properties.setProperty("hibernate.hbm2ddl.auto", "create");
+    properties.setProperty("hibernate.hbm2ddl.auto", "update");
     properties.setProperty("hibernate.connection.characterEncoding", "utf8");
     properties.setProperty("hibernate.connection.CharSet", "utf8");
     properties.setProperty("hibernate.connection.useUnicode", "true");

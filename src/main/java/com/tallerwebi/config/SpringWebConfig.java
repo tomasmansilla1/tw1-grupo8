@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,10 +26,10 @@ public class SpringWebConfig implements WebMvcConfigurer {
   private ApplicationContext applicationContext;
 
   @Override
-  public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/css/**").addResourceLocations("/resources/core/css/");
-    registry.addResourceHandler("/js/**").addResourceLocations("/resources/core/js/");
-    registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
+  public void addResourceHandlers(final @NonNull ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+    registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+    registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
   }
 
   // https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html
@@ -39,13 +40,13 @@ public class SpringWebConfig implements WebMvcConfigurer {
     // resource resolution infrastructure, which is highly recommended.
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
     templateResolver.setApplicationContext(this.applicationContext);
-    templateResolver.setPrefix("/WEB-INF/views/thymeleaf/");
+    templateResolver.setPrefix("classpath:/templates/");
     templateResolver.setSuffix(".html");
     // HTML is the default value, added here for the sake of clarity.
     templateResolver.setTemplateMode(TemplateMode.HTML);
     // Template cache is true by default. Set to false if you want
     // templates to be automatically updated when modified.
-    templateResolver.setCacheable(true);
+    templateResolver.setCacheable(false);
     return templateResolver;
   }
 
