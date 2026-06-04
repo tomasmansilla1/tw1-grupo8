@@ -16,11 +16,11 @@ public class Usuario {
   private String password;
   private String rol;
   private Boolean activo = false;
-<<<<<<< HEAD:src/main/java/com/tallerwebi/dominio/Usuario.java
+
   private Integer puntaje = 0;
 =======
   private Integer respuestasAcertadasSeguidas = 0;
->>>>>>> 46b258cc9f3f7ebed01ac1088bd89898a64d31f6:src/main/java/com/tallerwebi/dominio/usuario/Usuario.java
+
 
   public Long getId() {
     return id;
