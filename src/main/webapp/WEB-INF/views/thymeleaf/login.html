@@ -17,10 +17,7 @@
 </head>
 
 <body>
-
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">UNLAM</a>
-    </nav>
+    <div th:replace="~{fragments/navbar :: navbar}"> </div>
 
     <main role="main" class="container">
 
@@ -52,6 +49,12 @@
         crossorigin="anonymous"></script>
 
     <script type="module" th:src="@{js/login.js}"></script>
+
+    <footer class="bg-white border-top py-3 text-center text-muted mt-auto">
+        <div class="container small">
+            &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
+        </div>
+    </footer>
 </body>
 
 </html>
