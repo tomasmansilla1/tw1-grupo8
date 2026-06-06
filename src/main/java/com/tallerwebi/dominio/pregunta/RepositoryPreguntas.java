@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RepositorioPreguntas {
+public interface RepositoryPreguntas {
     void save(Pregunta pregunta);
     List<Pregunta> findAll();
     Pregunta findById(Long id);

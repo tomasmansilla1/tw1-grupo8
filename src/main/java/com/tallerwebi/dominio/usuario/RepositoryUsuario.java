@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio.usuario;
 
-public interface RepositorioUsuario {
+public interface RepositoryUsuario {
   Usuario buscarUsuario(String email, String password);
   void guardar(Usuario usuario);
   Usuario buscar(String email);

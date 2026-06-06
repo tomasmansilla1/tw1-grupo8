@@ -1,9 +1,13 @@
 package com.tallerwebi.integracion.config;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -31,7 +35,7 @@ public class HibernateTestConfig {
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan("com.tallerwebi.model");
+    sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }
@@ -49,4 +53,23 @@ public class HibernateTestConfig {
     properties.setProperty("hibernate.hbm2ddl.auto", "update");
     return properties;
   }
+
+  @Test
+  public void debeUsarValoresPorDefectoSiNoHayEnvVars() {
+
+    Map<String, String> original = System.getenv();
+
+    // No se puede mockear System.getenv fácilmente,
+    // así que esto se cubre ejecutando sin variables
+
+    DataSource ds = new HibernateTestConfig().dataSource();
+
+    assertNotNull(ds);
+  }
+  @Test
+  public void debeUsarEnvVarsSiExisten() {
+    DataSource ds = new HibernateTestConfig().dataSource();
+    assertNotNull(ds);
+  }
+  
 }

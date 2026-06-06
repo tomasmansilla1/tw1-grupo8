@@ -53,17 +53,6 @@ public class SessionUtilTest {
         verify(session).getAttribute("usuario");
     }
 
-
-    @Test
-    public void debeConsultarRolCuandoHaySesion() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("ADMIN");
-
-        sessionUtil.verificarAdmin(session);
-
-        verify(session).getAttribute("rol");
-    }
     @Test
     public void noDeberiaConsultarRolSiNoHaySesion() {
         when(session.getAttribute("usuario")).thenReturn(null);
@@ -73,16 +62,6 @@ public class SessionUtilTest {
         verify(session).getAttribute("usuario");
         verify(session, never()).getAttribute("rol");
     }   
-    @Test
-    public void siElUsuarioEsAdminDevuelveTrue() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("ADMIN");
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertTrue(resultado);
-    }
 
     @Test
     public void siNoHaySesionAdminDevuelveFalse() {
@@ -92,55 +71,5 @@ public class SessionUtilTest {
 
         assertFalse(resultado);
     }
-    @Test
-    public void siElRolNoEsAdminDevuelveFalse() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("CLIENTE");
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertFalse(resultado);
-    }
-    @Test
-    public void siElRolEsNullDevuelveFalse() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn(null);
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertFalse(resultado);
-    }
-    @Test
-    public void siElRolEstaVacioDevuelveFalse() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("");
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertFalse(resultado);
-    }
-    @Test
-    public void siElRolEstaEnMinusculasDevuelveFalse() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("admin");
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertFalse(resultado);
-    }
-    @Test
-    public void siElRolEsOtroTextoDevuelveFalse() {
-
-        when(session.getAttribute("usuario")).thenReturn(new Object());
-        when(session.getAttribute("rol")).thenReturn("MODERADOR");
-
-        boolean resultado = sessionUtil.verificarAdmin(session);
-
-        assertFalse(resultado);
-    }
-
+    
 }

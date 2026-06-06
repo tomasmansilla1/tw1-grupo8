@@ -3,6 +3,7 @@ package com.tallerwebi.integracion.config;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.lang.NonNull;
@@ -13,6 +14,7 @@ import org.hibernate.SessionFactory;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan(basePackages = {"com.tallerwebi.infraestructura", "com.tallerwebi.dominio"})
 public class HibernateInfraestructuraTestConfig {
 
   @Bean
@@ -30,7 +32,7 @@ public class HibernateInfraestructuraTestConfig {
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan("com.tallerwebi.model");
+    sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }

@@ -5,22 +5,25 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tallerwebi.config.SessionUtil;
 
 @Controller
 @RequestMapping("/admin")
-public class ControladorCategoriaDia {
+public class ControllerCategoriaDia {
 
-    @Autowired
     private SessionUtil sessionUtil;
 
+    @Autowired
+    public ControllerCategoriaDia(SessionUtil sessionUtil) {
+        this.sessionUtil = sessionUtil;
+    }
+
     // Mostrar formulario
-    @GetMapping("/categoriaDia")
+   @RequestMapping(value = "/categoriaDia", method = RequestMethod.GET)
     public String mostrarCategoriaDia(HttpSession session, Model model) {
 
         // verificar admin
@@ -33,13 +36,16 @@ public class ControladorCategoriaDia {
             "categoriaDia", 
             session.getAttribute("categoria_dia")
         );
+
+       // Devuelve: WEB-INF/views/thymeleaf/admin/categoriaDia.html
         return "admin/categoriaDia";
     }
 
     // Guardar categoría
-    @PostMapping("/categoriaDia")
+    @RequestMapping(value = "/categoriaDia", method = RequestMethod.POST)
     public String guardarCategoria(
-        @RequestParam("categoria") String categoria,
+        @RequestParam(value = "categoria", required = false) 
+        String categoria,
         HttpSession session,
         Model model) 
     {
@@ -61,6 +67,8 @@ public class ControladorCategoriaDia {
 
         // mensaje éxito
         session.setAttribute("ok", "La categoría está actualizada");
+       
+        // Redirección limpia al panel principal de administración
         return "redirect:/admin";
     }
 }

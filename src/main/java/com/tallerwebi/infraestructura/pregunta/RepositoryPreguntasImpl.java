@@ -8,14 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tallerwebi.dominio.pregunta.Pregunta;
-import com.tallerwebi.dominio.pregunta.RepositorioPreguntas;
+import com.tallerwebi.dominio.pregunta.RepositoryPreguntas;
 
 @Repository
 @Transactional
-public class RepositorioPreguntasImpl implements RepositorioPreguntas {
+public class RepositoryPreguntasImpl implements RepositoryPreguntas {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @Autowired SessionFactory sessionFactory;
 
     @Override
     public void save(Pregunta pregunta) {

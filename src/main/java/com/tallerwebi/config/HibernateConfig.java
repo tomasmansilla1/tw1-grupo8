@@ -51,7 +51,7 @@ public class HibernateConfig {
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan("com.tallerwebi.model");
+    sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }

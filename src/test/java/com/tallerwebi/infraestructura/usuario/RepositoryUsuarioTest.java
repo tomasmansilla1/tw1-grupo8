@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.integracion.config.HibernateInfraestructuraTestConfig;
 
@@ -27,16 +27,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { HibernateInfraestructuraTestConfig.class })
-public class RepositorioUsuarioTest {
+public class RepositoryUsuarioTest {
 
   @Autowired
   private SessionFactory sessionFactory;
 
-  private RepositorioUsuario repositorioUsuario;
+  private RepositoryUsuario repositorioUsuario;
 
   @BeforeEach
   public void init() {
-    repositorioUsuario = new RepositorioUsuarioImpl(sessionFactory);
+    repositorioUsuario = new RepositoryUsuarioImpl(sessionFactory);
   }
 
   @Test

@@ -2,7 +2,7 @@ package com.tallerwebi.presentacion.login;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.usuario.DatosLogin;
-import com.tallerwebi.dominio.usuario.ServicioLogin;
+import com.tallerwebi.dominio.usuario.ServiceLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ControladorLogin {
+public class ControllerLogin {
 
-  private ServicioLogin servicioLogin;
+  private ServiceLogin servicioLogin;
 
   @Autowired
-  public ControladorLogin(ServicioLogin servicioLogin) {
+  public ControllerLogin(ServiceLogin servicioLogin) {
     this.servicioLogin = servicioLogin;
   }
 

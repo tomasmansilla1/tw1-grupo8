@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.usuario.DatosLogin;
-import com.tallerwebi.dominio.usuario.ServicioLogin;
+import com.tallerwebi.dominio.usuario.ServiceLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,14 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
-public class ControladorLoginTest {
+public class ControllerLoginTest {
 
-  private ControladorLogin controladorLogin;
+  private ControllerLogin controladorLogin;
   private Usuario usuarioMock;
   private DatosLogin datosLoginMock;
   private HttpServletRequest requestMock;
   private HttpSession sessionMock;
-  private ServicioLogin servicioLoginMock;
+  private ServiceLogin servicioLoginMock;
 
   @BeforeEach
   public void init() {
@@ -32,8 +32,8 @@ public class ControladorLoginTest {
     when(usuarioMock.getEmail()).thenReturn("dami@unlam.com");
     requestMock = mock(HttpServletRequest.class);
     sessionMock = mock(HttpSession.class);
-    servicioLoginMock = mock(ServicioLogin.class);
-    controladorLogin = new ControladorLogin(servicioLoginMock);
+    servicioLoginMock = mock(ServiceLogin.class);
+    controladorLogin = new ControllerLogin(servicioLoginMock);
   }
 
   @Test

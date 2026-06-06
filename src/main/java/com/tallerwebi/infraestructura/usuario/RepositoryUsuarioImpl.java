@@ -5,16 +5,16 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.tallerwebi.dominio.usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
 
 @Repository("repositorioUsuario")
-public class RepositorioUsuarioImpl implements RepositorioUsuario {
+public class RepositoryUsuarioImpl implements RepositoryUsuario {
 
   private SessionFactory sessionFactory;
 
   @Autowired
-  public RepositorioUsuarioImpl(SessionFactory sessionFactory) {
+  public RepositoryUsuarioImpl(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
 

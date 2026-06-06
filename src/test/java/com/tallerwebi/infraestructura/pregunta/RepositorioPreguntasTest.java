@@ -5,73 +5,70 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.tallerwebi.dominio.pregunta.Pregunta;
-import com.tallerwebi.dominio.pregunta.RepositorioPreguntas;
+import com.tallerwebi.dominio.pregunta.RepositoryPreguntas;
+import com.tallerwebi.integracion.config.HibernateInfraestructuraTestConfig;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = HibernateInfraestructuraTestConfig.class)
 @Transactional
+@Rollback
 public class RepositorioPreguntasTest {
 
     @Autowired
-    private RepositorioPreguntas preguntasRepository;
+    private RepositoryPreguntas preguntasRepository;
 
     @Test
+    @Transactional
     @Rollback
     public void debeGuardarUnaPregunta() {
-        // preparación
         Pregunta pregunta = new Pregunta();
         pregunta.setPregunta("Pregunta de prueba");
 
-        preguntasRepository.save(pregunta);
+        pregunta.setCategoria("General");
+        pregunta.setA("A");
+        pregunta.setB("B");
+        pregunta.setC("C");
+        pregunta.setD("D");
+        pregunta.setCorrecta("A");
 
+        preguntasRepository.save(pregunta);
         assertNotNull(pregunta.getId());
     }
 
     @Test
+    @Transactional
     @Rollback
-    public void debeListarTodasLasPreguntas() {
-        Pregunta pregunta = new Pregunta();
-        pregunta.setPregunta("Pregunta test");
+    public void debeBuscarPreguntaPorId() { 
 
-        preguntasRepository.save(pregunta);
-        List<Pregunta> preguntas = preguntasRepository.findAll();
-
-        assertFalse(preguntas.isEmpty());
-    }
-
-    @Test
-    @Rollback
-    public void debeBuscarPreguntaPorId() {
         Pregunta pregunta = new Pregunta();
         pregunta.setPregunta("Pregunta buscar");
+        pregunta.setCategoria("General");
+        pregunta.setA("A");
+        pregunta.setB("B");
+        pregunta.setC("C");
+        pregunta.setD("D");
+        pregunta.setCorrecta("A");
 
         preguntasRepository.save(pregunta);
+        assertNotNull(pregunta.getId());
+
         Pregunta resultado = preguntasRepository.findById(pregunta.getId());
 
         assertNotNull(resultado);
         assertEquals("Pregunta buscar", resultado.getPregunta());
-    }
-
-    @Test
-    @Rollback
-    public void debeEliminarPreguntaPorId() {
-        Pregunta pregunta = new Pregunta();
-        pregunta.setPregunta("Pregunta eliminar");
-
-        preguntasRepository.save(pregunta);
-        Long id = pregunta.getId();
-        preguntasRepository.deleteById(id);
-        Pregunta eliminada = preguntasRepository.findById(id);
-
-        assertNull(eliminada);
     }
 
     @Test
@@ -82,19 +79,50 @@ public class RepositorioPreguntasTest {
     }
 
     @Test
+    @Transactional
     @Rollback
-    public void noDebeRomperSiSeEliminaUnaPreguntaInexistente() {
+    public void debeEliminarPreguntaPorId() {
+        Pregunta pregunta = new Pregunta();
+        pregunta.setPregunta("Pregunta eliminar");
 
-        assertDoesNotThrow(
-            () -> { preguntasRepository.deleteById(99L); }
-        );
+        pregunta.setCategoria("General");
+        pregunta.setA("A");
+        pregunta.setB("B");
+        pregunta.setC("C");
+        pregunta.setD("D");
+        pregunta.setCorrecta("A");
+
+        preguntasRepository.save(pregunta);
+
+        Long id = pregunta.getId();
+        preguntasRepository.deleteById(id);
+        Pregunta eliminada = preguntasRepository.findById(id);
+
+        assertNull(eliminada);
     }
 
     @Test
     @Rollback
+    public void noDebeRomperSiSeEliminaUnaPreguntaInexistente() {
+
+        assertDoesNotThrow(
+            () -> { preguntasRepository.deleteById(999L); }
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     public void debeActualizarUnaPreguntaExistente() {
         Pregunta pregunta = new Pregunta();
         pregunta.setPregunta("Texto original");
+
+        pregunta.setCategoria("General");
+        pregunta.setA("A");
+        pregunta.setB("B");
+        pregunta.setC("C");
+        pregunta.setD("D");
+        pregunta.setCorrecta("A");
 
         preguntasRepository.save(pregunta);
         pregunta.setPregunta("Texto actualizado");
@@ -104,12 +132,45 @@ public class RepositorioPreguntasTest {
 
         assertEquals("Texto actualizado", resultado.getPregunta());
     }
+  
+    @Test
+    @Transactional
+    @Rollback
+    public void debeListarTodasLasPreguntas() {
+        Pregunta pregunta = new Pregunta();
+        pregunta.setPregunta("Pregunta test");
+
+        pregunta.setCategoria("General");
+        pregunta.setA("A");
+        pregunta.setB("B");
+        pregunta.setC("C");
+        pregunta.setD("D");
+        pregunta.setCorrecta("A");
+
+        preguntasRepository.save(pregunta);
+        List<Pregunta> preguntas = preguntasRepository.findAll();
+
+        assertFalse(preguntas.isEmpty());
+
+        boolean existe = preguntas.stream()
+        .anyMatch(p -> p.getPregunta().equals("Pregunta test"));
+
+        assertTrue(existe);
+    }
 
     @Test
     @Rollback
     public void deberiaDevolverListaVaciaSiNoHayPreguntas() {
         List<Pregunta> preguntas = preguntasRepository.findAll();
+
         assertNotNull(preguntas);
+        assertTrue(preguntas.isEmpty());
+
     }
 
+    @Test
+    @Rollback
+    public void noDebeEliminarNadaSiLaPreguntaNoExiste() {
+        assertDoesNotThrow(() -> preguntasRepository.deleteById(Long.MAX_VALUE));
+    }
 }

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 @Service("servicioLogin")
 @Transactional
-public class ServicioLoginImpl implements ServicioLogin {
+public class ServiceLoginImpl implements ServiceLogin {
 
-  private RepositorioUsuario repositorioUsuario;
+  private RepositoryUsuario repositorioUsuario;
 
   @Autowired
-  public ServicioLoginImpl(RepositorioUsuario repositorioUsuario) {
+  public ServiceLoginImpl(RepositoryUsuario repositorioUsuario) {
     this.repositorioUsuario = repositorioUsuario;
   }
 

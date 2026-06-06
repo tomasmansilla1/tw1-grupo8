@@ -7,40 +7,45 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tallerwebi.config.SessionUtil;
 import com.tallerwebi.dominio.pregunta.Pregunta;
-import com.tallerwebi.dominio.pregunta.PreguntasService;
+import com.tallerwebi.dominio.pregunta.PreguntaService;
 
 
 @Controller
-
 @RequestMapping ("/admin")
-public class ControladorPregunta {
+public class ControllerPregunta {
 
-    @Autowired
-    private PreguntasService preguntaService;
-    @Autowired
+    private PreguntaService preguntaService;
     private SessionUtil sessionUtil;
 
+    @Autowired
+    public ControllerPregunta(PreguntaService preguntaService, SessionUtil sessionUtil) {
+        this.preguntaService = preguntaService;
+        this.sessionUtil = sessionUtil;
+    }
+
     // Mostrar formulario para crear pregunta
-    @GetMapping ("/crearPregunta")
-    public String mostrarFormulario (HttpSession session) {
+    @RequestMapping(value = "/crearPregunta", method = RequestMethod.GET)
+    public String mostrarFormulario (HttpSession session, Model model) {
 
         // verificar admin
         if (!sessionUtil.verificarAdmin(session) ) {
             return "redirect:/login";
         }
+        model.addAttribute("pregunta", new Pregunta());
+
         return "admin/crearPregunta";
     }
 
     // Guardar pregunta
-    @PostMapping("/crearPregunta")
+    @RequestMapping(value = "/crearPregunta", method = RequestMethod.POST)
     public String guardarPregunta(@ModelAttribute Pregunta pregunta, HttpSession session) {
 
         // verificar admin
@@ -52,11 +57,11 @@ public class ControladorPregunta {
 
         // mensaje de éxito
         session.setAttribute("ok", "Pregunta creada correctamente");
-        return "redirect:/admin/preguntas";
+        return "redirect:/admin/pregunta";
     }
 
     // Listar preguntas
-    @GetMapping("/preguntas")
+    @RequestMapping(value = "/pregunta", method = RequestMethod.GET)
     public String listarPreguntas(HttpSession session, Model model) {
 
         // verificar admin
@@ -65,22 +70,13 @@ public class ControladorPregunta {
         }
         // traer preguntas de bd
         List<Pregunta> preguntas = preguntaService.listar();
+        model.addAttribute("pregunta", preguntas);
 
-        // enviar a la vista
-        model.addAttribute("preguntas", preguntas);
-
-        // mensajes de éxito o error
-        model.addAttribute("ok", session.getAttribute("ok") );
-        model.addAttribute("error", session.getAttribute("error") );
-
-        // limpiar mensajes
-        session.removeAttribute("ok");
-        session.removeAttribute("error");
-        return "admin/preguntas";
+        return "admin/pregunta";
     }
 
     // Mostrar form editar
-    @GetMapping ("/editarPregunta")
+    @RequestMapping(value = "/editarPregunta", method = RequestMethod.GET)
     public String editarPregunta(
         @RequestParam(required = false) Long id,
         HttpSession session, Model model) {
@@ -92,15 +88,15 @@ public class ControladorPregunta {
         // validar id
         if (id == null) {
             session.setAttribute("error", "ID erroneo");
-            return "redirect:/admin/preguntas";
+            return "redirect:/admin/pregunta";
         }
-
         // buscar pregunta
         Pregunta pregunta = preguntaService.obtenerPorId(id);
+
         // verificar si existe
         if (pregunta == null) {
             session.setAttribute("error", "Pregunta no encontrada");
-            return "redirect:/admin/preguntas";
+            return "redirect:/admin/pregunta";
         }
 
         // enviar a la vista
@@ -109,7 +105,7 @@ public class ControladorPregunta {
     }
 
     // Actualizar pregunta
-    @PostMapping("/editarPregunta")
+    @RequestMapping(value = "/editarPregunta", method = RequestMethod.POST)
     public String actualizarPregunta(@ModelAttribute Pregunta pregunta, HttpSession session) {
 
         // verificar admin
@@ -121,14 +117,15 @@ public class ControladorPregunta {
 
         // mensaje éxito
         session.setAttribute("ok", "Pregunta actualizada");
-        return "redirect:/admin/preguntas";
+        return "redirect:/admin/pregunta";
     }
 
     // Eliminar pregunta
-    @GetMapping("/eliminarPregunta")
+   @RequestMapping(value = "/eliminarPregunta", method = RequestMethod.POST)
     public String eliminarPregunta(
         @RequestParam(required = false) Long id,
-        HttpSession session) {
+        HttpSession session,
+        RedirectAttributes redirectAttributes) {
 
         // verificar admin
         if (!sessionUtil.verificarAdmin(session)) {
@@ -136,16 +133,23 @@ public class ControladorPregunta {
         }
         // validar id
         if (id == null) {
-            session.setAttribute("error", "ID inválido");
-            return "redirect:/admin/preguntas";
+            redirectAttributes.addFlashAttribute("error", "ID inválido");
+            return "redirect:/admin/pregunta";
+        }
+        Pregunta pregunta = preguntaService.obtenerPorId(id);
+
+        if (pregunta == null) {
+            redirectAttributes.addFlashAttribute("error", "La pregunta no existe");
+
+            return "redirect:/admin/pregunta";    
         }
 
         // eliminar pregunta
         preguntaService.eliminar(id);
 
         // mensaje éxito
-        session.setAttribute("ok", "Pregunta eliminada correctamente");
-        return "redirect:/admin/preguntas";
+        redirectAttributes.addFlashAttribute("ok", "Pregunta eliminada correctamente");
+        return "redirect:/admin/pregunta";
     }
     
 }

@@ -9,15 +9,15 @@ import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ServicioLoginTest {
+public class ServiceLoginTest {
 
-  private ServicioLogin servicioLogin;
-  private RepositorioUsuario repositorioUsuarioMock;
+  private ServiceLogin servicioLogin;
+  private RepositoryUsuario repositorioUsuarioMock;
 
   @BeforeEach
   public void init() {
-    this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
-    this.servicioLogin = new ServicioLoginImpl(this.repositorioUsuarioMock);
+    this.repositorioUsuarioMock = mock(RepositoryUsuario.class);
+    this.servicioLogin = new ServiceLoginImpl(this.repositorioUsuarioMock);
   }
 
   @Test

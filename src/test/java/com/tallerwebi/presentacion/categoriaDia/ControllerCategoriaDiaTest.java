@@ -1,6 +1,9 @@
 package com.tallerwebi.presentacion.categoriaDia;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,26 +14,25 @@ import com.tallerwebi.config.SessionUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
-public class ControladorCategoriaDiaTest {
+public class ControllerCategoriaDiaTest {
     // obj simulado para no usar bd real
-    @Mock
     private SessionUtil sessionUtil;
-    @Mock
     private HttpSession session;
-    @Mock
     private Model model;
 
-    @InjectMocks
-    private ControladorCategoriaDia controller;
+    private ControllerCategoriaDia controller;
 
     @BeforeEach
     public void init() {
-        MockitoAnnotations.openMocks(this);
+        // mocks manuales
+        this.sessionUtil = mock(SessionUtil.class);
+        this.session = mock(HttpSession.class);
+        this.model = mock(Model.class);
+
+        // controller real
+        this.controller = new ControllerCategoriaDia(sessionUtil);
     }
 
 
@@ -44,14 +46,14 @@ public class ControladorCategoriaDiaTest {
     }
 
     @Test
-    public void noDebegregarCategoriaAlModelSiNoEsAdmin() {
+    public void noDebeAgregarCategoriaAlModelSiNoEsAdmin() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
         controller.mostrarCategoriaDia(session,model);
 
         verify(model, never()).addAttribute(
-            "categoriaDia",
-            null
+                any(),
+                any()
         );
     }
 
@@ -210,8 +212,8 @@ public class ControladorCategoriaDiaTest {
         controller.guardarCategoria( "", session, model);
 
         verify(session, never()).setAttribute(
-            "categoria_dia",
-            ""
+            eq("categoria_dia"),
+            any()
         );
     }
 }
