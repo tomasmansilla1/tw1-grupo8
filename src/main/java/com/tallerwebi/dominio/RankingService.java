@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.ranking;
+package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.usuario.Usuario;
 

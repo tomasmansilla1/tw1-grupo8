@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio.usuario;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
-
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

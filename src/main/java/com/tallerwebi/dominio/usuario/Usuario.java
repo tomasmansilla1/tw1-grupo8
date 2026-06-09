@@ -16,6 +16,9 @@ public class Usuario {
   private String password;
   private String rol;
   private Boolean activo = false;
+
+  private Integer puntaje = 0;
+
   private Integer respuestasAcertadasSeguidas = 0;
 
   public Long getId() {
@@ -62,9 +65,18 @@ public class Usuario {
     activo = true;
   }
 
+  public Integer getPuntaje() {
+    return puntaje;
+  }
+
+  public void setPuntaje(Integer puntaje) {
+    this.puntaje = puntaje;
+  }
+
   public Integer getRespuestasAcertadasSeguidas() {
     return respuestasAcertadasSeguidas;
   }
+
   public void setRespuestasAcertadasSeguidas(Integer respuestasAcertadasSeguidas) {
     this.respuestasAcertadasSeguidas = respuestasAcertadasSeguidas;
   }

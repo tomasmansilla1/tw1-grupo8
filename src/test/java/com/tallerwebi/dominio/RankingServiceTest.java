@@ -1,7 +1,9 @@
-package com.tallerwebi.dominio.ranking;
+package com.tallerwebi.dominio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.tallerwebi.dominio.ranking.RankingService;
+import com.tallerwebi.dominio.ranking.RankingServiceImpl;
 import com.tallerwebi.dominio.usuario.Usuario;
 import org.junit.jupiter.api.Test;
 

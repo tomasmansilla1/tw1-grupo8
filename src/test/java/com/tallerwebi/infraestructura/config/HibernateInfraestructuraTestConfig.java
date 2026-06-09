@@ -1,8 +1,7 @@
-package com.tallerwebi.integracion.config;
+package com.tallerwebi.infraestructura.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-public class HibernateTestConfig {
+public class HibernateInfraestructuraTestConfig {
 
   @Bean
   public DataSource dataSource() {

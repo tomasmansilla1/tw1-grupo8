@@ -2,7 +2,6 @@ package com.tallerwebi.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +27,14 @@ public class HibernateConfig {
 
     if (dbHost == null) dbHost = "localhost";
     if (dbPort == null) dbPort = "3306";
+
+    if (dbName == null) dbName = "preguntados_db";
+    if (dbUser == null) dbUser = "root";
+    if (dbPassword == null) dbPassword = "";
+
     if (dbName == null) dbName = "tallerwebi";
-    if (dbUser == null) dbUser = "user";
-    if (dbPassword == null) dbPassword = "user";
+    if (dbUser == null) dbUser = "root";
+    if (dbPassword == null) dbPassword = "1234";
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
