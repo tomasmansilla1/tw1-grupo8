@@ -9,88 +9,109 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "preguntas")
-
 public class Pregunta {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    // categoria: no puede estar vacio
-    @Column(nullable = false)
-    private String categoria;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    // columna de pregunta: no puede estar vacio
-    @Column(nullable = false)
-    private String pregunta;
-    // opciones: no puede estar vacio
-    @Column(nullable = false)
-    private String a;
-    @Column(nullable = false)
-    private String b;
-    @Column(nullable = false)
-    private String c;
-    @Column(nullable = false)
-    private String d;
+  // categoria: no puede estar vacio
+  @Column(nullable = false)
+  private String categoria;
 
-    // pregunta correcta: no puede estar vacio
-    @Column(nullable = false)
-    private String correcta;
+  // columna de pregunta: no puede estar vacio
+  @Column(nullable = false)
+  private String textoPregunta;
 
-    // Constructor vacío
-    public Pregunta() {
-    }
+  // opciones: no puede estar vacio
+  @Column(nullable = false)
+  private String opcionA;
 
-    // GETTERS Y SETTERS
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    // pregunta
-    public String getPregunta() {
-        return pregunta;
-    }
-    public void setPregunta(String pregunta) {
-        this.pregunta = pregunta;
-    }
-    // pregunta correcta
-    public String getCorrecta() {
-        return correcta;
-    }
-    public void setCorrecta(String correcta) {
-        this.correcta = correcta;
-    }
-    // opciones
-    public String getA() {
-        return a;
-    }
-    public void setA(String a) {
-        this.a = a;
-    }
-    public String getB() {
-        return b;
-    }
-    public void setB(String b) {
-        this.b = b;
-    }
-    public String getC() {
-        return c;
-    }
-    public void setC(String c) {
-        this.c = c;
-    }
-    public String getD() {
-        return d;
-    }
-    public void setD(String d) {
-        this.d = d;
-    }
-    // CATEGORIA
-    public String getCategoria() {
-        return categoria;
-    }
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
+  @Column(nullable = false)
+  private String opcionB;
+
+  @Column(nullable = false)
+  private String opcionC;
+
+  @Column(nullable = false)
+  private String opcionD;
+
+  // pregunta correcta: no puede estar vacio
+  @Column(nullable = false)
+  private String correcta;
+
+  // Constructor vacío
+  public Pregunta() {}
+
+  // ID
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  // Pregunta
+  public String getPregunta() {
+    return textoPregunta;
+  }
+
+  public void setPregunta(String textoPregunta) {
+    this.textoPregunta = textoPregunta;
+  }
+
+  // Respuesta correcta
+  public String getCorrecta() {
+    return correcta;
+  }
+
+  public void setCorrecta(String correcta) {
+    this.correcta = correcta;
+  }
+
+  // Opción A
+  public String getA() {
+    return opcionA;
+  }
+
+  public void setA(String opcionA) {
+    this.opcionA = opcionA;
+  }
+
+  // Opción B
+  public String getB() {
+    return opcionB;
+  }
+
+  public void setB(String opcionB) {
+    this.opcionB = opcionB;
+  }
+
+  // Opción C
+  public String getC() {
+    return opcionC;
+  }
+
+  public void setC(String opcionC) {
+    this.opcionC = opcionC;
+  }
+
+  // Opción D
+  public String getD() {
+    return opcionD;
+  }
+
+  public void setD(String opcionD) {
+    this.opcionD = opcionD;
+  }
+
+  // Categoría
+  public String getCategoria() {
+    return categoria;
+  }
+
+  public void setCategoria(String categoria) {
+    this.categoria = categoria;
+  }
 }

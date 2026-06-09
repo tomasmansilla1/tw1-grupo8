@@ -18,9 +18,8 @@ public class Usuario {
   private Boolean activo = false;
 
   private Integer puntaje = 0;
-=======
-  private Integer respuestasAcertadasSeguidas = 0;
 
+  private Integer respuestasAcertadasSeguidas = 0;
 
   public Long getId() {
     return id;
@@ -66,19 +65,19 @@ public class Usuario {
     activo = true;
   }
 
-<<<<<<< HEAD:src/main/java/com/tallerwebi/dominio/Usuario.java
   public Integer getPuntaje() {
     return puntaje;
   }
 
   public void setPuntaje(Integer puntaje) {
     this.puntaje = puntaje;
-=======
+  }
+
   public Integer getRespuestasAcertadasSeguidas() {
     return respuestasAcertadasSeguidas;
   }
+
   public void setRespuestasAcertadasSeguidas(Integer respuestasAcertadasSeguidas) {
     this.respuestasAcertadasSeguidas = respuestasAcertadasSeguidas;
->>>>>>> 46b258cc9f3f7ebed01ac1088bd89898a64d31f6:src/main/java/com/tallerwebi/dominio/usuario/Usuario.java
   }
 }

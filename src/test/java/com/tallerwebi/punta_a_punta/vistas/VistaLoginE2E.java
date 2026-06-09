@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
 import com.microsoft.playwright.*;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.jupiter.api.AfterAll;

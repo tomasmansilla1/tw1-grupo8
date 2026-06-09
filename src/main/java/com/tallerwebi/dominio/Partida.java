@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.usuario.Usuario;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
@@ -14,8 +15,6 @@ public class Partida {
   private Integer puntajeObtenido;
   private Boolean esVictoria;
 
-  // conecta partida con usuario (muchas partidas pueden pertenecer a un mismo
-  // usuario)
   @ManyToOne
   @JoinColumn(name = "usuario_id")
   private Usuario usuario;

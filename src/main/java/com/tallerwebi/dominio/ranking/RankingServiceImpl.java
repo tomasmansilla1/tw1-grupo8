@@ -4,20 +4,19 @@ import com.tallerwebi.dominio.usuario.Usuario;
 
 public class RankingServiceImpl implements RankingService {
 
-    @Override
-    public Double calcularPuntaje(Usuario usuario, Integer puntajeBase) {
-        // 1. Cada respuesta correcta suma siempre 50 puntos al puntaje base actual
-        int nuevoPuntaje = puntajeBase + 50;
+  private static final int RESPUESTAS_PARA_BONUS = 3;
+  private static final int PUNTOS_POR_RESPUESTA = 50;
+  private static final int BONUS_RACHA = 200;
 
-        // 2. Evaluamos si con esta respuesta llegó a la racha de 3 aciertos seguidos
-        if (usuario.getRespuestasAcertadasSeguidas() >= 3) {
-            // Le sumamos los 200 puntos extra de bonus
-            nuevoPuntaje += 200;
+  @Override
+  public Double calcularPuntaje(Usuario usuario, Integer puntajeBase) {
+    int nuevoPuntaje = puntajeBase + PUNTOS_POR_RESPUESTA;
 
-            //  Reseteamos la racha a 0 para que vuelva a empezar
-            usuario.setRespuestasAcertadasSeguidas(0);
-        }
-
-        return (double) nuevoPuntaje;
+    if (usuario.getRespuestasAcertadasSeguidas() >= RESPUESTAS_PARA_BONUS) {
+      nuevoPuntaje += BONUS_RACHA;
+      usuario.setRespuestasAcertadasSeguidas(0);
     }
+
+    return (double) nuevoPuntaje;
+  }
 }

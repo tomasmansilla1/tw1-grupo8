@@ -2,7 +2,6 @@ package com.tallerwebi.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +35,6 @@ public class HibernateConfig {
     if (dbName == null) dbName = "tallerwebi";
     if (dbUser == null) dbUser = "root";
     if (dbPassword == null) dbPassword = "1234";
-
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",

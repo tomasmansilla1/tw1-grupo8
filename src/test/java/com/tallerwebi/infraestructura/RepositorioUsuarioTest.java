@@ -1,14 +1,13 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
+import com.tallerwebi.infraestructura.usuario.RepositorioUsuarioImpl;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import org.hibernate.SessionFactory;
@@ -50,7 +49,7 @@ public class RepositorioUsuarioTest {
     this.elUsuarioObtenidoTiene150Puntos(obtenido, usuario);
   }
 
-  // LOS AYUDANTES PARA EL TEST DE USUARIOS 
+  // LOS AYUDANTES PARA EL TEST DE USUARIOS
   private Usuario dadoQueTengoUnUsuarioCon150Puntos(String email, String password, String rol) {
     Usuario usuario = new Usuario();
     usuario.setEmail(email);
@@ -60,7 +59,7 @@ public class RepositorioUsuarioTest {
     return usuario;
   }
 
-  // EL AYUDANTE PARA VALIDAR QUE EL USUARIO OBTENIDO TIENE 
+  // EL AYUDANTE PARA VALIDAR QUE EL USUARIO OBTENIDO TIENE
   private void elUsuarioObtenidoTiene150Puntos(Usuario usuarioObtenido, Usuario usuarioEsperado) {
     assertThat(usuarioObtenido.getEmail(), is(equalTo(usuarioEsperado.getEmail())));
     assertThat(usuarioObtenido.getPassword(), is(equalTo(usuarioEsperado.getPassword())));

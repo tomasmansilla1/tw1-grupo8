@@ -8,9 +8,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpSession;
 import com.tallerwebi.config.SessionUtil;
-
+import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,133 +18,110 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
 public class ControladorAdminTest {
-    // obj simulado para no usar bd real
-    @Mock
-    private SessionUtil sessionUtil;
-    @Mock
-    private HttpSession session;
-    @Mock
-    private Model model;
 
-    @InjectMocks
-    private ControladorAdmin adminController;
+  // obj simulado para no usar bd real
+  @Mock
+  private SessionUtil sessionUtil;
 
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @Mock
+  private HttpSession session;
 
-    @SuppressWarnings("null")
-    @Test
-    public void debeRedirigirALoginSiNoEsAdmin() {
+  @Mock
+  private Model model;
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+  @InjectMocks
+  private ControladorAdmin adminController;
 
-        String vista = adminController.panelAdmin(session, model);
-        assertEquals("redirect:/login", vista);
+  @BeforeEach
+  public void init() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-        verify(sessionUtil, times(1))
-            .verificarAdmin(session);
-        verify(model, never())
-            .addAttribute(anyString(), any());
-    }
+  @SuppressWarnings("null")
+  @Test
+  public void debeRedirigirALoginSiNoEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    @Test
-    public void debeVerificarAdminUnaVez() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        
-        adminController.panelAdmin(session, model);
+    String vista = adminController.panelAdmin(session, model);
+    assertEquals("redirect:/login", vista);
 
-        verify(sessionUtil, times(1))
-            .verificarAdmin(session);
-    }
+    verify(sessionUtil, times(1)).verificarAdmin(session);
+    verify(model, never()).addAttribute(anyString(), any());
+  }
 
-    @Test
-    public void debeMostrarPanelAdminSiEsAdmin() {
+  @Test
+  public void debeVerificarAdminUnaVez() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    adminController.panelAdmin(session, model);
 
-        when(session.getAttribute("ok"))
-            .thenReturn("Operación exitosa");
-        when(session.getAttribute("error"))
-            .thenReturn(null);
+    verify(sessionUtil, times(1)).verificarAdmin(session);
+  }
 
-        String vista = adminController.panelAdmin(session, model);
-        assertEquals("admin/panelAdmin", vista);
+  @Test
+  public void debeMostrarPanelAdminSiEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        verify(model).addAttribute(
-            "mensaje",
-            "Bienvenido administrador"
-        );
-        verify(model).addAttribute(
-            "ok",
-            "Operación exitosa"
-        );
-        verify(model).addAttribute(
-            "error",
-            null
-        );
-    }
+    when(session.getAttribute("ok")).thenReturn("Operación exitosa");
+    when(session.getAttribute("error")).thenReturn(null);
 
-    @Test
-    public void deberiaMostrarPanelAunqueNoHayaMensajes() {
+    String vista = adminController.panelAdmin(session, model);
+    assertEquals("admin/panelAdmin", vista);
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        when(session.getAttribute("ok")).thenReturn(null);
-        when(session.getAttribute("error")).thenReturn(null);
+    verify(model).addAttribute("mensaje", "Bienvenido administrador");
+    verify(model).addAttribute("ok", "Operación exitosa");
+    verify(model).addAttribute("error", null);
+  }
 
-        String vista = adminController.panelAdmin(session, model);
+  @Test
+  public void deberiaMostrarPanelAunqueNoHayaMensajes() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    when(session.getAttribute("ok")).thenReturn(null);
+    when(session.getAttribute("error")).thenReturn(null);
 
-        assertEquals("admin/panelAdmin",vista);
-    }
+    String vista = adminController.panelAdmin(session, model);
 
-    @Test
-    public void deberiaLimpiarMensajesDeSesion() {
+    assertEquals("admin/panelAdmin", vista);
+  }
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        adminController.panelAdmin(session, model);
+  @Test
+  public void deberiaLimpiarMensajesDeSesion() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    adminController.panelAdmin(session, model);
 
-        verify(session).removeAttribute("ok");
-        verify(session).removeAttribute("error");
-    }
+    verify(session).removeAttribute("ok");
+    verify(session).removeAttribute("error");
+  }
 
-    @Test
-    public void debeAgregarMensajeErrorAlModel() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        
-        when(session.getAttribute("ok")).thenReturn(null);
-        when(session.getAttribute("error")).thenReturn("Hubo un error");
+  @Test
+  public void debeAgregarMensajeErrorAlModel() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        adminController.panelAdmin(session, model);
+    when(session.getAttribute("ok")).thenReturn(null);
+    when(session.getAttribute("error")).thenReturn("Hubo un error");
 
-        verify(model).addAttribute(
-            "error",
-            "Hubo un error"
-        );
-    }
-    @Test
-    public void debeAgregarMensajeOkAlModel() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    adminController.panelAdmin(session, model);
 
-        when(session.getAttribute("ok"))
-            .thenReturn("Operación correcta");
+    verify(model).addAttribute("error", "Hubo un error");
+  }
 
-        adminController.panelAdmin(session, model);
+  @Test
+  public void debeAgregarMensajeOkAlModel() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        verify(model).addAttribute(
-            "ok",
-            "Operación correcta"
-        );
-    }
+    when(session.getAttribute("ok")).thenReturn("Operación correcta");
 
-    @Test
-    public void noDeberiaLimpiarMensajesSiNoEsAdmin() {
+    adminController.panelAdmin(session, model);
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-        adminController.panelAdmin(session, model);
+    verify(model).addAttribute("ok", "Operación correcta");
+  }
 
-        verify(session, never()).removeAttribute("ok");
-        verify(session, never()).removeAttribute("error");
-    }
+  @Test
+  public void noDeberiaLimpiarMensajesSiNoEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    adminController.panelAdmin(session, model);
 
+    verify(session, never()).removeAttribute("ok");
+    verify(session, never()).removeAttribute("error");
+  }
 }

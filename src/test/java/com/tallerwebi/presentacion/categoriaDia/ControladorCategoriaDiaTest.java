@@ -6,9 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpSession;
 import com.tallerwebi.config.SessionUtil;
-
+import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,201 +16,174 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
 public class ControladorCategoriaDiaTest {
-    // obj simulado para no usar bd real
-    @Mock
-    private SessionUtil sessionUtil;
-    @Mock
-    private HttpSession session;
-    @Mock
-    private Model model;
 
-    @InjectMocks
-    private ControladorCategoriaDia controller;
+  // obj simulado para no usar bd real
+  @Mock
+  private SessionUtil sessionUtil;
 
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @Mock
+  private HttpSession session;
 
+  @Mock
+  private Model model;
 
-    @Test
-    public void noDebeConsultarCategoriaSiNoEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+  @InjectMocks
+  private ControladorCategoriaDia controller;
 
-        controller.mostrarCategoriaDia( session, model);
+  @BeforeEach
+  public void init() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-        verify(session, never()).getAttribute("categoria_dia");
-    }
+  @Test
+  public void noDebeConsultarCategoriaSiNoEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    @Test
-    public void noDebegregarCategoriaAlModelSiNoEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    controller.mostrarCategoriaDia(session, model);
 
-        controller.mostrarCategoriaDia(session,model);
+    verify(session, never()).getAttribute("categoria_dia");
+  }
 
-        verify(model, never()).addAttribute(
-            "categoriaDia",
-            null
-        );
-    }
+  @Test
+  public void noDebegregarCategoriaAlModelSiNoEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    // GET
-    @Test
-    public void debeRedirigirALoginSiNoEsAdminEnGet() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    controller.mostrarCategoriaDia(session, model);
 
-        String vista = controller.mostrarCategoriaDia(session,model);
+    verify(model, never()).addAttribute("categoriaDia", null);
+  }
 
-        assertEquals("redirect:/login", vista);
-    }
-    @Test
-    public void debeVerificarAdminUnaVezEnGet() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+  // GET
+  @Test
+  public void debeRedirigirALoginSiNoEsAdminEnGet() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-        controller.mostrarCategoriaDia( session, model);
+    String vista = controller.mostrarCategoriaDia(session, model);
 
-        verify(sessionUtil, times(1))
-            .verificarAdmin(session);
-    }
+    assertEquals("redirect:/login", vista);
+  }
 
-    @Test
-    public void debeMostrarVistaSiEsAdmin() {
+  @Test
+  public void debeVerificarAdminUnaVezEnGet() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        when(session.getAttribute("categoria_dia")).thenReturn("Deportes");
+    controller.mostrarCategoriaDia(session, model);
 
-        String vista = controller.mostrarCategoriaDia( session, model);
+    verify(sessionUtil, times(1)).verificarAdmin(session);
+  }
 
-        assertEquals("admin/categoriaDia",vista);
+  @Test
+  public void debeMostrarVistaSiEsAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    when(session.getAttribute("categoria_dia")).thenReturn("Deportes");
 
-        verify(model).addAttribute(
-            "categoriaDia",
-            "Deportes"
-        );
-    }
-    @Test
-    public void debeMostrarVistaSiNoHayaCategoria() {
+    String vista = controller.mostrarCategoriaDia(session, model);
 
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        when(session.getAttribute("categoria_dia")).thenReturn(null);
+    assertEquals("admin/categoriaDia", vista);
 
-        String vista = controller.mostrarCategoriaDia(session, model);
+    verify(model).addAttribute("categoriaDia", "Deportes");
+  }
 
-        assertEquals("admin/categoriaDia", vista);
+  @Test
+  public void debeMostrarVistaSiNoHayaCategoria() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    when(session.getAttribute("categoria_dia")).thenReturn(null);
 
-        verify(model).addAttribute(
-            "categoriaDia",
-            null
-        );
-    }
+    String vista = controller.mostrarCategoriaDia(session, model);
 
-    // POST
-    @Test
-    public void debeRedirigirALoginSiNoEsAdminEnPost() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    assertEquals("admin/categoriaDia", vista);
 
-        String vista = controller.guardarCategoria("Deportes", session, model);
+    verify(model).addAttribute("categoriaDia", null);
+  }
 
-        assertEquals("redirect:/login", vista);
-    }
-    @Test
-    public void deberiaVerificarAdminUnaSolaVezEnPost() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+  // POST
+  @Test
+  public void debeRedirigirALoginSiNoEsAdminEnPost() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-        controller.guardarCategoria( "Historia", session, model);
+    String vista = controller.guardarCategoria("Deportes", session, model);
 
-        verify(sessionUtil, times(1))
-            .verificarAdmin(session);
-    }
+    assertEquals("redirect:/login", vista);
+  }
 
-    @Test
-    public void debeMostrarErrorSiCategoriaEsNull() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+  @Test
+  public void deberiaVerificarAdminUnaSolaVezEnPost() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        String vista = controller.guardarCategoria(null,session, model);
+    controller.guardarCategoria("Historia", session, model);
 
-        assertEquals("admin/categoriaDia",vista);
+    verify(sessionUtil, times(1)).verificarAdmin(session);
+  }
 
-        verify(model).addAttribute(
-            "error",
-            "Seleccionar una categoría"
-        );
-    }
-    @Test
-    public void debeMostrarErrorSiCategoriaEsVacia() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+  @Test
+  public void debeMostrarErrorSiCategoriaEsNull() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        String vista = controller.guardarCategoria("",session,model);
+    String vista = controller.guardarCategoria(null, session, model);
 
-        assertEquals("admin/categoriaDia",vista);
+    assertEquals("admin/categoriaDia", vista);
 
-        verify(model).addAttribute(
-            "error",
-            "Seleccionar una categoría"
-        );
-    }
-    @Test
-    public void debeMostrarErrorSiCategoriaEstaVacia() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    verify(model).addAttribute("error", "Seleccionar una categoría");
+  }
 
-        String vista = controller.guardarCategoria( "   ", session, model);
+  @Test
+  public void debeMostrarErrorSiCategoriaEsVacia() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        assertEquals("admin/categoriaDia",vista);
+    String vista = controller.guardarCategoria("", session, model);
 
-        verify(model).addAttribute(
-            "error",
-            "Seleccionar una categoría"
-        );
-    }
-    @Test
-    public void noDebeGuardarMensajeOkSiCategoriaEsErronea() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    assertEquals("admin/categoriaDia", vista);
 
-        controller.guardarCategoria( "", session,model);
+    verify(model).addAttribute("error", "Seleccionar una categoría");
+  }
 
-        verify(session, never()).setAttribute(
-            "ok",
-            "La categoría está actualizada"
-        );
-    }
+  @Test
+  public void debeMostrarErrorSiCategoriaEstaVacia() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    @Test
-    public void deberiaGuardarCategoriaYRedirigirAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    String vista = controller.guardarCategoria("   ", session, model);
 
-        String vista = controller.guardarCategoria("Entretenimiento",session,model);
+    assertEquals("admin/categoriaDia", vista);
 
-        assertEquals("redirect:/admin", vista);
+    verify(model).addAttribute("error", "Seleccionar una categoría");
+  }
 
-        verify(session).setAttribute(
-            "categoria_dia",
-            "Entretenimiento"
-        );
-        verify(session).setAttribute(
-            "ok",
-            "La categoría está actualizada"
-        );
-    }
-    @Test
-    public void deberiaGuardarLaCategoriaCorrecta() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+  @Test
+  public void noDebeGuardarMensajeOkSiCategoriaEsErronea() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        controller.guardarCategoria( "Ciencia", session, model);
+    controller.guardarCategoria("", session, model);
 
-        verify(session).setAttribute(
-            "categoria_dia",
-            "Ciencia"
-        );
-    }
-    @Test
-    public void noDeberiaGuardarCategoriaInvalida() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    verify(session, never()).setAttribute("ok", "La categoría está actualizada");
+  }
 
-        controller.guardarCategoria( "", session, model);
+  @Test
+  public void deberiaGuardarCategoriaYRedirigirAdmin() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        verify(session, never()).setAttribute(
-            "categoria_dia",
-            ""
-        );
-    }
+    String vista = controller.guardarCategoria("Entretenimiento", session, model);
+
+    assertEquals("redirect:/admin", vista);
+
+    verify(session).setAttribute("categoria_dia", "Entretenimiento");
+    verify(session).setAttribute("ok", "La categoría está actualizada");
+  }
+
+  @Test
+  public void deberiaGuardarLaCategoriaCorrecta() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+    controller.guardarCategoria("Ciencia", session, model);
+
+    verify(session).setAttribute("categoria_dia", "Ciencia");
+  }
+
+  @Test
+  public void noDeberiaGuardarCategoriaInvalida() {
+    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+    controller.guardarCategoria("", session, model);
+
+    verify(session, never()).setAttribute("categoria_dia", "");
+  }
 }

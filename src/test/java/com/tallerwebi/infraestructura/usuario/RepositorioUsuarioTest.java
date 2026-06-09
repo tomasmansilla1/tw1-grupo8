@@ -8,18 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.tallerwebi.dominio.usuario.RepositorioUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
-import com.tallerwebi.integracion.config.HibernateInfraestructuraTestConfig;
-
+import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.TransientObjectException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
