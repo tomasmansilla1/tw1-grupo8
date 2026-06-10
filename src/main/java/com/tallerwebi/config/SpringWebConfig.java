@@ -17,7 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 @EnableWebMvc
 @Configuration
 @ComponentScan(
-  { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura" }
+  { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura", "com.tallerwebi.config" }
 )
 public class SpringWebConfig implements WebMvcConfigurer {
 
@@ -40,7 +40,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     // resource resolution infrastructure, which is highly recommended.
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
     templateResolver.setApplicationContext(this.applicationContext);
-    templateResolver.setPrefix("classpath:/templates/");
+    templateResolver.setPrefix("/WEB-INF/views/thymeleaf/");
     templateResolver.setSuffix(".html");
     // HTML is the default value, added here for the sake of clarity.
     templateResolver.setTemplateMode(TemplateMode.HTML);

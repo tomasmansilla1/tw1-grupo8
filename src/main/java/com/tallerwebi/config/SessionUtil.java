@@ -26,6 +26,6 @@ public class SessionUtil {
         Object rol = session.getAttribute("rol");
 
         // validar admin
-        return rol != null && rol.equals ("ADMIN");
+        return rol != null && rol.equals("ADMIN");
     }
 }

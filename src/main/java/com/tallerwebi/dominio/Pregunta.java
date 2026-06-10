@@ -1,87 +1,93 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Pregunta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    // categoria: no puede estar vacio
+    @Column(nullable = false)
+    private String categoria;
 
-  private String categoria;
-  private String enunciado;
+    // columna de pregunta: no puede estar vacio
+    @Column(nullable = false)
+    private String pregunta;
+    // opciones: no puede estar vacio
+    @Column(nullable = false)
+    private String a;
+    @Column(nullable = false)
+    private String b;
+    @Column(nullable = false)
+    private String c;
+    @Column(nullable = false)
+    private String d;
 
-  private String opcionA;
-  private String opcionB;
-  private String opcionC;
-  private String opcionD;
+    // pregunta correcta: no puede estar vacio
+    @Column(nullable = false)
+    private String correcta;
 
-  private String opcionCorrecta;
+    // Constructor vacío
+    public Pregunta() {
+    }
 
-  // --- GETTERS Y SETTERS ---
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getCategoria() {
-    return categoria;
-  }
-
-  public void setCategoria(String categoria) {
-    this.categoria = categoria;
-  }
-
-  public String getEnunciado() {
-    return enunciado;
-  }
-
-  public void setEnunciado(String enunciado) {
-    this.enunciado = enunciado;
-  }
-
-  public String getOpcionA() {
-    return opcionA;
-  }
-
-  public void setOpcionA(String opcionA) {
-    this.opcionA = opcionA;
-  }
-
-  public String getOpcionB() {
-    return opcionB;
-  }
-
-  public void setOpcionB(String opcionB) {
-    this.opcionB = opcionB;
-  }
-
-  public String getOpcionC() {
-    return opcionC;
-  }
-
-  public void setOpcionC(String opcionC) {
-    this.opcionC = opcionC;
-  }
-
-  public String getOpcionD() {
-    return opcionD;
-  }
-
-  public void setOpcionD(String opcionD) {
-    this.opcionD = opcionD;
-  }
-
-  public String getOpcionCorrecta() {
-    return opcionCorrecta;
-  }
-
-  public void setOpcionCorrecta(String opcionCorrecta) {
-    this.opcionCorrecta = opcionCorrecta;
-  }
+    // GETTERS Y SETTERS
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    // pregunta
+    public String getPregunta() {
+        return pregunta;
+    }
+    public void setPregunta(String pregunta) {
+        this.pregunta = pregunta;
+    }
+    // pregunta correcta
+    public String getCorrecta() {
+        return correcta;
+    }
+    public void setCorrecta(String correcta) {
+        this.correcta = correcta;
+    }
+    // opciones
+    public String getA() {
+        return a;
+    }
+    public void setA(String a) {
+        this.a = a;
+    }
+    public String getB() {
+        return b;
+    }
+    public void setB(String b) {
+        this.b = b;
+    }
+    public String getC() {
+        return c;
+    }
+    public void setC(String c) {
+        this.c = c;
+    }
+    public String getD() {
+        return d;
+    }
+    public void setD(String d) {
+        this.d = d;
+    }
+    // CATEGORIA
+    public String getCategoria() {
+        return categoria;
+    }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 }

@@ -13,7 +13,7 @@ public class Partida {
   private LocalDateTime fecha;
   private Integer puntajeObtenido;
   private Boolean esVictoria;
-
+  private String categoria;
   // conecta partida con usuario (muchas partidas pueden pertenecer a un mismo
   // usuario)
   @ManyToOne
@@ -61,4 +61,12 @@ public class Partida {
   public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
   }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 }

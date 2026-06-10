@@ -1,6 +1,24 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.ranking.UsuariosOrdenadosDeMayorAMenorPorPuntaje;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+@Service
+@Transactional
 public class RankingServiceImpl implements RankingService {
+
+    RepositorioRanking repositorioRanking;
+
+    @Autowired
+    public RankingServiceImpl(RepositorioRanking repositorioRanking) {
+        this.repositorioRanking = repositorioRanking;
+    }
 
     @Override
     public Double calcularPuntaje(Usuario usuario, Integer puntajeBase) {
@@ -17,5 +35,20 @@ public class RankingServiceImpl implements RankingService {
         }
 
         return (double) nuevoPuntaje;
+    }
+
+    @Override
+    public Set<Usuario> buscarUsuariosPorRanking(String categoria) {
+        TreeSet<Usuario> listaUsuario = new TreeSet<>(new UsuariosOrdenadosDeMayorAMenorPorPuntaje());
+
+        List<Partida> listaPreguntas = repositorioRanking.buscarUsuariosPorRanking(categoria);
+
+        for (Partida partida : listaPreguntas) {
+            if (partida.getUsuario() != null) {
+                listaUsuario.add(partida.getUsuario());
+            }
+        }
+
+        return listaUsuario;
     }
 }

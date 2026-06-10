@@ -6,11 +6,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+
+import com.tallerwebi.integracion.config.HibernateInfraestructuraTestConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.TransientObjectException;
 import org.junit.jupiter.api.BeforeEach;
