@@ -53,11 +53,11 @@ public class Pregunta {
   }
 
   // Pregunta
-  public String getPregunta() {
+  public String getTextoPregunta() {
     return textoPregunta;
   }
 
-  public void setPregunta(String textoPregunta) {
+  public void setTextoPregunta(String textoPregunta) {
     this.textoPregunta = textoPregunta;
   }
 
@@ -71,38 +71,38 @@ public class Pregunta {
   }
 
   // Opción A
-  public String getA() {
+  public String getOpcionA() {
     return opcionA;
   }
 
-  public void setA(String opcionA) {
+  public void setOpcionA(String opcionA) {
     this.opcionA = opcionA;
   }
 
   // Opción B
-  public String getB() {
+  public String getOpcionB() {
     return opcionB;
   }
 
-  public void setB(String opcionB) {
+  public void setOpcionB(String opcionB) {
     this.opcionB = opcionB;
   }
 
   // Opción C
-  public String getC() {
+  public String getOpcionC() {
     return opcionC;
   }
 
-  public void setC(String opcionC) {
+  public void setOpcionC(String opcionC) {
     this.opcionC = opcionC;
   }
 
   // Opción D
-  public String getD() {
+  public String getOpcionD() {
     return opcionD;
   }
 
-  public void setD(String opcionD) {
+  public void setOpcionD(String opcionD) {
     this.opcionD = opcionD;
   }
 

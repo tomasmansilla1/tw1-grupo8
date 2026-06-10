@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,10 +25,9 @@ public class SpringWebConfig implements WebMvcConfigurer {
   private ApplicationContext applicationContext;
 
   @Override
-  public void addResourceHandlers(final @NonNull ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
-    registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
-    registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    // Mapea la URL física de la carpeta /resources/ dentro de webapp
+    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
   }
 
   // https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html
@@ -40,7 +38,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     // resource resolution infrastructure, which is highly recommended.
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
     templateResolver.setApplicationContext(this.applicationContext);
-    templateResolver.setPrefix("classpath:/templates/");
+    templateResolver.setPrefix("/WEB-INF/views/");
     templateResolver.setSuffix(".html");
     // HTML is the default value, added here for the sake of clarity.
     templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -72,6 +70,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
   public ThymeleafViewResolver viewResolver() {
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
     viewResolver.setTemplateEngine(templateEngine());
+    viewResolver.setCharacterEncoding("UTF-8");
     return viewResolver;
   }
 }

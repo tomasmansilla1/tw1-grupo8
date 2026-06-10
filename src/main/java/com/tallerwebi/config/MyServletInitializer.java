@@ -20,7 +20,6 @@ public class MyServletInitializer extends AbstractAnnotationConfigDispatcherServ
     };
   }
 
-  @SuppressWarnings("null")
   @Override
   protected String[] getServletMappings() {
     return new String[] { "/" };

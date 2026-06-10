@@ -1,5 +1,5 @@
 body {
-  padding-top: 5rem;
+  padding-top: 9rem;
 }
 .starter-template {
   padding: 3rem 1.5rem;
@@ -7,7 +7,8 @@ body {
 }
 
 h1{
-	color:#0000FF;
+	color:#ffffff;
+  background-color: #FF0000;
 }
 
 h2{
@@ -15,5 +16,5 @@ h2{
 }
 
 .navbar-brand{
-    margin:0 2rem;
+    margin:0 0rem;
 }
