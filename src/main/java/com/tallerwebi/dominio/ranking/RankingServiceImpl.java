@@ -14,9 +14,7 @@ public class RankingServiceImpl implements RankingService {
 
     if (usuario.getRespuestasAcertadasSeguidas() >= RESPUESTAS_PARA_BONUS) {
       nuevoPuntaje += BONUS_RACHA;
-      usuario.setRespuestasAcertadasSeguidas(0);
     }
-
     return (double) nuevoPuntaje;
   }
 }
