@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+
 import com.tallerwebi.config.SessionUtil;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,10 +51,7 @@ public class ControllerCategoriaDiaTest {
 
     controller.mostrarCategoriaDia(session,model);
 
-    verify(model, never()).addAttribute(
-      any(),
-      any()
-    );
+    verify(model).addAttribute("pregunta", new ArrayList<>());
   }
 
   // GET
@@ -152,9 +151,22 @@ public class ControllerCategoriaDiaTest {
   public void deberiaGuardarCategoriaYRedirigirAdmin() {
     when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    verify(session, never()).setAttribute(
-      eq("categoria_dia"),
-      any()
+    String vista = controller.guardarCategoria(
+      "Historia",
+      session,
+      model
+    );
+    assertEquals(
+      "redirect:/admin/categoriaDia",
+      vista
+    );
+    verify(session).setAttribute(
+      "categoria_dia",
+      "Historia"
+    );
+    verify(session).setAttribute(
+      "ok",
+      "Categoría actualizada correctamente"
     );
   }
   

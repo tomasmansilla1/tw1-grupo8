@@ -64,10 +64,10 @@ public class ControllerCategoriaDia {
     session.setAttribute("categoria_dia", categoria);
 
     // mensaje éxito
-    session.setAttribute("ok", "La categoría está actualizada");
+    session.setAttribute("ok", "Categoría actualizada correctamente");
        
     // Redirección limpia al panel principal de administración
-    return "redirect:/admin";
+    return "redirect:/admin/categoriaDia";
   }
   
 }

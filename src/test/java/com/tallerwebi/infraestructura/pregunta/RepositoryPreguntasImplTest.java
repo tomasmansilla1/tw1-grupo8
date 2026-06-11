@@ -70,6 +70,7 @@ public class RepositoryPreguntasImplTest {
         verify(session, never()).delete(any());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void debeListarTodasLasPreguntas() {
         Query<Pregunta> query = mock(Query.class);

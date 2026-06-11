@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -96,7 +95,7 @@ public class ControladorPreguntaTest {
     String vista = controller.mostrarFormulario(session, model);
 
     assertEquals("admin/crearPregunta", vista);
-    verify(model).addAttribute(eq("pregunta"), any(Pregunta.class));
+    verify(model).addAttribute("pregunta",any(Pregunta.class));
   }
 
   @Test
@@ -143,7 +142,7 @@ public class ControladorPreguntaTest {
 
     assertEquals("admin/pregunta", vista);
     verify(preguntaService).listar();
-    verify(model).addAttribute(eq("pregunta"), anyList());
+    verify(model).addAttribute("pregunta",anyList());
   }
 
   @Test
