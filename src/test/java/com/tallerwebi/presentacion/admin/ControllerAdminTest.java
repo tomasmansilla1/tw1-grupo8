@@ -36,6 +36,7 @@ public class ControllerAdminTest {
         this.adminController = new ControllerAdmin(sessionUtil);
     }
 
+    @SuppressWarnings("null")
     @Test
     public void debeRedirigirALoginSiNoEsAdmin() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(false);
@@ -59,6 +60,7 @@ public class ControllerAdminTest {
         verify(sessionUtil, times(1)).verificarAdmin(session);
     }
 
+    @SuppressWarnings("null")
     @Test
     public void debeMostrarPanelAdminSiEsAdmin() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);

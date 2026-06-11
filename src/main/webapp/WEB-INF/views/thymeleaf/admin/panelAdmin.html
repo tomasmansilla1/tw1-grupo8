@@ -3,117 +3,140 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> Panel Admin </title>
+    <title>Panel Admin</title>
+    <p class="subtitle"> Sesión activa: <b>ADMIN</b> </p>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 
-<body class="bg-light">
+<body class="home-body">
+
     <!-- Navbar -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container mt-5">
+    <main class="container my-5">
 
-        <div class="mb-4 pb-2 border-bottom">
-            <h1 class="text-dark fw-bold m-0"> Panel de Administrador </h1>
-            <p class="text-muted small mb-0"> Gestiona las preguntas, categorías y sistema </p>
+        <div class="row mb-4 text-center">
+            <div class="col">
+                <div class="quiz-card">
+                    <h2 class="title" th:text="${totalPreguntas}">0</h2>
+                    <p class="subtitle">Preguntas</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="quiz-card">
+                    <h2 class="title" th:text="${totalUsuarios}">0</h2>
+                    <p class="subtitle">Usuarios</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="quiz-card">
+                    <h2 class="title" th:text="${totalPartidas}">0</h2>
+                    <p class="subtitle">Partidas</p>
+                </div>
+            </div>
         </div>
 
-        <!-- mensaje principal -->
-        <div th:if="${mensaje}" class="alert alert-primary alert-dismissible fade show shadow-sm 
-        border-0 bg-primary bg-opacity-10 text-primary py-3 fw-medium" role="alert">
-            <span th:text="${mensaje}"> </span>
+        <div class="text-center mb-4">
+            <h1 class="title">Panel de Administrador</h1>
+            <div class="divider"></div>
+            <p class="subtitle">Gestiona preguntas, categorías y sistema</p>
         </div>
 
-        <!-- mensaje ok -->
-        <div th:if="${ok}" class="alert alert-success alert-dismissible 
-        fade show shadow-sm border-0 py-3" role="alert">
-            <span th:text="${ok}" class="fw-semibold"> </span>
+        <!-- MENSAJES -->
+        <div th:if="${mensaje}" class="alert alert-info">
+            <span th:text="${mensaje}"></span>
         </div>
 
-        <!-- mensaje error -->
-        <div th:if="${error}" class="alert alert-danger alert-dismissible 
-        fade show shadow-sm border-0 py-3" role="alert">
-            <span th:text="${error}" class="fw-semibold"> </span>
+        <div th:if="${ok}" class="alert alert-success">
+            <span th:text="${ok}"></span>
         </div>
 
-        <div class="row mt-4">
-            <!-- gestionar preguntas -->
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- CARDS -->
+        <div class="row justify-content-center">
+
+            <!-- Preguntas -->
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-3">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        
-                        <div class="mb-3">
-                            <h5 class="card-title fw-bold text-dark">Preguntas</h5>
-                            <p class="card-text text-muted small">Observa, edita y elimina preguntas</p>
-                        </div>
+                <div class="quiz-card text-center h-100">
 
-                        <a th:href="@{/admin/pregunta}" class="btn btn-primary w-100 fw-medium py-2 shadow-sm">
-                            Gestionar Preguntas
-                        </a>
+                    <h5 class="title">Preguntas</h5>
 
-                    </div>
+                    <p class="subtitle">
+                        Ver, editar y eliminar preguntas
+                    </p>
+
+                    <a th:href="@{/admin/pregunta}" class="btn-quiz">
+                        Gestionar
+                    </a>
+
                 </div>
             </div>
 
-            <!-- crear pregunta -->
+            <!-- Crear -->
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-3">
-                    <div class="card-body d-flex flex-column justify-content-between">
+                <div class="quiz-card text-center h-100">
 
-                        <div class="mb-3">
-                            <h5 class="card-title fw-bold text-dark">Nueva Pregunta</h5>
-                            <p class="card-text text-muted small">Crea y agrega una pregunta nueva</p>
-                        </div>
+                    <h5 class="title">Nueva Pregunta</h5>
 
-                        <a th:href="@{/admin/crearPregunta}" class="btn btn-success w-100 fw-medium py-2 shadow-sm">
-                            Crear Una Pregunta
-                        </a>
+                    <p class="subtitle">
+                        Crear preguntas nuevas
+                    </p>
 
-                    </div>
+                    <a th:href="@{/admin/crearPregunta}" class="btn-quiz">
+                        Crear
+                    </a>
+
                 </div>
             </div>
 
-            <!-- importar API -->
+            <!-- API -->
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-3">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        
-                        <div class="mb-3">
-                            <h5 class="card-title fw-bold text-dark">Sincronizar API</h5>
-                            <p class="card-text text-muted small">Importar preguntas externas</p>
-                        </div>
+                <div class="quiz-card text-center h-100">
 
-                        <a th:href=" " class="btn btn-warning w-100 fw-medium py-2 text-white shadow-sm">
-                            Importar API
-                        </a>
+                    <h5 class="title">Sincronizar API</h5>
 
-                    </div>
+                    <p class="subtitle">
+                        Importar preguntas externas
+                    </p>
+
+                    <a th:href="@{/admin/importarApi}" class="btn-quiz">
+                        Importar
+                    </a>
+
                 </div>
             </div>
 
-            <!-- categoría del día -->
+            <!-- Categoría -->
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-3">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        
-                        <div class="mb-3">
-                            <h5 class="card-title fw-bold text-dark">Categoría del Día</h5>
-                            <p class="card-text text-muted small">Define la categoria actual</p>
-                        </div>
+                <div class="quiz-card text-center h-100">
 
-                        <a th:href="@{/admin/categoriaDia}" class="btn btn-info w-100 fw-medium py-2 text-white shadow-sm">
-                            Elegir Categoría
-                        </a>
+                    <h5 class="title">Categoría del Día</h5>
 
-                    </div>
+                    <p class="subtitle">
+                        Definir categoría activa
+                    </p>
+
+                    <a th:href="@{/admin/categoriaDia}" class="btn-quiz">
+                        Elegir
+                    </a>
+
                 </div>
             </div>
-
         </div>
-    </div>
-    
+
+        <a th:href="@{/menu}" class="btn-quiz mt-4">
+            Volver al menú
+        </a>
+    </main>
+
     <!-- Footer -->
-    <footer class="bg-white border-top py-3 text-center text-muted mt-auto">
+    <footer class="quiz-footer mt-4">
         <div class="container small">
             &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
         </div>

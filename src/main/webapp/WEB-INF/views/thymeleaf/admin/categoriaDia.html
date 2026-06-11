@@ -3,80 +3,92 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> Categoria del Día </title>
+    <title>Categoría del Día</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 
-<body class="bg-light">
-    <!-- navbar -->
-    <div th:replace="~{fragments/navbar :: navbar}"> </div>
+<body class="home-body">
 
-    <div class="container mt-5 mb-5">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-        <div class="col-md-6 mx-auto mb-4 pb-2 border-bottom">
-            <h1 class="text-dark fw-bold m-0">Categoría del Día</h1>
-            <p class="text-muted small mb-0">
-                Selecciona la categoria que se jugara durante el dia
-            </p>
-        </div>
+<main class="container my-5">
 
-        <div class="row">
-            <div class="col-md-6 mx-auto">
-                <!-- error -->
-                <div th:if="${error}" class="alert alert-danger alert-dismissible 
-                fade show shadow-sm border-0 py-3 mb-3" role="alert">
-                    <span th:text="${error}" class="fw-semibold"> </span>
-                </div>
-
-            <!-- mensaje ok -->
-            <div th:if="${ok}" class="alert alert-success alert-dismissible 
-            fade show shadow-sm border-0 py-3 mb-3" role="alert">
-                <span th:text="${ok}" class="fw-semibold"> </span>
-            </div>
-
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4 p-md-5">
-
-                    <!-- formulario -->
-                    <form th:action="@{/admin/categoriaDia}"  method="post">
-                        <div class="mb-4">
-
-                            <label class="form-label fw-semibold text-secondary"> Seleccionar categoría </label>
-                            <select name="categoria" class="form-select form-select-lg shadow-sm fw-medium" required>
-
-                                <option value="" disabled selected> Seleccionar </option>
-                                <!-- categorías -->
-                                <option value="Entretenimiento"> Entretenimiento </option>
-                                <option value="Ciencia"> Ciencia </option>
-                                <option value="Cultura"> Cultura general </option>
-                                <option value="Deportes"> Deportes </option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex gap-2 justify-content-end pt-2">
-                            <a th:href="@{/admin}" 
-                            class="btn btn-outline-secondary px-4 fw-medium">
-                                Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-info text-white px-4 fw-medium shadow-sm">
-                                Guardar Configuración
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-            
-        </div>
+    <div class="text-center mb-4">
+        <h1 class="title">Categoría del Día</h1>
+        <div class="divider"></div>
+        <p class="subtitle">
+            Seleccioná la categoría que se jugará hoy
+        </p>
     </div>
-</div>
 
-    <!-- footer -->
-    <footer class="bg-white border-top py-3 text-center text-muted mt-auto">
-        <div class="container small">
-            &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
+    <div class="quiz-card mb-4 text-center">
+        <h5 class="title">Categoría activa hoy</h5>
+        <p class="subtitle">
+            <span th:text="${categoriaDia}">Sin categoría</span>
+        </p>
+    </div>
+
+    <div class="quiz-card narrow mx-auto">
+
+        <!-- ERROR -->
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
         </div>
-    </footer>
+
+        <!-- OK -->
+        <div th:if="${ok}" class="alert alert-success">
+            <span th:text="${ok}"></span>
+        </div>
+
+        <!-- FORM -->
+        <form th:action="@{/admin/categoriaDia}" method="post">
+
+            <label class="subtitle">Categoría</label>
+
+            <select name="categoria" class="form-control mt-2" required>
+
+                <option value="" disabled selected>Seleccionar</option>
+
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Ciencia">Ciencia</option>
+                <option value="Cultura">Cultura general</option>
+                <option value="Deportes">Deportes</option>
+
+            </select>
+
+            <!-- botones -->
+            <div class="d-flex gap-2 justify-content-end mt-4">
+
+                <a th:href="@{/admin}" class="btn-quiz" style="width:auto;">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-quiz" style="width:auto;">
+                    Guardar
+                </button>
+
+            </div>
+        </form>
+        <div class="quiz-card mt-4">
+            <h5 class="title">Historial de categorías</h5>
+            <ul class="text-start">
+                <li th:each="c : ${historial}">
+                    <b th:text="${c.nombre}"></b>
+                    <span class="text-muted"> - </span>
+                    <span th:text="${c.fecha}"></span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</main>
+
+<footer class="quiz-footer mt-4">
+    <div class="container small">
+        &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
+    </div>
+</footer>
 
 </body>
 </html>
