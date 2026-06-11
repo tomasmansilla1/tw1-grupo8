@@ -2,7 +2,6 @@ package com.tallerwebi.infraestructura.config;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -55,9 +54,6 @@ public class HibernateTestConfig {
 
   @Test
   public void debeUsarValoresPorDefectoSiNoHayEnvVars() {
-
-    Map<String, String> original = System.getenv();
-
     // No se puede mockear System.getenv fácilmente,
     // así que esto se cubre ejecutando sin variables
 

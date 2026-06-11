@@ -1,62 +1,91 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
 <body>
-    <nav th:fragment="navbar" class="navbar navbar-expand-lg 
-    navbar-dark bg-dark shadow-sm">
 
-        <div class="container">
+<nav th:fragment="navbar"
+     class="navbar navbar-expand-lg navbar-dark shadow-sm"
+     style="background: linear-gradient(135deg, #2B7DBF, #1f5f94);">
 
-            <!-- Logo / nombre -->
-            <a class="navbar-brand fw-bold"
-               th:href="@{/}">
-                UNLAM - Trivia Game
-            </a>
+    <div class="container">
 
-            <!-- botón responsive -->
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            Trivia Game
+        </a>
 
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- botón responsive -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- links -->
-            <div class="collapse navbar-collapse"
-                 id="navbarContent">
+        <div class="collapse navbar-collapse" id="navbarContent">
 
-                <ul class="navbar-nav ms-auto align-items-center">
+            <ul class="navbar-nav ms-auto align-items-center">
 
-                    <!-- Home -->
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           th:href="@{/Home}">
-                            Inicio
-                        </a>
-                    </li>
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">
+                        Inicio
+                    </a>
+                </li>
 
-                    <!-- Admin -->
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           th:href="@{/admin}">
-                            Panel Admin
-                        </a>
-                    </li>
+                <!-- Jugar -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/home}">
+                        Jugar
+                    </a>
+                </li>
 
-                    <!-- Login -->
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-outline-light btn-sm px-3"
-                           th:href="@{/login}">
-                            Iniciar Sesión
-                        </a>
-                    </li>
+                <!-- Ranking -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/ranking}">
+                        Ranking
+                    </a>
+                </li>
 
-                </ul>
+                <!-- Historial -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/historial}">
+                        Historial
+                    </a>
+                </li>
 
-            </div>
+                <!-- Admin (solo si existe sesión admin) -->
+                <li class="nav-item"
+                    th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}">
+
+                    <a class="nav-link text-warning fw-bold" th:href="@{/admin}">
+                        Panel Admin
+                    </a>
+
+                </li>
+
+                <!-- Login / Logout -->
+                <li class="nav-item ms-2">
+
+                    <!-- SI NO LOGUEADO -->
+                    <a th:if="${session.usuario == null}"
+                       class="btn btn-outline-light btn-sm px-3"
+                       th:href="@{/login}">
+                        Iniciar Sesión
+                    </a>
+
+                    <!-- SI LOGUEADO -->
+                    <a th:if="${session.usuario != null}"
+                       class="btn btn-danger btn-sm px-3"
+                       th:href="@{/logout}">
+                        Salir
+                    </a>
+
+                </li>
+
+            </ul>
+
         </div>
-    </nav>
+    </div>
+</nav>
 
 </body>
 </html>

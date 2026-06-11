@@ -27,14 +27,9 @@ public class HibernateConfig {
 
     if (dbHost == null) dbHost = "localhost";
     if (dbPort == null) dbPort = "3306";
-
     if (dbName == null) dbName = "preguntados_db";
     if (dbUser == null) dbUser = "root";
     if (dbPassword == null) dbPassword = "";
-
-    if (dbName == null) dbName = "tallerwebi";
-    if (dbUser == null) dbUser = "root";
-    if (dbPassword == null) dbPassword = "1234";
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
@@ -46,17 +41,20 @@ public class HibernateConfig {
     dataSource.setUrl(url);
     dataSource.setUsername(dbUser);
     dataSource.setPassword(dbPassword);
-    dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
     return dataSource;
   }
 
   @SuppressWarnings("null")
   @Bean
-  public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
+  public LocalSessionFactoryBean sessionFactory(@NonNull DataSource dataSource) {
+
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+
     sessionFactory.setDataSource(dataSource);
     sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
     sessionFactory.setHibernateProperties(hibernateProperties());
+
     return sessionFactory;
   }
 

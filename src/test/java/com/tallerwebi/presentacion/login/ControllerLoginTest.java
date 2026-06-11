@@ -1,154 +1,103 @@
 package com.tallerwebi.presentacion.login;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
-import com.tallerwebi.dominio.login.DatosLogin;
 import com.tallerwebi.dominio.login.ServiceLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class ControllerLoginTest {
 
-  private ControllerLogin controladorLogin;
-  private Usuario usuarioMock;
-  private DatosLogin datosLoginMock;
-  private HttpServletRequest requestMock;
-  private HttpSession sessionMock;
-  private ServiceLogin servicioLoginMock;
+  private MockMvc mockMvc;
+  private ServiceLogin servicioLogin;
+  private ControllerLogin controllerLogin;
 
   @BeforeEach
   public void init() {
-    datosLoginMock = new DatosLogin("dami@unlam.com", "123");
-    usuarioMock = mock(Usuario.class);
-    when(usuarioMock.getEmail()).thenReturn("dami@unlam.com");
-    requestMock = mock(HttpServletRequest.class);
-    sessionMock = mock(HttpSession.class);
-    servicioLoginMock = mock(ServiceLogin.class);
-    controladorLogin = new ControllerLogin(servicioLoginMock);
+    servicioLogin = mock(ServiceLogin.class);
+    controllerLogin = new ControllerLogin(servicioLogin);
+
+    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+
+    viewResolver.setPrefix("/WEB-INF/views/");
+    viewResolver.setSuffix(".jsp");
+
+    mockMvc = MockMvcBuilders
+      .standaloneSetup(controllerLogin)
+      .setViewResolvers(viewResolver)
+      .build();
   }
 
   @Test
-  public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() {
-    // preparacion
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
+  public void debeRedirigirALoginDesdeInicio() throws Exception {
 
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
-    assertThat(
-      modelAndView.getModel().get("error").toString(),
-      equalToIgnoringCase("Usuario o clave incorrecta")
-    );
-    verify(sessionMock, times(0)).setAttribute("ROL", "ADMIN");
+    mockMvc.perform(get("/"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/login"));
   }
 
   @Test
-  public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAHome() {
-    // preparacion
-    Usuario usuarioEncontradoMock = mock(Usuario.class);
-    when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
+  public void debeMostrarLogin() throws Exception {
 
-    when(requestMock.getSession()).thenReturn(sessionMock);
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString()))
-      .thenReturn(usuarioEncontradoMock);
-
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-    verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+    mockMvc.perform(get("/login"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("login"))
+        .andExpect(model().attributeExists("datosLogin"));
   }
 
   @Test
-  public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin()
-    throws UsuarioExistente {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
+  public void loginCorrectoDebeRedirigirAHome() throws Exception {
 
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
-    verify(servicioLoginMock, times(1)).registrar(usuarioMock);
+    Usuario usuario = new Usuario();
+    usuario.setEmail("dami@unlam.com");
+    usuario.setRol("ADMIN");
+
+    when(servicioLogin.consultarUsuario(
+        "dami@unlam.com",
+        "1234"
+    )).thenReturn(usuario);
+
+    mockMvc.perform(post("/validar-login")
+            .param("email", "dami@unlam.com")
+            .param("password", "1234"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/home"))
+        .andExpect(request()
+            .sessionAttribute("usuario", usuario))
+        .andExpect(request()
+            .sessionAttribute("rol", "ADMIN"));
   }
 
   @Test
-  public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError()
-    throws UsuarioExistente {
-    // preparacion
-    doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(usuarioMock);
+  public void loginIncorrectoDebeVolverALogin() throws Exception {
 
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
+    when(servicioLogin.consultarUsuario(
+        anyString(),
+        anyString()
+    )).thenReturn(null);
 
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-    assertThat(
-      modelAndView.getModel().get("error").toString(),
-      equalToIgnoringCase("El usuario ya existe")
-    );
+    mockMvc.perform(post("/validar-login")
+            .param("email", "mal@mail.com")
+            .param("password", "1234"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("login"))
+        .andExpect(model().attributeExists("error"));
   }
 
   @Test
-  public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
-    // preparacion
-    doThrow(RuntimeException.class).when(servicioLoginMock).registrar(usuarioMock);
+  public void debeMostrarHome() throws Exception {
 
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-    assertThat(
-      modelAndView.getModel().get("error").toString(),
-      equalToIgnoringCase("Error al registrar el nuevo usuario")
-    );
-  }
-
-  @Test
-  public void irALoginDeberiaRetornarVistaLoginConDatosLogin() {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.irALogin();
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
-    assertThat(modelAndView.getModel().get("datosLogin"), instanceOf(DatosLogin.class));
-  }
-
-  @Test
-  public void nuevoUsuarioDeberiaRetornarVistaNuevoUsuarioConUsuarioVacio() {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.nuevoUsuario();
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-    assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
-  }
-
-  @Test
-  public void irAHomeDeberiaRetornarVistaHome() {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.irAHome();
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-  }
-
-  @Test
-  public void inicioDeberiaRedirigirALogin() {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.inicio();
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
+    mockMvc.perform(get("/home"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("home"));
   }
 }

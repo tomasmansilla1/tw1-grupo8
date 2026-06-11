@@ -1,42 +1,29 @@
-/* Fondo general */
+/* Fondo igual al resto del sistema */
 body.home-body {
     background: linear-gradient(135deg, #FFE3EA, #A9D9FF);
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
 }
 
-/* Contenedor centrado (home/login/menu) */
-main.container {
-    min-height: 80vh;
-}
-
-/* CARD BASE */
+/* Card reutilizada del home */
 .quiz-card {
     background-color: #FFFFFF;
     border-radius: 18px;
     padding: 2.5rem;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-}
-
-/* Variante para pantallas pequeñas (login/menu/home) */
-.quiz-card.narrow {
-    max-width: 600px;
-    margin: auto;
+    max-width: 420px;
+    width: 100%;
 }
 
 /* Título */
 .title {
     color: #4DA3D9;
     font-weight: 800;
-    margin-bottom: 15px;
 }
 
 /* Subtítulo */
 .subtitle {
     color: #6c757d;
-    font-size: 1.1rem;
-    margin-top: 10px;
 }
 
 /* Línea decorativa */
@@ -48,35 +35,52 @@ main.container {
     border-radius: 5px;
 }
 
-.input-group .form-control {
-    border-radius: 10px 0 0 10px;
+/* Inputs del login */
+.input-game {
+    border-radius: 10px;
     border: 2px solid #A9D9FF;
+    padding: 10px;
+    transition: 0.2s ease;
 }
 
-.input-group .btn-quiz {
-    border-radius: 0 10px 10px 0;
-    margin-top: 0;
-    width: auto;
+/* Focus input */
+.input-game:focus {
+    border-color: #4DA3D9;
+    box-shadow: 0 0 0 0.2rem rgba(77, 163, 217, 0.25);
 }
 
-/* Botón principal */
-.btn-quiz {
+/* Botón (reusa estilo del juego) */
+/* botón secundario tipo link-game */
+.btn-link-game {
     display: block;
     width: 100%;
-    background-color: #F8A8B8;
-    color: white;
-    padding: 12px;
+    padding: 10px;
+    margin-top: 15px;
+
     border-radius: 10px;
-    text-decoration: none;
+    border: 2px solid #A9D9FF;
+
+    color: #4DA3D9;
     font-weight: bold;
-    margin-top: 10px;
-    transition: all 0.2s ease-in-out;
-    border: none;
+    text-decoration: none;
+
+    transition: all 0.2s ease;
 }
 
-.btn-quiz:hover {
-    background-color: #4DA3D9;
-    transform: scale(1.03);
+.btn-link-game:hover {
+    background-color: #A9D9FF;
+    color: white;
+    transform: scale(1.02);
+}
+
+/* Link de registro */
+a {
+    color: #4DA3D9;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #F8A8B8;
 }
 
 /* Footer */
