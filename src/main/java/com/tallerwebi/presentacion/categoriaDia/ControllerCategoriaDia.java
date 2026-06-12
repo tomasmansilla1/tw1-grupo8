@@ -21,7 +21,7 @@ public class ControllerCategoriaDia {
   }
 
   // Mostrar formulario
-  @RequestMapping(value = "/categoriaDia", method = RequestMethod.GET)
+  @RequestMapping(value = "/mostrarCategoriaDia", method = RequestMethod.GET)
   public String mostrarCategoriaDia(HttpSession session, Model model) {
 
     // verificar admin
@@ -40,7 +40,7 @@ public class ControllerCategoriaDia {
   }
 
   // Guardar categoría
-  @RequestMapping(value = "/categoriaDia", method = RequestMethod.POST)
+  @RequestMapping(value = "/guardarCategoriaDia", method = RequestMethod.POST)
   public String guardarCategoria(
     @RequestParam(value = "categoria", required = false) 
     String categoria,

@@ -30,7 +30,7 @@ public class ControllerPregunta {
   }
 
   // Mostrar formulario para crear pregunta
-  @RequestMapping(value = "/crearPregunta", method = RequestMethod.GET)
+  @RequestMapping(value = "/mostrarCrearPregunta", method = RequestMethod.GET)
   public String mostrarFormulario (HttpSession session, Model model) {
 
     // verificar admin
@@ -43,7 +43,7 @@ public class ControllerPregunta {
   }
 
   // Guardar pregunta
-  @RequestMapping(value = "/crearPregunta", method = RequestMethod.POST)
+  @RequestMapping(value = "/guardarCrearPregunta", method = RequestMethod.POST)
   public String guardarPregunta(@ModelAttribute Pregunta pregunta, HttpSession session) {
 
     // verificar admin
@@ -59,7 +59,7 @@ public class ControllerPregunta {
   }
 
   // Listar preguntas
-  @RequestMapping(value = "/pregunta", method = RequestMethod.GET)
+  @RequestMapping(value = "/preguntas", method = RequestMethod.GET)
   public String listarPreguntas(HttpSession session, Model model) {
 
     // verificar admin

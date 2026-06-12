@@ -19,7 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 @ComponentScan({
     "com.tallerwebi.presentacion",
     "com.tallerwebi.dominio",
-    "com.tallerwebi.infraestructura"
+    "com.tallerwebi.infraestructura", "com.tallerwebi.config"
 })
 public class SpringWebConfig implements WebMvcConfigurer {
 
@@ -43,7 +43,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
 
         resolver.setApplicationContext(context);
-        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setPrefix("/WEB-INF/views/thymeleaf/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCacheable(false);
