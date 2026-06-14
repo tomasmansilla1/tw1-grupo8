@@ -48,260 +48,260 @@ public class ControladorPreguntaTest {
     }
 
 
-  @Test
-  public void debeAgregarMensajesAlModel() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(session.getAttribute("ok")).thenReturn("todo bien");
-    when(session.getAttribute("error")).thenReturn("hubo error");
-
-    controller.listarPreguntas(session, model);
+    @Test
+    public void debeAgregarMensajesAlModel() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(session.getAttribute("ok")).thenReturn("todo bien");
+        when(session.getAttribute("error")).thenReturn("hubo error");
 
-    verify(model).addAttribute("ok", "todo bien");
-    verify(model).addAttribute("error", "hubo error");
-  }
+        controller.listarPreguntas(session, model);
 
-  @Test
-  public void debeRedirigirALoginSiNoEsAdminEnEditar() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        verify(model).addAttribute("ok", "todo bien");
+        verify(model).addAttribute("error", "hubo error");
+    }
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("redirect:/login", vista);
-  }
-  @Test
-  public void debeContinuarSiEsAdminEnEditar() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta());
+    @Test
+    public void debeRedirigirALoginSiNoEsAdminEnEditar() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("admin/editarPregunta", vista);
-  }
+        String vista = controller.editarPregunta(1L, session, model);
+        assertEquals("redirect:/login", vista);
+    }
+    @Test
+    public void debeContinuarSiEsAdminEnEditar() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta());
 
-  @Test
-  public void noDebeLimpiarMensajesSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        String vista = controller.editarPregunta(1L, session, model);
+        assertEquals("admin/editarPregunta", vista);
+    }
 
-    controller.listarPreguntas(session, model);
+    @Test
+    public void noDebeLimpiarMensajesSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    verify(session, never()).removeAttribute("ok");
-    verify(session, never()).removeAttribute("error");
-  }
+        controller.listarPreguntas(session, model);
 
-  
+        verify(session, never()).removeAttribute("ok");
+        verify(session, never()).removeAttribute("error");
+    }
 
-  // MOSTRAR FORM
-  @Test
-  public void debeMostrarFormSiEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    String vista = controller.mostrarFormulario(session, model);
 
-    assertEquals("admin/crearPregunta", vista);
-    verify(model).addAttribute("pregunta",any(Pregunta.class));
-  }
 
-  @Test
-  public void debeRedirigirLoginSiNoEsAdminEnForm() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    // MOSTRAR FORM
+    @Test
+    public void debeMostrarFormSiEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.mostrarFormulario(session, model);
 
-    String vista = controller.mostrarFormulario(session, model);
+        assertEquals("admin/crearPregunta", vista);
+        verify(model).addAttribute("pregunta",any(Pregunta.class));
+    }
 
-    assertEquals("redirect:/login", vista);
-  }
+    @Test
+    public void debeRedirigirLoginSiNoEsAdminEnForm() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  //GUARDAR PREGUNTA
-  @Test
-  public void debeGuardarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.mostrarFormulario(session, model);
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.guardarPregunta(pregunta, session);
+        assertEquals("redirect:/login", vista);
+    }
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(preguntaService).guardar(pregunta);
+    //GUARDAR PREGUNTA
+    @Test
+    public void debeGuardarPregunta() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    verify(session).setAttribute("ok", "Pregunta creada correctamente");
-  }
+        Pregunta pregunta = new Pregunta();
+        String vista = controller.guardarPregunta(pregunta, session);
 
-  @Test
-  public void noDebeGuardarSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(preguntaService).guardar(pregunta);
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.guardarPregunta(pregunta, session);
+        verify(session).setAttribute("ok", "Pregunta creada correctamente");
+    }
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).guardar(pregunta);
-  }
+    @Test
+    public void noDebeGuardarSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  // LISTAR PREGUNTA
-  @Test
-  public void debeListarPreguntasSiEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.listar()).thenReturn(new ArrayList<>());
+        Pregunta pregunta = new Pregunta();
+        String vista = controller.guardarPregunta(pregunta, session);
 
-    String vista = controller.listarPreguntas(session, model);
+        assertEquals("redirect:/login", vista);
+        verify(preguntaService, never()).guardar(pregunta);
+    }
 
-    assertEquals("admin/pregunta", vista);
-    verify(preguntaService).listar();
-    verify(model).addAttribute("pregunta",anyList());
-  }
+    // LISTAR PREGUNTA
+    @Test
+    public void debeListarPreguntasSiEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.listar()).thenReturn(new ArrayList<>());
 
-  @Test
-  public void noDebeListarPreguntasSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-    String vista = controller.listarPreguntas(session, model);
+        String vista = controller.listarPreguntas(session, model);
 
-    assertEquals("redirect:/login",vista);
-    verify(preguntaService, never()).listar();
-  }
+        assertEquals("admin/pregunta", vista);
+        verify(preguntaService).listar();
+        verify(model).addAttribute("pregunta",anyList());
+    }
 
-  @Test
-  public void debeListarPreguntas() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    List<Pregunta> preguntas = new ArrayList<>();
+    @Test
+    public void noDebeListarPreguntasSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        String vista = controller.listarPreguntas(session, model);
 
-    when(preguntaService.listar()).thenReturn(preguntas);
-    String vista = controller.listarPreguntas(session,model);
+        assertEquals("redirect:/login",vista);
+        verify(preguntaService, never()).listar();
+    }
 
-    assertEquals("admin/pregunta",vista);
-    verify(model).addAttribute("pregunta",preguntas);
-  }
+    @Test
+    public void debeListarPreguntas() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        List<Pregunta> preguntas = new ArrayList<>();
 
-  @Test
-  public void debeLimpiarMensajesDeSesion() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.listar()).thenReturn(preguntas);
+        String vista = controller.listarPreguntas(session,model);
 
-    controller.listarPreguntas(session, model);
+        assertEquals("admin/pregunta",vista);
+        verify(model).addAttribute("pregunta",preguntas);
+    }
 
-    verify(session).removeAttribute("ok");
-    verify(session).removeAttribute("error");
-  }
+    @Test
+    public void debeLimpiarMensajesDeSesion() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-  // EDITAR PREGUNTA
-  @Test
-  public void debeMostrarEditarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        controller.listarPreguntas(session, model);
 
-    Pregunta pregunta = new Pregunta();
-    when(preguntaService.obtenerPorId(1L)).thenReturn(pregunta);
+        verify(session).removeAttribute("ok");
+        verify(session).removeAttribute("error");
+    }
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("admin/editarPregunta", vista);
+    // EDITAR PREGUNTA
+    @Test
+    public void debeMostrarEditarPregunta() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    verify(model).addAttribute("pregunta", pregunta);
-  }
+        Pregunta pregunta = new Pregunta();
+        when(preguntaService.obtenerPorId(1L)).thenReturn(pregunta);
 
-  @Test
-  public void debeRedirigirSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.editarPregunta(1L, session, model);
+        assertEquals("admin/editarPregunta", vista);
 
-    String vista = controller.editarPregunta(null, session, model);
+        verify(model).addAttribute("pregunta", pregunta);
+    }
 
-    assertEquals("redirect:/admin/preguntas", vista);
+    @Test
+    public void debeRedirigirSiIdEsNull() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    verify(session).setAttribute("error", "ID erroneo");
-  }
+        String vista = controller.editarPregunta(null, session, model);
 
-  @Test
-  public void noDeberiaBuscarPreguntaSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        assertEquals("redirect:/admin/preguntas", vista);
 
-    controller.editarPregunta(null, session, model);
-    verify(preguntaService, never()).obtenerPorId(anyLong());
-  }
+        verify(session).setAttribute("error", "ID erroneo");
+    }
 
-  @Test
-  public void debeRedirigirSiPreguntaNoExiste() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(null);
+    @Test
+    public void noDeberiaBuscarPreguntaSiIdEsNull() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    String vista = controller.editarPregunta(1L, session, model);
+        controller.editarPregunta(null, session, model);
+        verify(preguntaService, never()).obtenerPorId(anyLong());
+    }
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(session).setAttribute("error", "Pregunta no encontrada");
-  }
+    @Test
+    public void debeRedirigirSiPreguntaNoExiste() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.obtenerPorId(1L)).thenReturn(null);
 
-  // ACTUALIZAR PREGUNTA
-  @Test
-  public void noDebeActualizarPreguntaSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        String vista = controller.editarPregunta(1L, session, model);
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.actualizarPregunta(pregunta, session);
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(session).setAttribute("error", "Pregunta no encontrada");
+    }
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).guardar(pregunta);
-  }
+    // ACTUALIZAR PREGUNTA
+    @Test
+    public void noDebeActualizarPreguntaSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  @Test
-  public void debeActualizarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        Pregunta pregunta = new Pregunta();
+        String vista = controller.actualizarPregunta(pregunta, session);
 
-    Pregunta pregunta = new Pregunta();
+        assertEquals("redirect:/login", vista);
+        verify(preguntaService, never()).guardar(pregunta);
+    }
 
-    String vista = controller.actualizarPregunta(pregunta, session);
+    @Test
+    public void debeActualizarPregunta() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(preguntaService).guardar(pregunta);
-  }
+        Pregunta pregunta = new Pregunta();
 
-  // ELIMINAR PREGUNTA
-  @Test
-  public void noDebeEliminarSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        String vista = controller.actualizarPregunta(pregunta, session);
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(preguntaService).guardar(pregunta);
+    }
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).eliminar(1L);
-  }
+    // ELIMINAR PREGUNTA
+    @Test
+    public void noDebeEliminarSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  @Test
-  public void debeEliminarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    // Existe la pregunta?
-    when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta()); 
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        assertEquals("redirect:/login", vista);
+        verify(preguntaService, never()).eliminar(1L);
+    }
 
-    assertEquals("redirect:/admin/pregunta",vista);
-    verify(preguntaService).eliminar(1L);
+    @Test
+    public void debeEliminarPregunta() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        // Existe la pregunta?
+        when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta());
 
-    verify(redirectAttributes).addFlashAttribute(
-      "ok", 
-      "Pregunta eliminada correctamente");
-    
-  }
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
 
-  @Test
-  public void noDebeEliminarPreguntaSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        assertEquals("redirect:/admin/pregunta",vista);
+        verify(preguntaService).eliminar(1L);
 
-    String vista = controller.eliminarPregunta(1L,session,redirectAttributes);
+        verify(redirectAttributes).addFlashAttribute(
+                "ok",
+                "Pregunta eliminada correctamente");
 
-    assertEquals("redirect:/login", vista);
+    }
 
-    verify(preguntaService, never()).eliminar(1L);
-  }
+    @Test
+    public void noDebeEliminarPreguntaSiIdEsNull() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-  @Test
-  public void debeRedirigirSiIdEliminarEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.eliminarPregunta(1L,session,redirectAttributes);
 
-    String vista = controller.eliminarPregunta(null, session, redirectAttributes);
+        assertEquals("redirect:/login", vista);
 
-    assertEquals("redirect:/admin/pregunta",vista);
-    verify(redirectAttributes).addFlashAttribute("error", "ID inválido");
-  } 
+        verify(preguntaService, never()).eliminar(1L);
+    }
 
-  @Test
-  public void debeRedirigirSiPreguntaAEliminarNoExiste() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(null); // No existe
+    @Test
+    public void debeRedirigirSiIdEliminarEsNull() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        String vista = controller.eliminarPregunta(null, session, redirectAttributes);
 
-    assertEquals("redirect:/admin/pregunta", vista);
-    verify(redirectAttributes).addFlashAttribute("error", "La pregunta no existe");
-    verify(preguntaService, never()).eliminar(1L);
-  }
+        assertEquals("redirect:/admin/pregunta",vista);
+        verify(redirectAttributes).addFlashAttribute("error", "ID inválido");
+    }
+
+    @Test
+    public void debeRedirigirSiPreguntaAEliminarNoExiste() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.obtenerPorId(1L)).thenReturn(null); // No existe
+
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+
+        assertEquals("redirect:/admin/pregunta", vista);
+        verify(redirectAttributes).addFlashAttribute("error", "La pregunta no existe");
+        verify(preguntaService, never()).eliminar(1L);
+    }
 }
