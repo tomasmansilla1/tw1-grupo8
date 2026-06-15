@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.partida;
 
+import com.tallerwebi.dominio.Respuesta;
 import com.tallerwebi.dominio.usuario.Usuario;
 import java.time.LocalDateTime;
 import javax.persistence.*;
@@ -24,6 +25,8 @@ public class Partida {
   @ManyToOne
   @JoinColumn(name = "usuario_id")
   private Usuario usuario;
+
+  private Respuesta respuesta;
 
   // --- GETTERS Y SETTERS ---
   public Partida() {
@@ -70,4 +73,12 @@ public class Partida {
   public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
   }
+
+    public Respuesta getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(Respuesta respuesta) {
+        this.respuesta = respuesta;
+    }
 }

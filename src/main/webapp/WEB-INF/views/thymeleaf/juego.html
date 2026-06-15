@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2 th:text="${pregunta.consigna}"></h2>
+
+<form th:action="@{/responder}" method="post">
+
+    <input type="radio" name="respuesta" value="A">
+    <span th:text="${pregunta.opcionA}"></span>
+
+    <input type="radio" name="respuesta" value="B">
+    <span th:text="${pregunta.opcionB}"></span>
+
+    <input type="radio" name="respuesta" value="C">
+    <span th:text="${pregunta.opcionC}"></span>
+
+    <input type="radio" name="respuesta" value="D">
+    <span th:text="${pregunta.opcionD}"></span>
+
+    <button type="submit">Responder</button>
+
+</form>
+</body>
+</html>
