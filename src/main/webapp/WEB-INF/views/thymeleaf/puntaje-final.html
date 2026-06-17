@@ -122,16 +122,13 @@
     <h1>¡Partida Terminada!</h1>
     <div class="title-underline"></div>
 
-    <!-- Efecto visual de juego -->
     <div class="trophy-icon">🏆</div>
 
     <p>Tu puntaje final es:</p>
 
-    <!-- Aquí se renderiza tu puntaje de Thymeleaf -->
     <h2 class="score-display" th:text="${puntaje}">150</h2>
 
-    <!-- Botón de acción para reiniciar el flujo (Estilo 'Crear Cuenta') -->
-    <a th:href="@{/}" class="btn-secondary">Volver al Inicio</a>
+    <a th:href="@{/home}" class="btn-secondary">Volver al Inicio</a>
 </div>
 
 </body>

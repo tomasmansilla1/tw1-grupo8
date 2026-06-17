@@ -140,39 +140,32 @@
 
 <div class="game-card">
 
-    <!-- Sección de la Pregunta -->
     <div class="question-header">
         <h2 th:text="${pregunta.consigna}">¿Aquí va la pregunta del juego?</h2>
     </div>
 
-    <!-- Formulario de Opciones -->
     <form th:action="@{/responder}" method="post" class="quiz-form">
 
-        <!-- Opción A -->
         <label class="option-container">
             <input type="radio" name="respuesta" value="A">
             <span class="option-label" data-letter="A" th:text="${pregunta.opcionA}">Opción A de muestra</span>
         </label>
 
-        <!-- Opción B -->
         <label class="option-container">
             <input type="radio" name="respuesta" value="B">
             <span class="option-label" data-letter="B" th:text="${pregunta.opcionB}">Opción B de muestra</span>
         </label>
 
-        <!-- Opción C -->
         <label class="option-container">
             <input type="radio" name="respuesta" value="C">
             <span class="option-label" data-letter="C" th:text="${pregunta.opcionC}">Opción C de muestra</span>
         </label>
 
-        <!-- Opción D -->
         <label class="option-container">
             <input type="radio" name="respuesta" value="D">
             <span class="option-label" data-letter="D" th:text="${pregunta.opcionD}">Opción D de muestra</span>
         </label>
 
-        <!-- Botón de Envío -->
         <button type="submit" class="btn-submit">Responder</button>
 
     </form>
