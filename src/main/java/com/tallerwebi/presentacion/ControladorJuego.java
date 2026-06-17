@@ -3,7 +3,6 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.Respuesta;
 import com.tallerwebi.dominio.ServicioJuego;
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
-import com.tallerwebi.dominio.login.ServiceLogin;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import com.tallerwebi.dominio.pregunta.PreguntaDto;
@@ -98,12 +97,13 @@ public class ControladorJuego {
 
         Integer puntaje = servicioJuego.calcularPuntaje(preguntas, partida.getRespuesta());
 
+        Boolean validacionPartida =  servicioJuego.validarPartida(puntaje);
+
+        partida.setEsVictoria(validacionPartida);
         partida.setPuntajeObtenido(puntaje);
         model.put("puntaje", puntaje);
 
         servicioJuego.guardarPartida(partida);
-
         return new ModelAndView("puntaje-final", model);
     }
-
 }

@@ -30,7 +30,7 @@ public class RepositoryPreguntasTest {
   private Pregunta crearPregunta(String texto) {
     Pregunta pregunta = new Pregunta();
 
-    pregunta.setTextoPregunta(texto);
+    pregunta.setConsigna(texto);
     pregunta.setCategoria("General");
     pregunta.setOpcionA("A");
     pregunta.setOpcionB("B");
@@ -63,7 +63,7 @@ public class RepositoryPreguntasTest {
     Pregunta resultado = preguntasRepository.findById(pregunta.getId());
 
     assertNotNull(resultado);
-    assertEquals("Pregunta buscar", resultado.getTextoPregunta());
+    assertEquals("Pregunta buscar", resultado.getConsigna());
   }
 
   @Test
@@ -103,12 +103,12 @@ public class RepositoryPreguntasTest {
     Pregunta pregunta = crearPregunta("Texto original");
     preguntasRepository.save(pregunta);
 
-    pregunta.setTextoPregunta("Texto actualizado");
+    pregunta.setConsigna("Texto actualizado");
     preguntasRepository.save(pregunta);
 
     Pregunta resultado = preguntasRepository.findById(pregunta.getId());
 
-    assertEquals("Texto actualizado", resultado.getTextoPregunta());
+    assertEquals("Texto actualizado", resultado.getConsigna());
   }
   
   @Test
@@ -124,7 +124,7 @@ public class RepositoryPreguntasTest {
 
     assertTrue(
       preguntas.stream().anyMatch(
-        p -> p.getTextoPregunta().equals(
+        p -> p.getConsigna().equals(
           "Pregunta test"
         )
       )

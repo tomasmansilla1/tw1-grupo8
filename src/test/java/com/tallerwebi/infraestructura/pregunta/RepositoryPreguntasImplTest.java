@@ -43,7 +43,7 @@ public class RepositoryPreguntasImplTest {
     @Test
     public void debeGuardarPregunta() {
         Pregunta pregunta = new Pregunta();
-        pregunta.setTextoPregunta("Pregunta test");
+        pregunta.setConsigna("Pregunta test");
 
         repository.save(pregunta);
 
@@ -76,9 +76,9 @@ public class RepositoryPreguntasImplTest {
         Query<Pregunta> query = mock(Query.class);
 
         Pregunta p1 = new Pregunta();
-        p1.setTextoPregunta("P1");
+        p1.setConsigna("P1");
         Pregunta p2 = new Pregunta();
-        p2.setTextoPregunta("P2");
+        p2.setConsigna("P2");
         List<Pregunta> listaMock = List.of(p1, p2);
 
         when(session.createQuery("FROM Pregunta", Pregunta.class)).thenReturn(query);

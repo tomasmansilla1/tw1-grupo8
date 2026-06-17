@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "preguntas")
 public class Pregunta {
 
   @Id
@@ -21,7 +20,7 @@ public class Pregunta {
 
   // columna de pregunta: no puede estar vacio
   @Column(nullable = false)
-  private String textoPregunta;
+  private String consigna;
 
   // opciones: no puede estar vacio
   @Column(nullable = false)
@@ -53,12 +52,12 @@ public class Pregunta {
   }
 
   // Pregunta
-  public String getTextoPregunta() {
-    return textoPregunta;
+  public String getConsigna() {
+    return consigna;
   }
 
-  public void setTextoPregunta(String textoPregunta) {
-    this.textoPregunta = textoPregunta;
+  public void setConsigna(String consigma) {
+    this.consigna = consigma;
   }
 
   // Respuesta correcta

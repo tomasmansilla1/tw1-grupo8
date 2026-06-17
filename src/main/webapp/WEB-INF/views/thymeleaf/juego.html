@@ -1,28 +1,183 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta - Trivia</title>
+    <style>
+        /* Reset básico y tipografía */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Fondo degradado consistente con el login */
+        body {
+            background: linear-gradient(135deg, #cbd3da 0%, #a1b4c4 50%, #8ca4b9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Contenedor principal estilo videojuego casual */
+        .game-card {
+            background-color: rgba(220, 224, 227, 0.95);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+        }
+
+        /* Contenedor de la Consigna/Pregunta */
+        .question-header {
+            margin-bottom: 30px;
+        }
+
+        .question-header h2 {
+            color: #2b5c7a;
+            font-size: 1.6rem;
+            font-weight: bold;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        /* Formulario y estructura de opciones */
+        .quiz-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Ocultamos el checkbox/radio circular por defecto */
+        .option-container input[type="radio"] {
+            display: none;
+        }
+
+        /* Convertimos el label/span en un botón interactivo gigante */
+        .option-label {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.55);
+            border: 2px solid #b2c4d4;
+            border-radius: 14px;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            color: #43515e;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+
+        /* Efecto hover al pasar el mouse por encima */
+        .option-label:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: #3b7da3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 125, 163, 0.1);
+        }
+
+        /* Cuando la opción está seleccionada (Checked) */
+        .option-container input[type="radio"]:checked + .option-label {
+            background-color: #3b7da3;
+            border-color: #2b5c7a;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(59, 125, 163, 0.3);
+        }
+
+        /* Pequeño indicador de letra (A, B, C, D) para darle onda de trivia */
+        .option-label::before {
+            content: attr(data-letter);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 28px;
+            height: 28px;
+            background-color: rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 0.9rem;
+            color: inherit;
+        }
+
+        .option-container input[type="radio"]:checked + .option-label::before {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Botón de Enviar Respuesta (Rosa viejo como el botón de "Entrar") */
+        .btn-submit {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #be7b8a;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 5px 10px rgba(190, 123, 138, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: #ad6b79;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
-<h2 th:text="${pregunta.consigna}"></h2>
 
-<form th:action="@{/responder}" method="post">
+<div class="game-card">
 
-    <input type="radio" name="respuesta" value="A">
-    <span th:text="${pregunta.opcionA}"></span>
+    <!-- Sección de la Pregunta -->
+    <div class="question-header">
+        <h2 th:text="${pregunta.consigna}">¿Aquí va la pregunta del juego?</h2>
+    </div>
 
-    <input type="radio" name="respuesta" value="B">
-    <span th:text="${pregunta.opcionB}"></span>
+    <!-- Formulario de Opciones -->
+    <form th:action="@{/responder}" method="post" class="quiz-form">
 
-    <input type="radio" name="respuesta" value="C">
-    <span th:text="${pregunta.opcionC}"></span>
+        <!-- Opción A -->
+        <label class="option-container">
+            <input type="radio" name="respuesta" value="A">
+            <span class="option-label" data-letter="A" th:text="${pregunta.opcionA}">Opción A de muestra</span>
+        </label>
 
-    <input type="radio" name="respuesta" value="D">
-    <span th:text="${pregunta.opcionD}"></span>
+        <!-- Opción B -->
+        <label class="option-container">
+            <input type="radio" name="respuesta" value="B">
+            <span class="option-label" data-letter="B" th:text="${pregunta.opcionB}">Opción B de muestra</span>
+        </label>
 
-    <button type="submit">Responder</button>
+        <!-- Opción C -->
+        <label class="option-container">
+            <input type="radio" name="respuesta" value="C">
+            <span class="option-label" data-letter="C" th:text="${pregunta.opcionC}">Opción C de muestra</span>
+        </label>
 
-</form>
+        <!-- Opción D -->
+        <label class="option-container">
+            <input type="radio" name="respuesta" value="D">
+            <span class="option-label" data-letter="D" th:text="${pregunta.opcionD}">Opción D de muestra</span>
+        </label>
+
+        <!-- Botón de Envío -->
+        <button type="submit" class="btn-submit">Responder</button>
+
+    </form>
+
+</div>
+
 </body>
 </html>

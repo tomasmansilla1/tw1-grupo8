@@ -16,9 +16,9 @@ public class PreguntaTest {
     @Test
     public void deberiaSetearYObtenerPregunta() {
         String textoPregunta = "¿Cuál es la capital de Argentina?";
-        pregunta.setTextoPregunta(textoPregunta);
+        pregunta.setConsigna(textoPregunta);
 
-        assertEquals(textoPregunta, pregunta.getTextoPregunta());
+        assertEquals(textoPregunta, pregunta.getConsigna());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PreguntaTest {
     @Test
     public void deberiaSetearYObtenerTodosLosCampos() {
 
-        pregunta.setTextoPregunta("Pregunta");
+        pregunta.setConsigna("Pregunta");
         pregunta.setCorrecta("A");
         pregunta.setOpcionA("Opcion A");
         pregunta.setOpcionB("Opcion B");
@@ -80,7 +80,7 @@ public class PreguntaTest {
         pregunta.setOpcionD("Opcion D");
         pregunta.setCategoria("Historia");
 
-        assertEquals("Pregunta", pregunta.getTextoPregunta());
+        assertEquals("Pregunta", pregunta.getConsigna());
         assertEquals("A", pregunta.getCorrecta());
         assertEquals("Opcion A", pregunta.getOpcionA());
         assertEquals("Opcion B", pregunta.getOpcionB());

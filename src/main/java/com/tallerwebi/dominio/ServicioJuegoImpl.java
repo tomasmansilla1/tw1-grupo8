@@ -48,4 +48,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
         return puntaje;
     }
+
+    @Override
+    public Boolean validarPartida(Integer puntaje) {
+        if (puntaje >= 35) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

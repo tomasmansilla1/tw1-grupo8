@@ -11,4 +11,6 @@ public interface ServicioJuego {
     void guardarPartida(Partida partida);
 
     Integer calcularPuntaje(List<Pregunta> listaPregunta, Respuesta respuesta);
+
+    Boolean validarPartida(Integer puntaje);
 }

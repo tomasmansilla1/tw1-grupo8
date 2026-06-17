@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "partidas")
 public class Partida {
 
   @Id
@@ -25,7 +24,8 @@ public class Partida {
   @ManyToOne
   @JoinColumn(name = "usuario_id")
   private Usuario usuario;
-
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "respuesta_id")
   private Respuesta respuesta;
 
   // --- GETTERS Y SETTERS ---
