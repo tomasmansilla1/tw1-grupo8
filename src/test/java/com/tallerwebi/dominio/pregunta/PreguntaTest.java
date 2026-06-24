@@ -88,4 +88,48 @@ public class PreguntaTest {
         assertEquals("Opcion D", pregunta.getOpcionD());
         assertEquals("Historia", pregunta.getCategoria());
     }
+
+    @Test
+    public void debeCrearPreguntaConTodosLosDatos() {
+
+        Pregunta pregunta = new Pregunta(
+            "CIENCIA",
+            "¿Cuál es el planeta más grande?",
+            "Tierra",
+            "Marte",
+            "Júpiter",
+            "Venus",
+            "C"
+        );
+
+        assertEquals("CIENCIA", pregunta.getCategoria());
+        assertEquals("¿Cuál es el planeta más grande?", pregunta.getConsigna());
+        assertEquals("Tierra", pregunta.getOpcionA());
+        assertEquals("Marte", pregunta.getOpcionB());
+        assertEquals("Júpiter", pregunta.getOpcionC());
+        assertEquals("Venus", pregunta.getOpcionD());
+        assertEquals("C", pregunta.getCorrecta());
+    }
+
+    @Test
+    public void debeGuardarYObtenerDatosDePregunta() {
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setCategoria("HISTORIA");
+        pregunta.setConsigna("¿Quién descubrió América?");
+        pregunta.setOpcionA("Colón");
+        pregunta.setOpcionB("San Martín");
+        pregunta.setOpcionC("Belgrano");
+        pregunta.setOpcionD("Sarmiento");
+        pregunta.setCorrecta("A");
+
+        assertEquals("HISTORIA", pregunta.getCategoria());
+        assertEquals("¿Quién descubrió América?", pregunta.getConsigna());
+        assertEquals("Colón", pregunta.getOpcionA());
+        assertEquals("San Martín", pregunta.getOpcionB());
+        assertEquals("Belgrano", pregunta.getOpcionC());
+        assertEquals("Sarmiento", pregunta.getOpcionD());
+        assertEquals("A", pregunta.getCorrecta());
+    }
 }

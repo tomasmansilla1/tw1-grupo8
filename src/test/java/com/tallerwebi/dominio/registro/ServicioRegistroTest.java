@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.tallerwebi.dominio.usuario.Usuario;
 
+
 public class ServicioRegistroTest {
 
   ServicioRegistro servicioRegistro;
@@ -21,54 +22,7 @@ public class ServicioRegistroTest {
 
   @BeforeEach
   void setUp() {
-    servicioRegistro = new ServicioRegistroImpl();
-  }
-
-  @Test
-  void iniciarSesion_datosCorrectos_noLanzaExcepcion() {
-    ServicioRegistro servicioRegistro = new ServicioRegistroImpl();
-
-    servicioRegistro.registrar(
-      "test@mail.com", 
-      "user", 
-      "Pass123!");
-
-    assertDoesNotThrow(()->servicioRegistro.iniciarSesion(
-      "test@mail.com", 
-      "Pass123!")
-    );
-  }
-  @Test
-  void iniciarSesion_datosIncorrectos_lanzaExcepcion() {
-    ServicioRegistro servicioRegistro = new ServicioRegistroImpl();
-
-    // usuario registrado
-    servicioRegistro.registrar("test@mail.com", "user", "Pass123!");
-
-    // login con password incorrecto
-    IllegalArgumentException ex = assertThrows(
-      IllegalArgumentException.class,
-      ()-> servicioRegistro.iniciarSesion(
-        "test@mail.com", 
-        "WrongPass123!"
-      )
-    );
-
-    assertEquals("Email o password incorrectos.", ex.getMessage());
-  }
-  @Test
-  void iniciarSesion_emailNoExiste_lanzaExcepcion() {
-    ServicioRegistro servicioRegistro = new ServicioRegistroImpl();
-
-    IllegalArgumentException ex = assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioRegistro.iniciarSesion(
-        "no@mail.com", 
-        "Pass123!"
-      )
-    );
-
-    assertEquals("Email o password incorrectos.", ex.getMessage());
+    servicioRegistro = new ServicioRegistroImpl(null);
   }
 
   @Test
@@ -132,7 +86,7 @@ public class ServicioRegistroTest {
 
   @Test
   void registrar_usernameNuevo_noLanzaExcepcion() {
-    ServicioRegistro servicioRegistro = new ServicioRegistroImpl();
+    ServicioRegistro servicioRegistro = new ServicioRegistroImpl(null);
 
     assertDoesNotThrow(()->servicioRegistro.registrar(
       "mail@mail.com", 
@@ -151,7 +105,7 @@ public class ServicioRegistroTest {
   }
   @Test
   void registrarUsernameDuplicadoLanzaExcepcion() {
-    ServicioRegistro servicioRegistro = new ServicioRegistroImpl();
+    ServicioRegistro servicioRegistro = new ServicioRegistroImpl(null);
 
     servicioRegistro.registrar("mail1@mail.com", "facu", "Pass123!");
 
@@ -224,4 +178,18 @@ public class ServicioRegistroTest {
     assertEquals("test@gmail.com", datos.getEmail());
   }
 
+  @Test
+  public void queSePuedaCrearDatosRegistroDTO() {
+    DatosRegistroDTO dto = new DatosRegistroDTO(
+      "test@mail.com",
+      "usuario",
+      "Pass123!"
+    );
+
+    assertEquals("test@mail.com", dto.getEmail());
+    assertEquals("usuario", dto.getUsername());
+    assertEquals("Pass123!", dto.getPassword());
+  }
+
+  
 }

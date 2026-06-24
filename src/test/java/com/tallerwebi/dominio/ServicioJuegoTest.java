@@ -5,13 +5,18 @@ import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ServicioJuegoTest {
@@ -81,5 +86,70 @@ public class ServicioJuegoTest {
         Boolean resultado = servicioJuego.validarPartida(35);
 
         assertThat(resultado, equalTo(true));
+    }
+
+    @Test
+    public void validarPartidaDebeRetornarTrueSiPuntajeEsMayorOIgualA35() {
+
+        ServicioJuegoImpl servicio = new ServicioJuegoImpl(Mockito.mock(RepositorioJuego.class));
+
+        Boolean resultado = servicio.validarPartida(35);
+        assertTrue(resultado);
+    }
+
+    @Test
+    public void validarPartidaDebeRetornarFalseSiPuntajeEsMenorA35() {
+
+        ServicioJuegoImpl servicio = new ServicioJuegoImpl(Mockito.mock(RepositorioJuego.class));
+
+        Boolean resultado = servicio.validarPartida(30);
+        assertFalse(resultado);
+    }
+
+    @Test
+    public void calcularRespuestasCorrectasDebeRetornarDos() {
+        ServicioJuegoImpl servicio = new ServicioJuegoImpl(Mockito.mock(RepositorioJuego.class));
+
+        Pregunta p1 = new Pregunta(
+            "Ciencia", "P1",
+            "A", "B", "C", "D", "A"
+        );
+        Pregunta p2 = new Pregunta(
+            "Historia", "P2",
+            "A", "B", "C", "D", "C"
+        );
+
+        List<Pregunta> preguntas = Arrays.asList(p1, p2);
+
+        Respuesta respuesta = new Respuesta();
+        respuesta.setRespuestasUsuario(Arrays.asList("A", "C"));
+
+        Integer resultado = servicio.calcularRespuestasCorrectas(preguntas, respuesta);
+
+        assertEquals(2, resultado);
+    }   
+
+    @Test
+    public void calcularRespuestasCorrectasDebeRetornarUna() {
+        ServicioJuegoImpl servicio = new ServicioJuegoImpl(Mockito.mock(RepositorioJuego.class));
+
+        Pregunta p1 = new Pregunta(
+            "Ciencia", "P1",
+            "A", "B", "C", "D", "A"
+        );
+
+        Pregunta p2 = new Pregunta(
+            "Historia", "P2",
+            "A", "B", "C", "D", "C"
+        );
+
+        List<Pregunta> preguntas = Arrays.asList(p1, p2);
+
+        Respuesta respuesta = new Respuesta();
+        respuesta.setRespuestasUsuario(Arrays.asList("A", "B"));
+
+        Integer resultado = servicio.calcularRespuestasCorrectas(preguntas, respuesta);
+
+        assertEquals(1, resultado);
     }
 }
