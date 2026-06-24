@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking por Tiempo</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:linear-gradient(to right,#ead5dc,#cfe7f8);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .card{
+            width:850px;
+            background:white;
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+            padding:35px;
+        }
+
+        h1{
+            text-align:center;
+            color:#3b82b5;
+            font-size:38px;
+        }
+
+        .linea{
+            width:90px;
+            height:4px;
+            background:#d68da0;
+            margin:10px auto 30px;
+            border-radius:5px;
+        }
+
+        /* Navegación */
+
+        .nav{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:30px;
+        }
+
+        .nav a{
+            text-decoration:none;
+            color:#3b82b5;
+            border:1px solid #87c4ec;
+            border-radius:8px;
+            padding:10px 18px;
+            font-weight:bold;
+            transition:.2s;
+        }
+
+        .nav a:hover{
+            background:#f4fbff;
+        }
+
+        .activo{
+            background:#d68da0;
+            color:white !important;
+            border-color:#d68da0 !important;
+        }
+
+        /* Tabla */
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#87c4ec;
+            color:white;
+            padding:14px;
+            font-size:16px;
+        }
+
+        td{
+            padding:14px;
+            text-align:center;
+            border-bottom:1px solid #ddd;
+        }
+
+        tr:nth-child(even){
+            background:#f8f8f8;
+        }
+
+        tr:hover{
+            background:#eef8ff;
+        }
+
+        .mensaje-vacio{
+           width:100%;
+           padding:20px;
+           margin-bottom:25px;
+           border:1px solid #87c4ec;
+           border-radius:10px;
+           background:#f4fbff;
+           text-align:center;
+        }
+
+        .mensaje-vacio p{
+           color:#3b82b5;
+           font-size:18px;
+           font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <h1>Ranking por Tiempo</h1>
+    <div class="linea"></div>
+
+    <div class="nav">
+        <a th:href="@{/estadisticas/categorias}">Categorías</a>
+        <a class="activo" th:href="@{/estadisticas/tiempo}">Tiempo</a>
+        <a th:href="@{/estadisticas/racha}">Racha</a>
+        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+    </div>
+
+    <div th:if="${listaVacio != null}" class="mensaje-vacio">
+        <p>No hay partidas cargadas.</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Top</th>
+            <th>Usuario</th>
+            <th>Tiempo</th>
+        </tr>
+        <tr th:each="dato, stat : ${usuariosTiempo}">
+            <td th:text="${stat.count}"></td>
+            <td th:text="${dato.usuario.username}"></td>
+            <td th:text="${dato.tiempoFormateado}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -86,3 +86,14 @@ main.container {
     color: #4DA3D9;
     font-size: 0.9rem;
 }
+.stats-link{
+    color:#5b7db1;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.2s;
+}
+
+.stats-link:hover{
+    color:#d68da0;
+    text-decoration:underline;
+}

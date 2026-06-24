@@ -1,8 +1,8 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Respuesta;
-import com.tallerwebi.dominio.ServicioJuego;
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
+import com.tallerwebi.dominio.juego.Respuesta;
+import com.tallerwebi.dominio.juego.ServicioJuego;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import com.tallerwebi.dominio.pregunta.PreguntaDto;
@@ -31,7 +31,7 @@ public class ControladorJuego {
 
     @Autowired
     public ControladorJuego(ServicioJuego servicioJuego, RankingService rankingService,
-            RepositoryUsuario repositoryUsuario) {
+                            RepositoryUsuario repositoryUsuario) {
         this.servicioJuego = servicioJuego;
         this.rankingService = rankingService;
         this.repositoryUsuario = repositoryUsuario;

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(to right,#ead5dc,#cfe7f8);
+        }
+
+        .card{
+            width:480px;
+            background:#fff;
+            border-radius:18px;
+            padding:40px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+            text-align:center;
+        }
+
+        h1{
+            color:#3b82b5;
+            font-size:46px;
+            margin-bottom:8px;
+        }
+
+        .linea{
+            width:90px;
+            height:4px;
+            background:#d68da0;
+            margin:0 auto 25px;
+            border-radius:5px;
+        }
+
+        p{
+            color:#555;
+            margin-bottom:30px;
+            font-size:18px;
+        }
+
+        .opcion{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            text-decoration:none;
+            color:#3b82b5;
+            font-weight:bold;
+            border:1px solid #87c4ec;
+            border-radius:10px;
+            padding:16px 20px;
+            margin-bottom:15px;
+            transition:.2s;
+        }
+
+        .opcion:hover{
+            background:#f4fbff;
+            transform:translateY(-2px);
+        }
+
+        .flecha{
+            font-size:28px;
+            color:#d68da0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+
+    <h1>Estadísticas</h1>
+    <div class="linea"></div>
+
+    <p>Seleccioná una estadística para consultar.</p>
+
+    <a class="opcion" th:href="@{/estadisticas/categorias}">
+        <span>Categoría más elegida</span>
+        <span class="flecha">➜</span>
+    </a>
+
+    <a class="opcion" th:href="@{/estadisticas/tiempo}">
+        <span>Usuarios con mejor tiempo por partida</span>
+        <span class="flecha">➜</span>
+    </a>
+
+    <a class="opcion" th:href="@{/estadisticas/racha}">
+        <span>Usuarios con mejor racha de respuestas acertadas</span>
+        <span class="flecha">➜</span>
+    </a>
+
+    <a class="opcion" th:href="@{/estadisticas/victorias}">
+        <span>Preguntas mas faciles y dificiles</span>
+        <span class="flecha">➜</span>
+    </a>
+
+</div>
+
+</body>
+</html>

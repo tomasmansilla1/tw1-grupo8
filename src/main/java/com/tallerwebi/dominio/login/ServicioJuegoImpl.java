@@ -1,6 +1,9 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.login;
 
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
+import com.tallerwebi.dominio.juego.RepositorioJuego;
+import com.tallerwebi.dominio.juego.Respuesta;
+import com.tallerwebi.dominio.juego.ServicioJuego;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import org.springframework.beans.factory.annotation.Autowired;
