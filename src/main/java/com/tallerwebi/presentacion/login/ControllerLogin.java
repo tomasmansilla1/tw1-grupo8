@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControllerLogin {
 
-  private ServiceLogin servicioLogin;
+    private ServiceLogin servicioLogin;
 
   @Autowired
   private AdminIniciador adminIniciador;
@@ -54,6 +54,7 @@ public class ControllerLogin {
     } else {
       ModelMap model = new ModelMap();
       model.put("error", "Usuario o clave incorrecta");
+
       return new ModelAndView("login", model);
     }
   }

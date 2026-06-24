@@ -90,9 +90,7 @@ public class ControladorJuego {
         }
 
         request.getSession().setAttribute("indiceActual", 0);
-
         Respuesta respuesta = new Respuesta();
-
         partida.setFecha(LocalDateTime.now());
         partida.setRespuesta(respuesta);
 
@@ -111,7 +109,6 @@ public class ControladorJuego {
        
         ModelMap model = new ModelMap();
         List<Pregunta> preguntas = (List<Pregunta>) request.getSession().getAttribute("preguntas");
-
         Integer indice = (Integer) request.getSession().getAttribute("indiceActual");
         Partida partida = (Partida) request.getSession().getAttribute("partida");
 
@@ -122,7 +119,6 @@ public class ControladorJuego {
 
         partida.getRespuesta().getRespuestasUsuario().add(respuestaElegida);
         indice++;
-
         request.getSession().setAttribute("indiceActual", indice);
 
         if (indice >= preguntas.size()) {
@@ -150,27 +146,30 @@ public class ControladorJuego {
 
         Partida partida = (Partida) request.getSession().getAttribute("partida");
         List<Pregunta> preguntas = (List<Pregunta>) request.getSession().getAttribute("preguntas");
+        Usuario usuarioNuevo = (Usuario)request.getSession().getAttribute("usuario");
 
         Integer puntaje = servicioJuego.calcularPuntaje(preguntas, partida.getRespuesta());
         Boolean validacionPartida = servicioJuego.validarPartida(puntaje);
-
-        Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
         
-        
-        if (usuario != null) {
+        if (usuarioNuevo != null) {
             if (validacionPartida) {
-                usuario.setPartidasGanadasSeguidas(
-                usuario.getPartidasGanadasSeguidas() + 1);
+                usuarioNuevo.setPartidasGanadasSeguidas(
+                usuarioNuevo.getPartidasGanadasSeguidas() + 1);
             } else {
-                usuario.setPartidasGanadasSeguidas(0);
+                usuarioNuevo.setPartidasGanadasSeguidas(0);
             }
-            usuario.setPuntaje(usuario.getPuntaje() + puntaje);
-            repositoryUsuario.modificar(usuario);
+            usuarioNuevo.setPuntaje(usuarioNuevo.getPuntaje() + puntaje);
+            repositoryUsuario.modificar(usuarioNuevo);
         }
 
         partida.setEsVictoria(validacionPartida);
         partida.setPuntajeObtenido(puntaje);
         model.put("puntaje", puntaje);
+
+        if (usuarioNuevo != null) {
+            usuarioNuevo.sumarPuntos(puntaje);
+            repositoryUsuario.modificar(usuarioNuevo);
+        }
 
         servicioJuego.guardarPartida(partida);
 

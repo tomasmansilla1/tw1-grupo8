@@ -34,7 +34,8 @@ public class Usuario {
   private Integer partidasGanadasSeguidas;
 
   // constructor vacio
-  public Usuario() {}
+  public Usuario() {
+  }
 
   public Usuario(String email, String username, String password) {
     this.email = email;
@@ -48,6 +49,7 @@ public class Usuario {
   public Long getId() {
     return id;
   }
+
   public void setId(Long id) {
     this.id = id;
   }
@@ -55,6 +57,7 @@ public class Usuario {
   public String getEmail() {
     return email;
   }
+
   public void setEmail(String email) {
     this.email = email;
   }
@@ -62,6 +65,7 @@ public class Usuario {
   public String getUsername() {
     return username;
   }
+
   public void setUsername(String username) {
     this.username = username;
   }
@@ -69,6 +73,7 @@ public class Usuario {
   public String getPassword() {
     return password;
   }
+
   public void setPassword(String password) {
     this.password = password;
   }
@@ -76,6 +81,7 @@ public class Usuario {
   public String getRol() {
     return rol;
   }
+
   public void setRol(String rol) {
     this.rol = rol;
   }
@@ -83,6 +89,7 @@ public class Usuario {
   public Boolean getActivo() {
     return activo;
   }
+
   public void setActivo(Boolean activo) {
     this.activo = activo;
   }
@@ -94,6 +101,7 @@ public class Usuario {
   public Integer getPuntaje() {
     return puntaje;
   }
+
   public void setPuntaje(Integer puntaje) {
     this.puntaje = puntaje;
   }
@@ -103,5 +111,22 @@ public class Usuario {
   }
   public void setPartidasGanadasSeguidas(Integer partidasGanadasSeguidas) {
     this.partidasGanadasSeguidas = partidasGanadasSeguidas;
+  }
+
+  private Integer puntajeTotal = 0;
+
+  public Integer getPuntajeTotal() {
+    return puntajeTotal;
+  }
+
+  public void setPuntajeTotal(Integer puntajeTotal) {
+    this.puntajeTotal = puntajeTotal;
+  }
+
+  public void sumarPuntos(Integer puntos) {
+    if (this.puntajeTotal == null) {
+      this.puntajeTotal = 0;
+    }
+    this.puntajeTotal += puntos;
   }
 }
