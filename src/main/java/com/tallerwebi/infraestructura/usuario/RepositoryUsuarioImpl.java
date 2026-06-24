@@ -1,6 +1,9 @@
 package com.tallerwebi.infraestructura.usuario;
 
 import com.tallerwebi.dominio.usuario.Usuario;
+
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +52,20 @@ public class RepositoryUsuarioImpl implements RepositoryUsuario {
   @Override
   public void modificar(Usuario usuario) {
     sessionFactory.getCurrentSession().update(usuario);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public Usuario buscarPorUsername(String username) {
+
+    return (Usuario) sessionFactory.getCurrentSession()
+      .createCriteria(Usuario.class)
+      .add(Restrictions.eq("username",username)).uniqueResult();
+  }
+
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  @Override
+  public List<Usuario> listarTodos() {
+    return sessionFactory.getCurrentSession().createCriteria(Usuario.class).list();
   }
 }
