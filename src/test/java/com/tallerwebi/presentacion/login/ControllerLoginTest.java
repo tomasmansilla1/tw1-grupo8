@@ -28,7 +28,6 @@ public class ControllerLoginTest {
   private AdminIniciador adminIniciador;
   private ControllerLogin controllerLogin;
 
-  @SuppressWarnings("null")
   @BeforeEach
   public void init() {
     servicioLogin = mock(ServiceLogin.class);

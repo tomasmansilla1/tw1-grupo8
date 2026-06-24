@@ -64,7 +64,6 @@ public class ControladorPreguntaTest {
         assertEquals("redirect:/login", vista);
     }
 
-    @SuppressWarnings("null")
     @Test
     public void debeMostrarFormularioSiEsAdmin() {
 
@@ -80,7 +79,7 @@ public class ControladorPreguntaTest {
     // --------------------------------------------------
     // 2. LISTAR
     // --------------------------------------------------
-    @SuppressWarnings("null")
+
     @Test
     public void debeAgregarMensajesAlModel() {
 
@@ -283,7 +282,7 @@ public class ControladorPreguntaTest {
 // ELIMINAR PREGUNTA
 // =======================
 
-    @SuppressWarnings("null")
+
     @Test
     public void debeRedirigirConErrorSiIdNullEnEliminar() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
@@ -294,8 +293,7 @@ public class ControladorPreguntaTest {
         verify(redirectAttributes).addFlashAttribute(eq("error"), anyString());
         verify(preguntaService, never()).eliminar(any());
     }
-
-    @SuppressWarnings("null")
+    
     @Test
     public void debeRedirigirSiPreguntaNoExisteEnEliminar() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
@@ -311,7 +309,6 @@ public class ControladorPreguntaTest {
         verify(preguntaService, never()).eliminar(anyLong());
     }
 
-    @SuppressWarnings("null")
     @Test
     public void debeEliminarPreguntaCorrectamente() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
@@ -333,7 +330,6 @@ public class ControladorPreguntaTest {
 // LISTAR PREGUNTAS
 // =======================
 
-    @SuppressWarnings("null")
     @Test
     public void debeListarPreguntasCorrectamente() {
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);

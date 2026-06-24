@@ -50,14 +50,14 @@ public class ControllerAdminTest {
                 sessionUtil,
                 preguntaService,
                 categoriaService,
-                repositoryUsuario
+                repositoryUsuario, null
         );
     }
 
     // -------------------------------
     // 1. SI NO ES ADMIN → LOGIN
     // -------------------------------
-    @SuppressWarnings("null")
+
     @Test
     public void debeRedirigirALoginSiNoEsAdmin() {
 

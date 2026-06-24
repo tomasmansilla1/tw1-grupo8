@@ -23,7 +23,7 @@ public class RankingServiceTest {
     // Mockeamos el repositorio para los tests de ranking
     repositoryUsuarioMock = mock(RepositoryUsuario.class);
     // Instanciamos el servicio con el mock
-    rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    rankingService = new RankingServiceImpl();
   }
 
   // --- TESTS DE LÓGICA DE PUNTOS ---
@@ -31,7 +31,7 @@ public class RankingServiceTest {
   @Test
   public void siElUsuarioTieneUnaRachaDeUnAciertoDebeSumarSoloCincuentaPuntos() {
 
-    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    RankingService rankingService = new RankingServiceImpl();
 
     Usuario usuario = new Usuario();
     usuario.setPartidasGanadasSeguidas(1);
@@ -45,7 +45,7 @@ public class RankingServiceTest {
   @Test
   public void siElUsuarioAlcanzaTresAciertosSeguidosDebeRecibirBonusDeDoscientosPuntos() {
 
-    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    RankingService rankingService = new RankingServiceImpl();
 
     Usuario usuario = new Usuario();
     usuario.setPartidasGanadasSeguidas(3);
@@ -59,7 +59,7 @@ public class RankingServiceTest {
   @Test
   public void debeSumarAlPuntajeExistente() {
 
-    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    RankingService rankingService = new RankingServiceImpl();
 
     Usuario usuario = new Usuario();
     usuario.setPartidasGanadasSeguidas(1);
@@ -72,7 +72,7 @@ public class RankingServiceTest {
   @Test
   public void debeAgregarBonusAlPuntajeExistente() {
 
-    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    RankingService rankingService = new RankingServiceImpl();
 
     Usuario usuario = new Usuario();
     usuario.setPartidasGanadasSeguidas(3);
@@ -85,7 +85,7 @@ public class RankingServiceTest {
   @Test
   public void noDebeResetearLaRachaSiTodaviaNoLlegoATres() {
 
-    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+    RankingService rankingService = new RankingServiceImpl();
 
     Usuario usuario = new Usuario();
     usuario.setPartidasGanadasSeguidas(2);

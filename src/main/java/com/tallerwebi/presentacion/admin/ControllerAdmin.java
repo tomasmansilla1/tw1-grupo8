@@ -12,6 +12,7 @@ import com.tallerwebi.config.SessionUtil;
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.pregunta.PreguntaService;
 import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.ServicioUsuario;
 
 
 @Controller
@@ -21,19 +22,20 @@ public class ControllerAdmin {
     private SessionUtil sessionUtil;
     private PreguntaService preguntaService;
     private CategoriaService categoriaService;
-    private RepositoryUsuario repositoryUsuario;
+    private ServicioUsuario servicioUsuario;
 
     @Autowired
     public ControllerAdmin(
         SessionUtil sessionUtil,
         PreguntaService preguntaService,
         CategoriaService categoriaService,
-        RepositoryUsuario repositoryUsuario) 
+        RepositoryUsuario repositoryUsuario,
+        ServicioUsuario servicioUsuario)
     {
         this.sessionUtil = sessionUtil;
         this.preguntaService = preguntaService;
         this.categoriaService = categoriaService;
-        this.repositoryUsuario = repositoryUsuario;
+        this.servicioUsuario = servicioUsuario;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -73,7 +75,7 @@ public class ControllerAdmin {
     }
 
     private Integer obtenerCantidadUsuarios() {
-        return repositoryUsuario.listarTodos().size();
+        return servicioUsuario.listarTodos().size();
     }
 
     // hacer de la API

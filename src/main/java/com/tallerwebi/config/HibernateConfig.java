@@ -45,7 +45,6 @@ public class HibernateConfig {
     return dataSource;
   }
 
-  @SuppressWarnings("null")
   @Bean
   public LocalSessionFactoryBean sessionFactory(@NonNull DataSource dataSource) {
 

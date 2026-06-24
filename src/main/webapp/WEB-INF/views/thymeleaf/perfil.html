@@ -235,7 +235,7 @@
     </footer>
 
     <script th:inline="javascript">
-      var username = [[${usuario.username}]];
+      var username = [[$usuario.username]];
 
       document.addEventListener("DOMContentLoaded", function() {
         var savedUrl = localStorage.getItem('avatarUrl_' + username);
