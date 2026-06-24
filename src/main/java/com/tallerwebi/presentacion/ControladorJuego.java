@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Respuesta;
-import com.tallerwebi.dominio.ServicioJuego;
+import com.tallerwebi.dominio.juego.Respuesta;
+import com.tallerwebi.dominio.juego.ServicioJuego;
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
@@ -53,9 +53,9 @@ public class ControladorJuego {
         request.getSession().setAttribute("indiceActual", 0);
 
         Respuesta respuesta = new Respuesta();
-
         partida.setFecha(LocalDateTime.now());
         partida.setRespuesta(respuesta);
+        partida.setCategoria(preguntaDto.getCategoria());
 
         request.getSession().setAttribute("partida", partida);
 
@@ -96,7 +96,6 @@ public class ControladorJuego {
         List<Pregunta> preguntas = (List<Pregunta>) request.getSession().getAttribute("preguntas");
 
         Integer puntaje = servicioJuego.calcularPuntaje(preguntas, partida.getRespuesta());
-
         Boolean validacionPartida =  servicioJuego.validarPartida(puntaje);
 
         partida.setEsVictoria(validacionPartida);

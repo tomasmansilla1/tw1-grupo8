@@ -1,6 +1,10 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
+import com.tallerwebi.dominio.juego.RepositorioJuego;
+import com.tallerwebi.dominio.juego.Respuesta;
+import com.tallerwebi.dominio.juego.ServicioJuego;
+import com.tallerwebi.dominio.login.ServicioJuegoImpl;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking de Rachas</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:linear-gradient(to right,#ead5dc,#cfe7f8);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .card{
+            width:850px;
+            background:white;
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+            padding:35px;
+        }
+
+        h1{
+            text-align:center;
+            color:#3b82b5;
+            font-size:38px;
+        }
+
+        .linea{
+            width:90px;
+            height:4px;
+            background:#d68da0;
+            margin:10px auto 30px;
+            border-radius:5px;
+        }
+
+        .nav{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:30px;
+        }
+
+        .nav a{
+            text-decoration:none;
+            color:#3b82b5;
+            border:1px solid #87c4ec;
+            border-radius:8px;
+            padding:10px 18px;
+            font-weight:bold;
+            transition:.2s;
+        }
+
+        .nav a:hover{
+            background:#f4fbff;
+        }
+
+        .activo{
+            background:#d68da0;
+            color:white !important;
+            border-color:#d68da0 !important;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#87c4ec;
+            color:white;
+            padding:14px;
+        }
+
+        td{
+            padding:14px;
+            text-align:center;
+            border-bottom:1px solid #ddd;
+        }
+
+        tr:nth-child(even){
+            background:#f8f8f8;
+        }
+
+        tr:hover{
+            background:#eef8ff;
+        }
+
+        .mensaje-vacio{
+            padding:20px;
+            text-align:center;
+            border:1px solid #87c4ec;
+            border-radius:10px;
+            background:#f4fbff;
+        }
+
+        .mensaje-vacio p{
+            color:#3b82b5;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+
+    <h1>Ranking de Rachas</h1>
+    <div class="linea"></div>
+
+    <div class="nav">
+        <a th:href="@{/estadisticas/categorias}">Categorías</a>
+        <a th:href="@{/estadisticas/tiempo}">Tiempo</a>
+        <a class="activo" th:href="@{/estadisticas/racha}">Racha</a>
+        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+    </div>
+
+    <div th:if="${error != null}" class="mensaje-vacio">
+        <p th:text="${error}"></p>
+    </div>
+
+    <table th:if="${usuariosRacha != null}">
+        <tr>
+            <th>Top</th>
+            <th>Usuario</th>
+            <th>Racha</th>
+        </tr>
+        <tr th:each="usuario, estado : ${usuariosRacha}">
+            <td th:text="${estado.count}"></td>
+            <td th:text="${usuario.username}"></td>
+            <td th:text="${usuario.respuestasAcertadasSeguidas}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

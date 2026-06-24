@@ -52,6 +52,13 @@
                     </a>
                 </li>
 
+                <!-- Estadisticas -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estadisticas}">
+                        Estadísticas
+                    </a>
+                </li>
+
                 <!-- Admin (solo si existe sesión admin) -->
                 <li class="nav-item"
                     th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}">

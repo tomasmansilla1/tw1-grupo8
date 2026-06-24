@@ -1,6 +1,6 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.juego;
 
-import com.tallerwebi.dominio.RepositorioJuego;
+import com.tallerwebi.dominio.juego.RepositorioJuego;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import org.hibernate.SessionFactory;

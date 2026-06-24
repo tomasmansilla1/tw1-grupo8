@@ -1,11 +1,12 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioJuego;
-import com.tallerwebi.dominio.Respuesta;
+import com.tallerwebi.dominio.juego.RepositorioJuego;
+import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import com.tallerwebi.infraestructura.config.HibernateTestConfig;
 import com.tallerwebi.infraestructura.config.SpringWebTestConfig;
+import com.tallerwebi.infraestructura.juego.RepositorioJuegoImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
