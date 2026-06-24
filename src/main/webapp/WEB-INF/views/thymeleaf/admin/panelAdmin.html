@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel Admin</title>
-    <p class="subtitle"> Sesión activa: <b>ADMIN</b> </p>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS-->
@@ -15,6 +14,12 @@
 
     <!-- Navbar -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="text-center mb-3">
+        <p class="subtitle">
+            Sesión activa: <b>ADMIN</b>
+        </p>
+    </div>
 
     <main class="container my-5">
 
@@ -71,7 +76,7 @@
                         Ver, editar y eliminar preguntas
                     </p>
 
-                    <a th:href="@{/admin/pregunta}" class="btn-quiz">
+                    <a th:href="@{/admin/preguntas}" class="btn-quiz">
                         Gestionar
                     </a>
 
@@ -88,7 +93,7 @@
                         Crear preguntas nuevas
                     </p>
 
-                    <a th:href="@{/admin/crearPregunta}" class="btn-quiz">
+                    <a th:href="@{/admin/mostrarCrearPregunta}" class="btn-quiz">
                         Crear
                     </a>
 
