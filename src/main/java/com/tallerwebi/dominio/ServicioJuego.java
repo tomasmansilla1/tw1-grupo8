@@ -13,4 +13,8 @@ public interface ServicioJuego {
     Integer calcularPuntaje(List<Pregunta> listaPregunta, Respuesta respuesta);
 
     Boolean validarPartida(Integer puntaje);
+
+    List<Partida> buscarHistorial(Long usuarioId);
+
+    Integer calcularRespuestasCorrectas(List<Pregunta> preguntas, Respuesta respuesta);
 }
