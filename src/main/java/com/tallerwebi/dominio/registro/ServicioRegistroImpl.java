@@ -1,37 +1,61 @@
 package com.tallerwebi.dominio.registro;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.Roles;
 import com.tallerwebi.dominio.usuario.Usuario;
 
 @Service
+@Transactional
 public class ServicioRegistroImpl implements ServicioRegistro {
-
-  private List<Usuario> jugadores = new ArrayList<>();
   private static final int LONGITUD_MINIMA_PASSWORD = 8;
   private static final String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-  public ServicioRegistroImpl() {}
+  private RepositoryUsuario repositorioUsuario;
+
+  @Autowired
+  public ServicioRegistroImpl(RepositoryUsuario repositorioUsuario) {
+    this.repositorioUsuario = repositorioUsuario;
+  }
+
+  public ServicioRegistroImpl() {
+   
+  }
 
   @Override
   public Usuario registrar(String email, String username, String password) {
+
     validarEmail(email);
     validarUsername(username);
     validarPassword(password);
-    validarQueNoExistaElEmail(email);
-    validarQueNoExistaElUsername(username);
 
-    Usuario jugador = new Usuario(email, username, password);
-    jugadores.add(jugador);
+    if (repositorioUsuario.buscar(email) != null) {
+      throw new IllegalArgumentException("El email ya existe");
+    }
+    if(repositorioUsuario.buscarPorUsername(username) != null){
+      throw new IllegalArgumentException("El username ya existe");
+    }
 
-    return jugador;
+    Usuario usuario = new Usuario(email, username, password);
+
+    usuario.setRol(Roles.JUGADOR);
+    usuario.setActivo(true);
+    usuario.setPuntaje(0);
+    usuario.setPartidasGanadasSeguidas(0);
+
+    repositorioUsuario.guardar(usuario);
+    return usuario;
   }
 
+  @Override
   public void validarEmail(String email) {
-    if (email == null) {
+    if (email == null || email.trim().isEmpty()) {
       throw new IllegalArgumentException("El email no puede estar vacío");
     }
     if (!Pattern.matches(regex, email)) {
@@ -39,18 +63,20 @@ public class ServicioRegistroImpl implements ServicioRegistro {
     }
   }
 
+  @Override
   public void validarUsername(String username) {
-    if (username == null) {
+    if (username == null || username.trim().isEmpty()) {
       throw new IllegalArgumentException("El username no puede estar vacío");
     }
   }
 
+  @Override
   public void validarPassword(String password) {
-    if (password == null) {
+    if (password == null || password.trim().isEmpty()) {
       throw new IllegalArgumentException("El password no puede estar vacío");
     }
     if (!elPasswordTieneFormatoValido(password)) {
-      throw new IllegalArgumentException("El password no cumple formato");
+      throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial");
     }
   }
 
@@ -93,52 +119,4 @@ public class ServicioRegistroImpl implements ServicioRegistro {
     }
     return false;
   }
-
-  private void validarQueNoExistaElEmail(String email) {
-    for (Usuario jugador : jugadores) {
-        if (jugador.getEmail().equalsIgnoreCase(email)) {
-            throw new IllegalArgumentException("El email ya existe");
-        }
-    }
-  } 
-
-  //  private void validarQueExistaElEmail(String email) {
-  //    for (Jugador jugador : jugadores) {
-  //      if (jugador.getEmail().equalsIgnoreCase(email)) {
-  //        return;
-  //      }
-  //    }
-  //    throw new IllegalArgumentException("El email no existe");
-  //  }
-
-  private void validarQueNoExistaElUsername(String username) {
-    for (Usuario jugador : jugadores) {
-      if (jugador.getUsername().equalsIgnoreCase(username)) {
-        throw new IllegalArgumentException("El username ya existe");
-      }
-    }
-  }
-
-  //  private void validarQueElIngresoDelPasswordSeaCorrecto(String password) {
-  //    for (Jugador jugador : jugadores) {
-  //      if (jugador.getPassword().equalsIgnoreCase(password)) {
-  //        return;
-  //      }
-  //    }
-  //    throw new IllegalArgumentException("El password no coincide con el email registrado");
-  //  }
-
-  @Override
-  public void iniciarSesion(String email, String password) {
-    for (Usuario jugador : jugadores) {
-      if (
-        jugador.getEmail().equalsIgnoreCase(email) &&
-        jugador.getPassword().equalsIgnoreCase(password)
-      ) {
-        return;
-      }
-    }
-    throw new IllegalArgumentException("Email o password incorrectos.");
-  }
-
 }

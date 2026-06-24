@@ -21,16 +21,23 @@ public class ServiceLoginImpl implements ServiceLogin {
 
   @Override
   public Usuario consultarUsuario(String email, String password) {
-    return repositorioUsuario.buscarUsuario(email, password);
+    Usuario usuario = repositorioUsuario.buscar(email);
+
+    if (usuario == null) {
+      return null;
+    }
+    if(!usuario.getActivo()){
+      return null;
+    }
+    if (!usuario.getPassword().equals(password)) {
+      return null;
+    }
+    return usuario;
   }
 
   @Override
   public void registrar(Usuario usuario) throws UsuarioExistente {
-    Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(
-      usuario.getEmail(),
-      usuario.getPassword()
-    );
-    if (usuarioEncontrado != null) {
+    if (repositorioUsuario.buscar(usuario.getEmail()) != null) {
       throw new UsuarioExistente();
     }
     repositorioUsuario.guardar(usuario);
