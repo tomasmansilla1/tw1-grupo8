@@ -1,9 +1,12 @@
 package com.tallerwebi.presentacion.login;
 
+import com.tallerwebi.dominio.admin.AdminIniciador;
 import com.tallerwebi.dominio.login.DatosLogin;
 import com.tallerwebi.dominio.login.ServiceLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,12 +21,17 @@ public class ControllerLogin {
   private ServiceLogin servicioLogin;
 
   @Autowired
+  private AdminIniciador adminIniciador;
+
+  @Autowired
   public ControllerLogin(ServiceLogin servicioLogin) {
     this.servicioLogin = servicioLogin;
   }
 
   @RequestMapping("/login")
   public ModelAndView irALogin() {
+    adminIniciador.crearAdmin();
+
     ModelMap modelo = new ModelMap();
     modelo.put("datosLogin", new DatosLogin());
     return new ModelAndView("login", modelo);
@@ -51,12 +59,23 @@ public class ControllerLogin {
   }
 
   @RequestMapping(path = "/home", method = RequestMethod.GET)
-  public ModelAndView irAHome() {
+  public ModelAndView irAHome(HttpSession session) {
+
+    if (session.getAttribute("usuario") == null) {
+      return new ModelAndView("redirect:/login");
+    }
+
     return new ModelAndView("home");
   }
 
   @RequestMapping(path = "/", method = RequestMethod.GET)
   public ModelAndView inicio() {
     return new ModelAndView("redirect:/login");
+  }
+
+  @RequestMapping("/logout")
+  public String logout(HttpSession session) {
+    session.invalidate();
+    return "redirect:/login";
   }
 }
