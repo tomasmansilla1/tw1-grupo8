@@ -129,71 +129,22 @@
                   <span class="medal" th:if="${status.index == 2}">🥉</span>
                   <span class="medal" th:if="${status.index > 2}"></span>
 
-                  <img
-                    class="ranking-avatar"
-                    th:data-username="${user.username}"
-                    th:src="@{'https://robohash.org/' + ${user.username} + '.png'}"
-                    alt="avatar"
-                  />
-                  <a
-                    th:href="@{/perfil-usuario(id=${user.id})}"
-                    th:text="${user.username}"
-                    class="user-link"
-                    >Usuario</a
-                  >
-                </td>
-
-                <tr th:each="item, stat : ${ranking}">
-                  <td th:text="${stat.index + 1}"></td>
-                  <td th:text="${item.usuario.username}"></td>
-                  <td th:text="${item.puntaje}"></td>
-
-                  <td
-                    class="fw-bold text-warning fs-5"
-                    th:text="${item.usuario.puntajeTotal != null ? item.usuario.puntajeTotal : 0}">
-                      0
-                  </td>
-
-                  <td>
-                    <span class="badge" style="font-size: 0.9rem; padding: 8px 12px"
-                      th:classappend="${(item.usuario.respuestasAcertadasSeguidas != null ?
-                      item.usuario.respuestasAcertadasSeguidas : 0) < 5 ? 'bg-secondary': (
-                        (item.usuario.respuestasAcertadasSeguidas != null ?
-                        item.usuario.respuestasAcertadasSeguidas : 0) < 10 ? 'bg-primary' : 'bg-success'
-                      )}"
-                      th:text="${item.usuario.respuestasAcertadasSeguidas != null ? 
-                        item.usuario.respuestasAcertadasSeguidas : 0}">
-                      0
-                    </span>
-                  </td>
-                </tr>
-              </tr>
-            </tbody>
-
+                <tbody>
+                    <tr th:each="item, stat : ${ranking}">
+                        <td th:text="${stat.index + 1}"></td>
+                        <td th:text="${item.usuario.username}"></td>
+                        <td th:text="${item.puntaje}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Si no hay ranking -->
             <div th:if="${#lists.isEmpty(ranking)}" class="mt-3 text-muted">
-              No hay partidas registradas todavía.
+                No hay partidas registradas todavía.
             </div>
-            <a
-              th:href="@{/home}"
-              class="btn btn-dark mt-3 fw-bold"
-              style="border-radius: 8px; padding: 10px 30px">
-                Volver al inicio
-            </a>
-
-          </table>
         </div>
 
-        <div th:if="${#lists.isEmpty(listaUsuarios)}" class="alert alert-dark mt-4 fw-bold">
-          No hay partidas registradas todavía. ¡Sé el primero en jugar!
-        </div>
-
-        <a
-          th:href="@{/home}"
-          class="btn btn-dark mt-3 fw-bold"
-          style="border-radius: 8px; padding: 10px 30px"
-          >Volver al inicio</a
-        >
-      </div>
+        <!-- Botón volver -->
+        <a th:href="@{/home}" class="btn-quiz mt-3">Volver al inicio</a>
     </div>
 
     <footer class="quiz-footer mt-5">
