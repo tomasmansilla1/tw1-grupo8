@@ -1,13 +1,22 @@
 package com.tallerwebi.dominio.categoriaDia;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.tallerwebi.infraestructura.categoriaDia.CategoriaRepository;
 
+@Service
+@Transactional
 public class CategoriaService {
 
     private CategoriaRepository repositorio;
 
+    @Autowired
     public CategoriaService(CategoriaRepository repositorio) {
         this.repositorio = repositorio;
     }
@@ -28,11 +37,13 @@ public class CategoriaService {
     }
 
     public void guardarNuevaCategoria(String nombre) {
+        CategoriaHistorial ultima = repositorio.findUltima();
 
-        CategoriaHistorial nueva = new CategoriaHistorial();
-        nueva.setNombre(nombre);
-        nueva.setFecha(java.time.LocalDate.now());
-
+        if (ultima != null && ultima.getNombre().equalsIgnoreCase(nombre)) {
+            return;
+        }
+        CategoriaHistorial nueva = new CategoriaHistorial(nombre, LocalDate.now());
+        
         repositorio.save(nueva);
-    }
+    }   
 }
