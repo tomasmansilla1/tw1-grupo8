@@ -2,13 +2,12 @@ package com.tallerwebi.presentacion.login;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-
 import com.tallerwebi.dominio.login.ServiceLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.presentacion.login.ControllerLogin;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,19 +26,17 @@ public class ControllerLoginTest {
     controllerLogin = new ControllerLogin(servicioLogin);
 
     InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-
     viewResolver.setPrefix("/WEB-INF/views/");
     viewResolver.setSuffix(".jsp");
 
     mockMvc = MockMvcBuilders
-      .standaloneSetup(controllerLogin)
-      .setViewResolvers(viewResolver)
-      .build();
+        .standaloneSetup(controllerLogin)
+        .setViewResolvers(viewResolver)
+        .build();
   }
 
   @Test
   public void debeRedirigirALoginDesdeInicio() throws Exception {
-
     mockMvc.perform(get("/"))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:/login"));
@@ -47,7 +44,6 @@ public class ControllerLoginTest {
 
   @Test
   public void debeMostrarLogin() throws Exception {
-
     mockMvc.perform(get("/login"))
         .andExpect(status().isOk())
         .andExpect(view().name("login"))
@@ -56,38 +52,28 @@ public class ControllerLoginTest {
 
   @Test
   public void loginCorrectoDebeRedirigirAHome() throws Exception {
-
     Usuario usuario = new Usuario();
     usuario.setEmail("dami@unlam.com");
     usuario.setRol("ADMIN");
 
-    when(servicioLogin.consultarUsuario(
-        "dami@unlam.com",
-        "1234"
-    )).thenReturn(usuario);
+    when(servicioLogin.consultarUsuario("dami@unlam.com", "1234")).thenReturn(usuario);
 
     mockMvc.perform(post("/validar-login")
-            .param("email", "dami@unlam.com")
-            .param("password", "1234"))
+        .param("email", "dami@unlam.com")
+        .param("password", "1234"))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:/home"))
-        .andExpect(request()
-            .sessionAttribute("usuario", usuario))
-        .andExpect(request()
-            .sessionAttribute("rol", "ADMIN"));
+        .andExpect(request().sessionAttribute("usuario", usuario))
+        .andExpect(request().sessionAttribute("rol", "ADMIN"));
   }
 
   @Test
   public void loginIncorrectoDebeVolverALogin() throws Exception {
-
-    when(servicioLogin.consultarUsuario(
-        anyString(),
-        anyString()
-    )).thenReturn(null);
+    when(servicioLogin.consultarUsuario(anyString(), anyString())).thenReturn(null);
 
     mockMvc.perform(post("/validar-login")
-            .param("email", "mal@mail.com")
-            .param("password", "1234"))
+        .param("email", "mal@mail.com")
+        .param("password", "1234"))
         .andExpect(status().isOk())
         .andExpect(view().name("login"))
         .andExpect(model().attributeExists("error"));
@@ -95,7 +81,6 @@ public class ControllerLoginTest {
 
   @Test
   public void debeMostrarHome() throws Exception {
-
     mockMvc.perform(get("/home"))
         .andExpect(status().isOk())
         .andExpect(view().name("home"));

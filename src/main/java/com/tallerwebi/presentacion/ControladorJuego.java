@@ -6,6 +6,9 @@ import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import com.tallerwebi.dominio.pregunta.PreguntaDto;
+import com.tallerwebi.dominio.ranking.RankingService;
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,11 +25,16 @@ import java.util.List;
 @Controller
 public class ControladorJuego {
 
-    ServicioJuego servicioJuego;
+    private ServicioJuego servicioJuego;
+    private RankingService rankingService;
+    private RepositoryUsuario repositoryUsuario;
 
     @Autowired
-    public ControladorJuego(ServicioJuego servicioJuego) {
+    public ControladorJuego(ServicioJuego servicioJuego, RankingService rankingService,
+            RepositoryUsuario repositoryUsuario) {
         this.servicioJuego = servicioJuego;
+        this.rankingService = rankingService;
+        this.repositoryUsuario = repositoryUsuario;
     }
 
     @RequestMapping(path = "/buscar-juego", method = RequestMethod.GET)
@@ -37,7 +45,8 @@ public class ControladorJuego {
     }
 
     @RequestMapping(path = "/juego", method = RequestMethod.POST)
-    public ModelAndView mostrarJuego(@ModelAttribute("preguntaDto") PreguntaDto preguntaDto, HttpServletRequest request) {
+    public ModelAndView mostrarJuego(@ModelAttribute("preguntaDto") PreguntaDto preguntaDto,
+            HttpServletRequest request) {
         ModelMap model = new ModelMap();
         Partida partida = new Partida();
 
@@ -51,12 +60,9 @@ public class ControladorJuego {
         }
 
         request.getSession().setAttribute("indiceActual", 0);
-
         Respuesta respuesta = new Respuesta();
-
         partida.setFecha(LocalDateTime.now());
         partida.setRespuesta(respuesta);
-
         request.getSession().setAttribute("partida", partida);
 
         model.put("partida", partida);
@@ -66,17 +72,12 @@ public class ControladorJuego {
     @RequestMapping(path = "/responder", method = RequestMethod.POST)
     public ModelAndView responder(@RequestParam("respuesta") String respuestaElegida, HttpServletRequest request) {
         ModelMap model = new ModelMap();
-
         List<Pregunta> preguntas = (List<Pregunta>) request.getSession().getAttribute("preguntas");
-
         Integer indice = (Integer) request.getSession().getAttribute("indiceActual");
-
         Partida partida = (Partida) request.getSession().getAttribute("partida");
 
         partida.getRespuesta().getRespuestasUsuario().add(respuestaElegida);
-
         indice++;
-
         request.getSession().setAttribute("indiceActual", indice);
 
         if (indice >= preguntas.size()) {
@@ -92,16 +93,20 @@ public class ControladorJuego {
         ModelMap model = new ModelMap();
 
         Partida partida = (Partida) request.getSession().getAttribute("partida");
-
         List<Pregunta> preguntas = (List<Pregunta>) request.getSession().getAttribute("preguntas");
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 
         Integer puntaje = servicioJuego.calcularPuntaje(preguntas, partida.getRespuesta());
-
-        Boolean validacionPartida =  servicioJuego.validarPartida(puntaje);
+        Boolean validacionPartida = servicioJuego.validarPartida(puntaje);
 
         partida.setEsVictoria(validacionPartida);
         partida.setPuntajeObtenido(puntaje);
         model.put("puntaje", puntaje);
+
+        if (usuario != null) {
+            usuario.sumarPuntos(puntaje);
+            repositoryUsuario.modificar(usuario);
+        }
 
         servicioJuego.guardarPartida(partida);
         return new ModelAndView("puntaje-final", model);

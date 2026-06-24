@@ -15,48 +15,46 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControllerLogin {
 
-  private ServiceLogin servicioLogin;
+    private ServiceLogin servicioLogin;
 
-  @Autowired
-  public ControllerLogin(ServiceLogin servicioLogin) {
-    this.servicioLogin = servicioLogin;
-  }
-
-  @RequestMapping("/login")
-  public ModelAndView irALogin() {
-    ModelMap modelo = new ModelMap();
-    modelo.put("datosLogin", new DatosLogin());
-    return new ModelAndView("login", modelo);
-  }
-
-  @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
-  public ModelAndView validarLogin(
-    @ModelAttribute("datosLogin") DatosLogin datosLogin,
-    HttpServletRequest request
-  ) {
-    Usuario usuarioBuscado = servicioLogin.consultarUsuario(
-      datosLogin.getEmail(),
-      datosLogin.getPassword()
-    );
-
-    if (usuarioBuscado != null) {
-      request.getSession().setAttribute("usuario", usuarioBuscado);
-      request.getSession().setAttribute("rol", usuarioBuscado.getRol());
-      return new ModelAndView("redirect:/home");
-    } else {
-      ModelMap model = new ModelMap();
-      model.put("error", "Usuario o clave incorrecta");
-      return new ModelAndView("login", model);
+    @Autowired
+    public ControllerLogin(ServiceLogin servicioLogin) {
+        this.servicioLogin = servicioLogin;
     }
-  }
 
-  @RequestMapping(path = "/home", method = RequestMethod.GET)
-  public ModelAndView irAHome() {
-    return new ModelAndView("home");
-  }
+    @RequestMapping("/login")
+    public ModelAndView irALogin() {
+        ModelMap modelo = new ModelMap();
+        modelo.put("datosLogin", new DatosLogin());
+        return new ModelAndView("login", modelo);
+    }
 
-  @RequestMapping(path = "/", method = RequestMethod.GET)
-  public ModelAndView inicio() {
-    return new ModelAndView("redirect:/login");
-  }
+    @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
+    public ModelAndView validarLogin(
+            @ModelAttribute("datosLogin") DatosLogin datosLogin,
+            HttpServletRequest request) {
+        Usuario usuarioBuscado = servicioLogin.consultarUsuario(
+                datosLogin.getEmail(),
+                datosLogin.getPassword());
+
+        if (usuarioBuscado != null) {
+            request.getSession().setAttribute("usuario", usuarioBuscado);
+            request.getSession().setAttribute("rol", usuarioBuscado.getRol());
+            return new ModelAndView("redirect:/home");
+        } else {
+            ModelMap model = new ModelMap();
+            model.put("error", "Usuario o clave incorrecta");
+            return new ModelAndView("login", model);
+        }
+    }
+
+    @RequestMapping(path = "/home", method = RequestMethod.GET)
+    public ModelAndView irAHome() {
+        return new ModelAndView("home");
+    }
+
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public ModelAndView inicio() {
+        return new ModelAndView("redirect:/login");
+    }
 }
