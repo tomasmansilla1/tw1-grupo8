@@ -3,6 +3,8 @@ package com.tallerwebi.config;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 
+import com.tallerwebi.dominio.usuario.Roles;
+
 @Component
 public class SessionUtil {
 
@@ -23,6 +25,6 @@ public class SessionUtil {
     Object rol = session.getAttribute("rol");
 
     // validar admin
-    return rol != null && rol.equals("ADMIN");
+    return rol != null && rol.equals(Roles.ADMIN);
   }
 }
