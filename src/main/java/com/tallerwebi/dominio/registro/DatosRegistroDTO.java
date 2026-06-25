@@ -2,9 +2,9 @@ package com.tallerwebi.dominio.registro;
 
 public class DatosRegistroDTO {
 
-  String email;
-  String username;
-  String password;
+  private String email;
+  private String username;
+  private String password;
 
   public DatosRegistroDTO() {}
 

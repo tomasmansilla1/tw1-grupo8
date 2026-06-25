@@ -1,87 +1,85 @@
-<html xmlns:th="http://www.thymeleaf.org">
-  <body>
-    <nav
-      th:fragment="navbar"
-      class="navbar navbar-expand-lg navbar-dark shadow-sm"
-      style="background: linear-gradient(135deg, #2b7dbf, #1f5f94)"
-    >
-      <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand fw-bold" th:href="@{/}"> Trivia Game </a>
+<!DOCTYPE html>
 
-        <!-- botón responsive -->
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-        >
-          <span class="navbar-toggler-icon"></span>
+<nav th:fragment="navbar"
+     class="navbar navbar-expand-lg navbar-dark shadow-sm"
+     style="background: linear-gradient(135deg, #2B7DBF, #1f5f94);">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" th:href="@{/home}">
+            Trivia Game
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav ms-auto align-items-center">
-            <!-- Inicio -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/}"> Inicio </a>
-            </li>
 
-            <!-- Jugar -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/home}"> Jugar </a>
-            </li>
+            <ul class="navbar-nav ms-auto">
 
-            <!-- Ranking -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/ranking}"> Ranking </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/home}">Inicio</a>
+                </li>
 
-            <!-- Historial -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/historial}"> Historial </a>
-            </li>
-              <li class="nav-item">
-                  <a class="nav-link" th:href="@{/estadisticas}">
-                      Estadísticas
-                  </a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/buscar-juego}">Jugar</a>
+                </li>
 
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/perfil}">Perfil</a>
-            </li>
-            <!-- Admin (solo si existe sesión admin) -->
-            <li
-              class="nav-item"
-              th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}"
-            >
-              <a class="nav-link text-warning fw-bold" th:href="@{/admin}">
-                Panel Admin
-              </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/tutorial}">
+                        ¿Cómo jugar?
+                    </a>
+                </li>
 
-            <!-- Login / Logout -->
-            <li class="nav-item ms-2">
-              <!-- SI NO LOGUEADO -->
-              <a
-                th:if="${session.usuario == null}"
-                class="btn btn-outline-light btn-sm px-3"
-                th:href="@{/login}"
-              >
-                Iniciar Sesión
-              </a>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/ranking}">Ranking</a>
+                </li>
 
-              <!-- SI LOGUEADO -->
-              <a
-                th:if="${session.usuario != null}"
-                class="btn btn-danger btn-sm px-3"
-                th:href="@{/logout}"
-              >
-                Salir
-              </a>
-            </li>
-          </ul>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/usuario/historial}">
+                        Historial
+                    </a>
+                </li>
+
+                <li class="nav-item"
+                    th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}">
+                    <a class="nav-link text-warning fw-bold"
+                       th:href="@{/admin}">
+                        Panel Admin
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:if="${session.usuario == null}"
+                       class="nav-link"
+                       th:href="@{/login}">
+                        Iniciar sesión
+                    </a>
+
+                    <a th:if="${session.usuario != null}"
+                       class="nav-link text-danger"
+                       th:href="@{/logout}">
+                        Salir
+                    </a>
+                </li>
+
+            </ul>
+
         </div>
-      </div>
-    </nav>
-  </body>
+    </div>
+
+</nav>
+
+    <script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
 </html>

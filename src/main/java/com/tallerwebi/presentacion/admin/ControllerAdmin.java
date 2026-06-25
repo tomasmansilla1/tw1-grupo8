@@ -9,16 +9,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tallerwebi.config.SessionUtil;
+import com.tallerwebi.dominio.categoriaDia.CategoriaService;
+import com.tallerwebi.dominio.pregunta.PreguntaService;
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.ServicioUsuario;
+
 
 @Controller
 @RequestMapping("/admin")
 public class ControllerAdmin {
 
     private SessionUtil sessionUtil;
+    private PreguntaService preguntaService;
+    private CategoriaService categoriaService;
+    private ServicioUsuario servicioUsuario;
 
     @Autowired
-    public ControllerAdmin(SessionUtil sessionUtil) {
+    public ControllerAdmin(
+        SessionUtil sessionUtil,
+        PreguntaService preguntaService,
+        CategoriaService categoriaService,
+        RepositoryUsuario repositoryUsuario,
+        ServicioUsuario servicioUsuario)
+    {
         this.sessionUtil = sessionUtil;
+        this.preguntaService = preguntaService;
+        this.categoriaService = categoriaService;
+        this.servicioUsuario = servicioUsuario;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -32,6 +49,10 @@ public class ControllerAdmin {
         // mensaje principal
         model.addAttribute("mensaje", "Bienvenido administrador");
 
+        model.addAttribute("cantidadPreguntas", preguntaService.listar().size());
+        model.addAttribute("categoriaActual", categoriaService.obtenerCategoriaActiva());
+        model.addAttribute("cantidadUsuarios", obtenerCantidadUsuarios());
+        
         // mensajes de validacion o error
         Object ok = session.getAttribute("ok");
         Object error = session.getAttribute("error");
@@ -39,7 +60,7 @@ public class ControllerAdmin {
         if (ok != null) {
             model.addAttribute("ok", ok);
 
-             // Se limpia de la sesión una vez usado
+            // Se limpia de la sesión una vez usado
             session.removeAttribute("ok"); 
         }
         if (error != null) {
@@ -53,32 +74,8 @@ public class ControllerAdmin {
         return "admin/panelAdmin"; 
     }
 
-    // MAPEO DE TODOS LOS BOTONES TH:HREF
-    @RequestMapping(value = "/pregunta", method = RequestMethod.GET)
-    public String gestionarPreguntas(HttpSession session) {
-
-        if (!sessionUtil.verificarAdmin(session)) {
-            return "redirect:/login";
-        }
-        return "admin/pregunta";
-    }
-
-    @RequestMapping(value = "/crearPregunta", method = RequestMethod.GET)
-    public String crearPregunta(HttpSession session) {
-
-        if (!sessionUtil.verificarAdmin(session)) {
-            return "redirect:/login";
-        }
-        return "admin/crearPregunta";
-    }
-
-    @RequestMapping(value = "/categoriaDia", method = RequestMethod.GET)
-    public String categoriaDia(HttpSession session) {
-
-        if (!sessionUtil.verificarAdmin(session)) {
-            return "redirect:/login";
-        }
-        return "admin/categoriaDia";
+    private Integer obtenerCantidadUsuarios() {
+        return servicioUsuario.listarTodos().size();
     }
 
     // hacer de la API

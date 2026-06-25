@@ -28,6 +28,7 @@ public class Partida {
   @ManyToOne
   @JoinColumn(name = "usuario_id")
   private Usuario usuario;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "respuesta_id")
   private Respuesta respuesta;
@@ -37,11 +38,12 @@ public class Partida {
   public Partida() {
 
   }
-  public Partida(LocalDateTime fecha, Integer puntajeObtenido, Boolean esVictoria, Usuario usuario) {
+  public Partida(LocalDateTime fecha, Integer puntajeObtenido, Boolean esVictoria, Usuario usuario, Respuesta respuesta) {
     this.fecha = fecha;
     this.puntajeObtenido = puntajeObtenido;
     this.esVictoria = esVictoria;
     this.usuario = usuario;
+    this.respuesta = respuesta;
   }
 
   public Long getId() {

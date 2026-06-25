@@ -1,274 +1,140 @@
-<!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
     <title>Ranking</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{/core/css/main.css}" />
-    <link rel="stylesheet" th:href="@{/core/css/ranking.css}" />
 
-    <style>
-      /* Diseño Premium para la Tabla (Dashboard Dark) */
-      .quiz-card-dark {
-        background-color: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        padding: 30px;
-      }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-      .table-custom {
-        background-color: #212529 !important;
-        color: #fff !important;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        margin-top: 20px;
-      }
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/ranking.css}">
+</head>
 
-      .table-custom thead th {
-        background-color: #1e2125 !important;
-        cursor: pointer;
-        user-select: none;
-        transition: background 0.3s;
-        border-bottom: 2px solid #ffc107 !important;
-        color: #ffc107 !important;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        padding: 15px;
-      }
+<body class="home-body">
 
-      .table-custom thead th:hover {
-        background-color: #343a40 !important;
-        color: #fff !important;
-      }
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-      /* PARCHE ANTI-ROSADO: Forzamos el fondo oscuro en las filas y celdas */
-      .table-custom tbody tr,
-      .table-custom tbody td {
-        background-color: #212529 !important;
-        color: #fff !important;
-        transition: all 0.2s ease;
-        border-bottom: 1px solid #343a40 !important;
-      }
+  <div class="container mt-5">
 
-      .table-custom tbody tr:hover,
-      .table-custom tbody tr:hover td {
-        background-color: #2c3034 !important;
-        transform: scale(1.02);
-      }
+    <div class="quiz-card text-center mx-auto" style="max-width: 900px;">
 
-      .table-custom td {
-        padding: 12px 15px;
-        vertical-align: middle;
-      }
+      <h1 class="ranking-title">Ranking Global</h1>
 
-      /* Estilo del Avatar en la tabla */
-      .ranking-avatar {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
-        border: 2px solid #ffc107;
-        background-color: #f8f9fa;
-        object-fit: cover;
-        transition: transform 0.3s;
-      }
+      <div class="divider"></div>
 
-      .ranking-avatar:hover {
-        transform: scale(1.5);
-      }
-
-      .user-link {
-        color: #ffffff !important;
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.2s;
-      }
-
-      .user-link:hover {
-        color: #ffc107 !important;
-      }
-
-      .medal {
-        font-size: 1.3rem;
-        margin-right: 8px;
-        display: inline-block;
-        width: 25px;
-      }
-    </style>
-  </head>
-
-  <body class="home-body">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
-
-    <div class="container mt-5">
-      <div class="quiz-card-dark text-center mx-auto" style="max-width: 800px">
-        <h1 class="title" style="color: #212529 !important; font-weight: bold">
-          Ranking Global
-        </h1>
-        <div
-          class="divider"
-          style="
-            height: 3px;
-            background: linear-gradient(
-              to right,
-              transparent,
-              #212529,
-              transparent
-            );
-            margin: 15px 0;
-          "
-        ></div>
-        <p class="subtitle text-muted fw-bold">
+        <p class="ranking-subtitle">
           Los mejores jugadores de la plataforma
         </p>
 
         <div class="table-responsive">
-          <table
-            class="table table-borderless table-custom text-center align-middle"
-          >
+
+          <table class="table table-borderless table-custom align-middle">
+
             <thead>
               <tr>
                 <th onclick="sortTable(0)">Posición ↕</th>
-                <th onclick="sortTable(1)" class="text-start">Usuario ↕</th>
+                <th onclick="sortTable(1)">Usuario ↕</th>
                 <th onclick="sortTable(2)">Puntaje ↕</th>
-                <th onclick="sortTable(3)">Racha ↕</th>
               </tr>
             </thead>
+
             <tbody>
-              <tr th:each="user, status : ${listaUsuarios}">
-                <td class="fw-bold fs-5" th:text="${status.count}">1</td>
 
-                <td class="text-start">
-                  <span class="medal" th:if="${status.index == 0}">🥇</span>
-                  <span class="medal" th:if="${status.index == 1}">🥈</span>
-                  <span class="medal" th:if="${status.index == 2}">🥉</span>
-                  <span class="medal" th:if="${status.index > 2}"></span>
-
-                  <img
-                    class="ranking-avatar"
-                    th:data-username="${user.username}"
-                    th:src="@{'https://robohash.org/' + ${user.username} + '.png'}"
-                    alt="avatar"
-                  />
-                  <a
-                    th:href="@{/perfil-usuario(id=${user.id})}"
-                    th:text="${user.username}"
-                    class="user-link"
-                    >Usuario</a
-                  >
-                </td>
-
-                <td
-                  class="fw-bold text-warning fs-5"
-                  th:text="${user.puntajeTotal != null ? user.puntajeTotal : 0}"
-                >
-                  0
-                </td>
-
-                <td>
-                  <span
-                    class="badge"
-                    style="font-size: 0.9rem; padding: 8px 12px"
-                    th:classappend="${(user.respuestasAcertadasSeguidas != null ? user.respuestasAcertadasSeguidas : 0) < 5 ? 'bg-secondary' : ((user.respuestasAcertadasSeguidas != null ? user.respuestasAcertadasSeguidas : 0) < 10 ? 'bg-primary' : 'bg-success')}"
-                    th:text="${user.respuestasAcertadasSeguidas != null ? user.respuestasAcertadasSeguidas : 0}"
-                    >0</span
-                  >
-                </td>
+             <tr th:each="item, stat : ${ranking}"
+              th:classappend="${
+              stat.index == 0 ? 'first-place' :
+              stat.index == 1 ? 'second-place' :
+              stat.index == 2 ? 'third-place' : ''
+              }">
+                <td class="fw-bold" th:text="${stat.index + 1}"></td>
+                <td class="fw-semibold" th:text="${item.usuario.username}"></td>
+                <td class="fw-bold text-primary"th:text="${item.puntaje}"> </td>
               </tr>
             </tbody>
+
           </table>
+
         </div>
 
-        <div
-          th:if="${#lists.isEmpty(listaUsuarios)}"
-          class="alert alert-dark mt-4 fw-bold"
-        >
-          No hay partidas registradas todavía. ¡Sé el primero en jugar!
+        <div th:if="${#lists.isEmpty(ranking)}" class="mt-3 text-muted">
+          No hay partidas registradas todavía.
         </div>
 
-        <a
-          th:href="@{/home}"
-          class="btn btn-dark mt-3 fw-bold"
-          style="border-radius: 8px; padding: 10px 30px"
-          >Volver al inicio</a
-        >
+        <a th:href="@{/home}" class="btn-quiz mt-4">
+          Volver al inicio
+        </a>
+
       </div>
+
     </div>
 
-    <footer class="quiz-footer mt-5">
-      <div class="container small" style="color: #6c757d">
-        &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
-      </div>
-    </footer>
+  <footer class="quiz-footer mt-5">
+    <div class="container small" style="color: #6c757d">
+      &copy; 2026 - Taller Web I - Universidad Nacional de La Matanza
+    </div>
+  </footer>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var avatares = document.querySelectorAll(".ranking-avatar");
+<script>
+function sortTable(n) {
 
-        avatares.forEach(function (img) {
-          var username = img.getAttribute("data-username");
-          var avatarGuardado = localStorage.getItem("avatarUrl_" + username);
+  let table = document.querySelector(".table-custom");
+  let rows, switching, i, x, y, shouldSwitch;
+  let dir = "asc";
+  let switchcount = 0;
 
-          if (avatarGuardado) {
-            img.src = avatarGuardado;
+  switching = true;
+
+  while (switching) {
+
+    switching = false;
+    rows = table.rows;
+
+    for (i = 1; i < rows.length - 1; i++) {
+
+      shouldSwitch = false;
+
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+
+      let xContent = isNaN(x.innerText)
+      ? x.innerText.toLowerCase()
+      : parseFloat(x.innerText);
+
+      let yContent = isNaN(y.innerText)
+      ? y.innerText.toLowerCase()
+      : parseFloat(y.innerText);
+
+      if (dir === "asc") {
+        if (xContent > yContent) {
+          shouldSwitch = true;
+          break;
           }
-        });
-      });
+        } else {
 
-      function sortTable(n) {
-        var table,
-          rows,
-          switching,
-          i,
-          x,
-          y,
-          shouldSwitch,
-          dir,
-          switchcount = 0;
-        table = document.querySelector("table");
-        switching = true;
-        dir = "asc";
-        while (switching) {
-          switching = false;
-          rows = table.rows;
-          for (i = 1; i < rows.length - 1; i++) {
-            shouldSwitch = false;
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
-            var xContent = isNaN(x.innerText)
-              ? x.innerText.toLowerCase()
-              : parseFloat(x.innerText);
-            var yContent = isNaN(y.innerText)
-              ? y.innerText.toLowerCase()
-              : parseFloat(y.innerText);
-            if (dir == "asc") {
-              if (xContent > yContent) {
-                shouldSwitch = true;
-                break;
-              }
-            } else if (dir == "desc") {
-              if (xContent < yContent) {
-                shouldSwitch = true;
-                break;
-              }
-            }
-          }
-          if (shouldSwitch) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-            switchcount++;
-          } else {
-            if (switchcount == 0 && dir == "asc") {
-              dir = "desc";
-              switching = true;
-            }
-          }
+        if (xContent < yContent) {
+          shouldSwitch = true;
+          break;
         }
       }
-    </script>
-  </body>
+    }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1],rows[i]);
+
+      switching = true;
+      switchcount++;
+
+    } else {
+      if (switchcount === 0 && dir === "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
+</body>
+
 </html>

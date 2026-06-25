@@ -58,7 +58,22 @@ public class RepositoryUsuarioImpl implements RepositoryUsuario {
     sessionFactory.getCurrentSession().update(usuario);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
+  public Usuario buscarPorUsername(String username) {
+
+    return (Usuario) sessionFactory.getCurrentSession()
+      .createCriteria(Usuario.class)
+      .add(Restrictions.eq("username",username)).uniqueResult();
+  }
+
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  @Override
+  public List<Usuario> listarTodos() {
+    return sessionFactory.getCurrentSession().createCriteria(Usuario.class).list();
+  }
+
+  @SuppressWarnings({ "deprecation", "unchecked" })
   public List<Usuario> obtenerTopUsuarios() {
     return sessionFactory.getCurrentSession()
         .createCriteria(Usuario.class)

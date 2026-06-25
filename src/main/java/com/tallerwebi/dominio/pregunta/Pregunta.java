@@ -14,11 +14,11 @@ public class Pregunta {
   private Long id;
 
   // categoria: no puede estar vacio
-  @Column(nullable = false)
+  @Column(nullable = false, length = 100)
   private String categoria;
 
   // columna de pregunta: no puede estar vacio
-  @Column(nullable = false)
+  @Column(nullable = false, length = 500)
   private String consigna;
 
   // opciones: no puede estar vacio
@@ -41,6 +41,18 @@ public class Pregunta {
   // Constructor vacío
   public Pregunta() {}
 
+  public Pregunta(String categoria, String consigna, String opcionA, 
+    String opcionB, String opcionC, String opcionD, String correcta) 
+  {
+    this.categoria = categoria;
+    this.consigna = consigna;
+    this.opcionA = opcionA;
+    this.opcionB = opcionB;
+    this.opcionC = opcionC;
+    this.opcionD = opcionD;
+    this.correcta = correcta;
+  }
+
   // ID
   public Long getId() {
     return id;
@@ -55,8 +67,8 @@ public class Pregunta {
     return consigna;
   }
 
-  public void setConsigna(String consigma) {
-    this.consigna = consigma;
+  public void setConsigna(String consigna) {
+    this.consigna = consigna;
   }
 
   // Respuesta correcta

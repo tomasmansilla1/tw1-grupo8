@@ -19,7 +19,7 @@ public class usuarioTest {
         assertNull(usuario.getRol());
         assertFalse(usuario.getActivo());
         assertEquals(0, usuario.getPuntaje());
-        assertEquals(0, usuario.getRespuestasAcertadasSeguidas());
+        assertEquals(0, usuario.getPartidasGanadasSeguidas());
     }
 
     @Test
@@ -82,9 +82,9 @@ public class usuarioTest {
     @Test
     void deberiaSetearRespuestasAcertadasSeguidasCorrectamente() {
         Usuario usuario = new Usuario();
-        usuario.setRespuestasAcertadasSeguidas(3);
+        usuario.setPartidasGanadasSeguidas(3);
 
-        assertEquals(3, usuario.getRespuestasAcertadasSeguidas());
+        assertEquals(3, usuario.getPartidasGanadasSeguidas());
     }
 
     @Test
@@ -108,5 +108,41 @@ public class usuarioTest {
         usuario.setId(100L);
 
         assertEquals(100L, usuario.getId());
+    }
+
+        @Test
+    public void debeAsignarYObtenerId() {
+        Usuario usuario = new Usuario();
+
+        usuario.setId(1L);
+        assertEquals(1L, usuario.getId());
+    }
+
+    @Test
+    public void debeAsignarUsername() {
+        Usuario usuario = new Usuario();
+
+        usuario.setUsername("tmansilla7");
+        assertEquals("tmansilla7", usuario.getUsername());
+    }
+
+    @Test
+    public void debeActivarUsuario() {
+        Usuario usuario = new Usuario();
+
+        usuario.setActivo(false);
+        usuario.activar();
+
+        assertTrue(usuario.getActivo());
+    }
+
+    @Test
+    public void debeCambiarId() {
+        Usuario usuario = new Usuario();
+
+        usuario.setId(1L);
+        usuario.setId(2L);
+
+        assertEquals(2L, usuario.getId());
     }
 }

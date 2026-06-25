@@ -9,4 +9,6 @@ public interface RepositorioJuego {
     List<Pregunta> buscarPreguntaPorCategoria(String categoria);
 
     void guardarPartida(Partida partida);
+
+    List<Partida> buscarPartidasPorUsuario(Long usuarioId);
 }

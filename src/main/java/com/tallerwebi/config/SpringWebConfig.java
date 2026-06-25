@@ -16,11 +16,12 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({
-    "com.tallerwebi.presentacion",
-    "com.tallerwebi.dominio",
-    "com.tallerwebi.infraestructura", "com.tallerwebi.config"
-})
+//@ComponentScan({
+//    "com.tallerwebi.presentacion",
+//    "com.tallerwebi.dominio",
+//    "com.tallerwebi.infraestructura", "com.tallerwebi.config"
+//})
+@ComponentScan("com.tallerwebi")
 public class SpringWebConfig implements WebMvcConfigurer {
 
     @Override

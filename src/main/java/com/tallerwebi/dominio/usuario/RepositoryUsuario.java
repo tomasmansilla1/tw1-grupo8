@@ -13,6 +13,7 @@ public interface RepositoryUsuario {
   Usuario buscar(Long id);
 
   void modificar(Usuario usuario);
-
+  Usuario buscarPorUsername(String username);
+  List<Usuario> listarTodos();
   List<Usuario> obtenerTopUsuarios();
 }

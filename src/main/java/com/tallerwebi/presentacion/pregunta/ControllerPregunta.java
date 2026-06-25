@@ -1,8 +1,8 @@
 package com.tallerwebi.presentacion.pregunta;
 
 import com.tallerwebi.config.SessionUtil;
+import com.tallerwebi.dominio.categoriaDia.CategoriaEnum;
 import com.tallerwebi.dominio.pregunta.Pregunta;
-import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,12 +50,53 @@ public class ControllerPregunta {
     if (!sessionUtil.verificarAdmin(session) ) {
       return "redirect:/login";
     }
+
+    if (pregunta.getOpcionA() == null || pregunta.getOpcionA().trim().isEmpty() ||
+      pregunta.getOpcionB() == null || pregunta.getOpcionB().trim().isEmpty() ||
+      pregunta.getOpcionC() == null || pregunta.getOpcionC().trim().isEmpty() ||
+      pregunta.getOpcionD() == null || pregunta.getOpcionD().trim().isEmpty()) 
+    {
+      session.setAttribute("error", "Todas las opciones son obligatorias");
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
+
+    if (pregunta.getConsigna() == null || pregunta.getConsigna().trim().isEmpty()) {
+
+      session.setAttribute("error","La consigna es obligatoria");
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
+
+    if (pregunta.getCategoria() == null || pregunta.getCategoria().trim().isEmpty()) {
+
+      session.setAttribute("error", "La categoría es obligatoria");
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
+
+    if (pregunta.getCorrecta() == null || pregunta.getCorrecta().trim().isEmpty()) {
+
+      session.setAttribute("error", "Debe indicar la respuesta correcta");
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
+
+    if (!respuestaValida(pregunta.getCorrecta())) {
+      session.setAttribute(
+        "error",
+        "La respuesta correcta debe ser A, B, C o D"
+      );
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
+
+    if (!categoriaValida(pregunta.getCategoria())) {
+      
+      session.setAttribute("error", "Categoría invalida");
+      return "redirect:/admin/mostrarCrearPregunta";
+    }
     // guardar en bd
     preguntaService.guardar(pregunta);
 
     // mensaje de éxito
     session.setAttribute("ok", "Pregunta creada correctamente");
-    return "redirect:/admin/pregunta";
+    return "redirect:/admin/preguntas";
   }
 
   // Listar preguntas
@@ -67,10 +108,15 @@ public class ControllerPregunta {
       return "redirect:/login";
     }
     // traer preguntas de bd
-    List<Pregunta> preguntas = preguntaService.listar();
-    model.addAttribute("pregunta", preguntas);
+    model.addAttribute("preguntas", preguntaService.listar());
 
-    return "admin/pregunta";
+    model.addAttribute("ok", session.getAttribute("ok"));
+    model.addAttribute("error", session.getAttribute("error"));
+
+    session.removeAttribute("ok");
+    session.removeAttribute("error");
+
+    return "redirect:/admin/preguntas";
   }
 
   // Mostrar form editar
@@ -86,7 +132,7 @@ public class ControllerPregunta {
     // validar id
     if (id == null) {
       session.setAttribute("error", "ID erroneo");
-      return "redirect:/admin/pregunta";
+      return "redirect:/admin/preguntas";
     }
     // buscar pregunta
     Pregunta pregunta = preguntaService.obtenerPorId(id);
@@ -94,7 +140,7 @@ public class ControllerPregunta {
     // verificar si existe
     if (pregunta == null) {
       session.setAttribute("error", "Pregunta no encontrada");
-      return "redirect:/admin/pregunta";
+      return "redirect:/admin/preguntas";
     }
 
     // limpiar mensajes
@@ -102,7 +148,7 @@ public class ControllerPregunta {
     session.removeAttribute("error");
     model.addAttribute("pregunta", pregunta);
 
-    return "admin/preguntas";
+    return "admin/editarPregunta";
   }
 
   // Actualizar pregunta
@@ -118,9 +164,8 @@ public class ControllerPregunta {
 
     // mensaje éxito
     session.setAttribute("ok", "Pregunta actualizada");
-    session.removeAttribute("ok");
 
-    return "redirect:/admin/pregunta";
+    return "redirect:/admin/preguntas";
   }
 
   // Eliminar pregunta
@@ -137,7 +182,7 @@ public class ControllerPregunta {
     // validar id
     if (id == null) {
       redirectAttributes.addFlashAttribute("error", "ID inválido");
-      return "redirect:/admin/pregunta";
+      return "redirect:/admin/preguntas";
     }
     Pregunta pregunta = preguntaService.obtenerPorId(id);
 
@@ -146,14 +191,34 @@ public class ControllerPregunta {
         "error", 
         "La pregunta no existe"
       );
-      return "redirect:/admin/pregunta";    
+      return "redirect:/admin/preguntas";    
     }
 
     // eliminar pregunta
     preguntaService.eliminar(id);
     // mensaje éxito
     redirectAttributes.addFlashAttribute("ok", "Pregunta eliminada correctamente");
-    return "redirect:/admin/pregunta";
+    return "redirect:/admin/preguntas";
   }
 
+  private boolean respuestaValida(String correcta) {
+    return correcta != null && (correcta.equalsIgnoreCase("A") || 
+      correcta.equalsIgnoreCase("B") || 
+      correcta.equalsIgnoreCase("C") || 
+      correcta.equalsIgnoreCase("D")
+    );
+  }
+
+  private boolean categoriaValida(String categorias) {
+
+    for (CategoriaEnum categoria : CategoriaEnum.values()) {
+      if (categoria.name().equalsIgnoreCase(categorias)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  
 }

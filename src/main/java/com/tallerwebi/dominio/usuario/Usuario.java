@@ -1,26 +1,37 @@
 package com.tallerwebi.dominio.usuario;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "usuarios")
 public class Usuario {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  private String username;
+  
+  @Column(nullable = false, unique = true)
   private String email;
+
+  @Column(nullable = false, unique = true)
+  private String username;
+
+  @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false)
   private String rol;
+  
   private Boolean activo = false;
 
-  private Integer puntaje = 0;
+  private Integer puntaje;
 
-  private Integer respuestasAcertadasSeguidas = 0;
+  private Integer partidasGanadasSeguidas;
 
   // constructor vacio
   public Usuario() {
@@ -30,6 +41,9 @@ public class Usuario {
     this.email = email;
     this.username = username;
     this.password = password;
+    this.activo = true;
+    this.puntaje = 0;
+    this.partidasGanadasSeguidas = 0;
   }
 
   public Long getId() {
@@ -92,12 +106,11 @@ public class Usuario {
     this.puntaje = puntaje;
   }
 
-  public Integer getRespuestasAcertadasSeguidas() {
-    return respuestasAcertadasSeguidas;
+  public Integer getPartidasGanadasSeguidas() {
+    return partidasGanadasSeguidas;
   }
-
-  public void setRespuestasAcertadasSeguidas(Integer respuestasAcertadasSeguidas) {
-    this.respuestasAcertadasSeguidas = respuestasAcertadasSeguidas;
+  public void setPartidasGanadasSeguidas(Integer partidasGanadasSeguidas) {
+    this.partidasGanadasSeguidas = partidasGanadasSeguidas;
   }
 
   private Integer puntajeTotal = 0;

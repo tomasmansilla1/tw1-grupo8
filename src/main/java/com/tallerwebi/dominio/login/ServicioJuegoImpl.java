@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -30,7 +32,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
             throw new OpcionInvalidaException("debe elegir una opcion");
         }
 
-        return repositorioJuego.buscarPreguntaPorCategoria(categoria);
+        List<Pregunta> preguntas = repositorioJuego.buscarPreguntaPorCategoria(categoria);
+
+        Collections.shuffle(preguntas);
+
+        return preguntas;
     }
 
     @Override
@@ -43,8 +49,9 @@ public class ServicioJuegoImpl implements ServicioJuego {
         Integer puntaje = 0;
 
         List<String> listaRespuestas = respuesta.getRespuestasUsuario();
+        int limite = Math.min(listaPregunta.size(), listaRespuestas.size());
 
-        for (int i = 0; i < listaPregunta.size(); i++) {
+        for (int i = 0; i < limite; i++) {
             if (listaPregunta.get(i).getCorrecta().equalsIgnoreCase(listaRespuestas.get(i))) {
                 puntaje+=5;
             }
@@ -59,5 +66,25 @@ public class ServicioJuegoImpl implements ServicioJuego {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Integer calcularRespuestasCorrectas(List<Pregunta> preguntas, Respuesta respuesta) {
+        Integer correctas = 0;
+
+        for (int i = 0; i < preguntas.size(); i++) {
+
+        if (preguntas.get(i).getCorrecta().equalsIgnoreCase(
+            respuesta.getRespuestasUsuario().get(i)
+        )) {
+            correctas++;
+        }
+        }
+        return correctas;
+    }
+
+    @Override
+    public List<Partida> buscarHistorial(Long usuarioId) {
+        return repositorioJuego.buscarPartidasPorUsuario(usuarioId);
     }
 }

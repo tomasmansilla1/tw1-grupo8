@@ -32,12 +32,13 @@
 
             <!-- pregunta -->
             <label class="subtitle">Pregunta</label>
+
             <textarea id="inputPregunta"
-                      name="pregunta"
-                      class="form-control mt-2"
-                      rows="3"
-                      required
-                      th:text="${pregunta.pregunta}">
+                name="pregunta"
+                class="form-control mt-2"
+                rows="3"
+                required
+                th:text="${pregunta.consigna}">
             </textarea>
 
             <hr>
@@ -47,30 +48,30 @@
 
                 <div class="col-md-6 mb-3">
                     <input class="form-control"
-                           name="a"
-                           th:value="${pregunta.a}"
-                           placeholder="Opción A">
+                        name="a"
+                        th:value="${pregunta.opcionA}"
+                    >
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <input class="form-control"
-                           name="b"
-                           th:value="${pregunta.b}"
-                           placeholder="Opción B">
+                        name="b"
+                        th:value="${pregunta.opcionB}"
+                        >
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <input class="form-control"
-                           name="c"
-                           th:value="${pregunta.c}"
-                           placeholder="Opción C">
+                        name="c"
+                        th:value="${pregunta.opcionC}"
+                        >
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <input class="form-control"
-                           name="d"
-                           th:value="${pregunta.d}"
-                           placeholder="Opción D">
+                        name="d"
+                        th:value="${pregunta.opcionD}"
+                        >
                 </div>
 
             </div>
@@ -92,23 +93,16 @@
 
             <select name="categoria" class="form-control mt-2">
 
-                <option value="Entretenimiento"
-                        th:selected="${pregunta.categoria == 'Entretenimiento'}">
+                <option value="Entretenimiento" th:selected="${pregunta.categoria == 'Entretenimiento'}">
                     Entretenimiento
                 </option>
-
-                <option value="Ciencia"
-                        th:selected="${pregunta.categoria == 'Ciencia'}">
+                <option value="Ciencia" th:selected="${pregunta.categoria == 'Ciencia'}">
                     Ciencia
                 </option>
-
-                <option value="Cultura"
-                        th:selected="${pregunta.categoria == 'Cultura'}">
+                <option value="Cultura" th:selected="${pregunta.categoria == 'Cultura'}">
                     Cultura
                 </option>
-
-                <option value="Deportes"
-                        th:selected="${pregunta.categoria == 'Deportes'}">
+                <option value="Deportes" th:selected="${pregunta.categoria == 'Deportes'}">
                     Deportes
                 </option>
 
@@ -117,14 +111,13 @@
             <!-- botones -->
             <div class="d-flex gap-2 justify-content-end mt-4">
 
-                <a th:href="@{/admin/pregunta}" class="btn-quiz" style="width:auto;">
+                <a th:href="@{/admin/preguntas}" class="btn-quiz" style="width:auto;">
                     Cancelar
                 </a>
 
                 <button type="submit" class="btn-quiz" style="width:auto;">
                     Guardar
                 </button>
-
             </div>
 
         </form> 

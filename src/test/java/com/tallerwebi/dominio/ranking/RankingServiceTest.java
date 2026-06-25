@@ -29,27 +29,68 @@ public class RankingServiceTest {
   // --- TESTS DE LÓGICA DE PUNTOS ---
 
   @Test
-  public void siElUsuarioAciertaUnaPreguntaNormalDebeSumarCincuentaPuntosYNoDarBonus() {
+  public void siElUsuarioTieneUnaRachaDeUnAciertoDebeSumarSoloCincuentaPuntos() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
     Usuario usuario = new Usuario();
-    usuario.setRespuestasAcertadasSeguidas(1);
-    Integer puntajeBase = 0;
+    usuario.setPartidasGanadasSeguidas(1);
 
-    Double resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
+    Integer resultado = rankingService.calcularPuntaje(usuario, 0);
 
-    assertEquals(50.0, resultado);
-    assertEquals(1, usuario.getRespuestasAcertadasSeguidas()); // La racha se mantiene
+    assertEquals(50, resultado);
+    assertEquals(1, usuario.getPartidasGanadasSeguidas());
   }
 
   @Test
-  public void siElUsuarioLlegaALaTerceraRespuestaSeguidaDebeSumarCincuentaPuntosMasDoscientosDeBonusYResetearRacha() {
+  public void siElUsuarioAlcanzaTresAciertosSeguidosDebeRecibirBonusDeDoscientosPuntos() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
     Usuario usuario = new Usuario();
-    usuario.setRespuestasAcertadasSeguidas(3); // Ya tiene 3
-    Integer puntajeBase = 0;
+    usuario.setPartidasGanadasSeguidas(3);
 
-    Double resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
+    Integer resultado = rankingService.calcularPuntaje(usuario, 0);
 
-    assertEquals(250.0, resultado); // 0 + 50 + 200
-    assertEquals(0, usuario.getRespuestasAcertadasSeguidas()); // Se resetea
+    assertEquals(250, resultado);
+    assertEquals(0, usuario.getPartidasGanadasSeguidas());
+  }
+
+  @Test
+  public void debeSumarAlPuntajeExistente() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(1);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 100);
+
+    assertEquals(150, resultado);
+  }
+
+  @Test
+  public void debeAgregarBonusAlPuntajeExistente() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(3);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 100);
+
+    assertEquals(350, resultado);
+  }
+
+  @Test
+  public void noDebeResetearLaRachaSiTodaviaNoLlegoATres() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(2);
+
+    rankingService.calcularPuntaje(usuario, 0);
   }
 
   // --- TEST DE INTEGRACIÓN DE RANKING ---
@@ -68,5 +109,17 @@ public class RankingServiceTest {
     // Validación
     assertThat(resultado, equalTo(usuariosTop));
     verify(repositoryUsuarioMock, times(1)).obtenerTopUsuarios();
+  }
+
+  @Test
+  public void siElUsuarioLlegaALaTerceraRespuestaSeguidaDebeSumarCincuentaPuntosMasDoscientosDeBonusYResetearRacha() {
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(3); // Ya tiene 3
+    Integer puntajeBase = 0;
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
+
+    assertEquals(250, resultado); // 0 + 50 + 200
+    assertEquals(0, usuario.getPartidasGanadasSeguidas()); // Se resetea
   }
 }

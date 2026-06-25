@@ -8,6 +8,4 @@ public interface ServicioRegistro {
   void validarEmail(String email);
   void validarUsername(String username);
   void validarPassword(String password);
-  
-  void iniciarSesion(String email, String password);
 }

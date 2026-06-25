@@ -28,7 +28,6 @@ public class HibernateTestConfig {
     return dataSource;
   }
 
-  @SuppressWarnings("null")
   @Bean
   public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();

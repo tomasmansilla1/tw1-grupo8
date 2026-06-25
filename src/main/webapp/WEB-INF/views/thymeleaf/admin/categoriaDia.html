@@ -31,18 +31,15 @@
 
     <div class="quiz-card narrow mx-auto">
 
-        <!-- ERROR -->
-        <div th:if="${error}" class="alert alert-danger">
+        <div th:if="${error}" class="alert alert-danger mb-3">
             <span th:text="${error}"></span>
         </div>
-
-        <!-- OK -->
-        <div th:if="${ok}" class="alert alert-success">
+        <div th:if="${ok}" class="alert alert-success mb-3">
             <span th:text="${ok}"></span>
         </div>
 
         <!-- FORM -->
-        <form th:action="@{/admin/categoriaDia}" method="post">
+        <form th:action="@{/admin/guardarCategoriaDia}" method="post">
 
             <label class="subtitle">Categoría</label>
 
@@ -70,16 +67,22 @@
 
             </div>
         </form>
-        <div class="quiz-card mt-4">
-            <h5 class="title">Historial de categorías</h5>
-            <ul class="text-start">
-                <li th:each="c : ${historial}">
-                    <b th:text="${c.nombre}"></b>
-                    <span class="text-muted"> - </span>
-                    <span th:text="${c.fecha}"></span>
-                </li>
-            </ul>
-        </div>
+
+        <h3 class="mt-4"> Historial de categorías </h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${historial}">
+                    <td th:text="${item.nombre}"></td>
+                    <td th:text="${item.fecha}"></td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 </main>
