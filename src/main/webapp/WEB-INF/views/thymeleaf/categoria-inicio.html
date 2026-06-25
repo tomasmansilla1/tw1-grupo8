@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías Aleatorias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 60px auto;
+        }
+
+        .container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 150px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .stat-valor {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .descripcion {
+            color: #666;
+            font-size: 1.1em;
+            margin: 30px 0;
+            line-height: 1.6;
+        }
+
+        .cantidad-selector {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .cantidad-selector label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .cantidad-selector select,
+        .cantidad-selector input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            color: #333;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .cantidad-selector select:focus,
+        .cantidad-selector input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .cantidad-selector input[type="number"] {
+            cursor: text;
+        }
+
+        .botones {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-obtener {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-obtener:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-reiniciar {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-reiniciar:hover {
+            background: #ff5252;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="main-content">
+    <div class="container">
+        <h1>🎯 Empezar Juego</h1>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Puntaje</div>
+                <div class="stat-valor" th:text="${puntaje}"></div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Categorías Usadas</div>
+                <div class="stat-valor" th:text="${categoriasUsadas}"></div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Restantes</div>
+                <div class="stat-valor" th:text="${categoriasRestantes}"></div>
+            </div>
+        </div>
+
+        <div class="descripcion">
+            <p>Selecciona cuántas preguntas quieres responder.</p>
+            <p>Haz clic en "OBTENER CATEGORÍA" para comenzar.</p>
+        </div>
+
+        <form method="post" th:action="@{/categoria/obtener}">
+            <div class="cantidad-selector">
+                <label for="cantidad">¿Cuántas preguntas quieres responder?</label>
+                <select id="cantidad" name="cantidad" required>
+                    <option value="1">1 pregunta</option>
+                    <option value="5">5 preguntas</option>
+                    <option value="10" selected>10 preguntas</option>
+                    <option value="15">15 preguntas</option>
+                    <option value="20">20 preguntas</option>
+                    <option value="30">30 preguntas</option>
+                    <option value="50">50 preguntas</option>
+                </select>
+            </div>
+
+            <div class="botones">
+                <button type="submit" class="btn-obtener">
+                    OBTENER CATEGORÍA 🎲
+                </button>
+            </div>
+        </form>
+
+        <div th:if="${categoriasUsadas > 0}" style="margin-top: 30px;">
+            <form method="post" th:action="@{/categoria/reiniciar}">
+                <button type="submit" class="btn-reiniciar">
+                    REINICIAR JUEGO
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

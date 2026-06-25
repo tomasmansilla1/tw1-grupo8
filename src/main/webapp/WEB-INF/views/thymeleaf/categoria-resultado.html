@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            margin: 60px auto 0 auto;
+        }
+
+        .emoji {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .puntaje {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .respuesta-correcta {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+
+    <div class="emoji" th:if="${acierto}">🎉</div>
+    <div class="emoji" th:unless="${acierto}">❌</div>
+
+    <h1 th:if="${acierto}">¡CORRECTO!</h1>
+    <h1 th:unless="${acierto}">INCORRECTO</h1>
+
+    <div class="categoria-badge" th:text="${categoria.nombre}">
+        Categoría
+    </div>
+
+    <div class="puntaje" th:text="'Puntaje: ' + ${puntaje}">
+        Puntaje: 0
+    </div>
+
+    <div th:if="${!acierto}" class="respuesta-correcta">
+        <p><strong>Respuesta correcta:</strong></p>
+        <p th:text="${respuestaCorrecta}"></p>
+    </div>
+
+    <form method="post" th:action="@{/categoria/obtener}">
+        <button type="submit" class="btn">
+            SIGUIENTE PREGUNTA
+        </button>
+    </form>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
