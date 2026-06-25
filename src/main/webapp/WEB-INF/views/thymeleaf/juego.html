@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .progreso {
+            text-align: center;
+        }
+
+        .progreso h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .progreso p {
+            color: #333;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .puntaje {
+            text-align: center;
+        }
+
+        .puntaje h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .puntaje p {
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .dificultad {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .dificultad.easy { background: #c8e6c9; color: #2e7d32; }
+        .dificultad.medium { background: #fff9c4; color: #f57f17; }
+        .dificultad.hard { background: #ffccbc; color: #d84315; }
+
+        .pregunta {
+            margin-bottom: 30px;
+        }
+
+        .pregunta h2 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .opcion {
+            position: relative;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        label:hover {
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="progreso">
+            <h3>Pregunta</h3>
+            <p th:text="${preguntaNumero} + ' de ' + ${totalPreguntas}"></p>
+        </div>
+        <div class="puntaje">
+            <h3>Puntaje</h3>
+            <p th:text="${puntajeActual} != null ? ${puntajeActual} : '0'"></p>
+        </div>
+    </div>
+
+    <div class="pregunta">
+        <span class="dificultad" th:classappend="${pregunta.difficulty}" th:text="${pregunta.difficulty}"></span>
+
+        <h2 th:text="${pregunta.preguntaDecodificada}"></h2>
+
+        <form method="post" th:action="@{/responder}">
+            <div th:each="opcion : ${pregunta.opcionesDecodificadas}" class="opcion">
+                <input type="radio"
+                       th:id="'opcion_' + ${opcionStat.index}"
+                       name="respuesta"
+                       th:value="${opcion}"
+                       required>
+                <label th:for="'opcion_' + ${opcionStat.index}" th:text="${opcion}"></label>
+            </div>
+
+            <button type="submit">Siguiente Pregunta</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
