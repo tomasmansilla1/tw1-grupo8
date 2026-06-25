@@ -8,57 +8,81 @@
 
 <body class="home-body">
 
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <main class="container my-5">
+<main class="container py-5">
+
+    <div class="quiz-card">
 
         <div class="text-center mb-4">
             <h1 class="title">Historial de Partidas</h1>
             <div class="divider"></div>
         </div>
 
-        <div class="quiz-card">
+            <div class="divider"></div>
+                <p class="subtitle">
+                    Consultá todas tus partidas jugadas y sus resultados.
+                </p>
+            </div>
 
-            <table class="table table-striped table-hover">
+            <div th:if="${#lists.isEmpty(partidas)}"
+            class="alert alert-light text-center">
+                No jugaste ninguna partida todavía.
+            </div>
 
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Puntaje</th>
-                        <th>Resultado</th>
-                    </tr>
-                </thead>
+            <div th:unless="${#lists.isEmpty(partidas)}" class="table-responsive">
 
-                    <tr th:if="${#lists.isEmpty(partidas)}">
-                        <td colspan="3" class="text-center">
-                            No jugaste ninguna partida todavía
-                        </td>
-                    </tr>
+                <table class="table align-middle">
+                    
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Puntaje</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    <tr th:each="partida : ${partidas}">
-                        <td th:text="${partida.fecha}"></td>
-                        <td th:text="${partida.puntajeObtenido}"></td>
-                        <td>
-                            <span th:if="${partida.esVictoria}">Ganó</span>
-                            <span th:unless="${partida.esVictoria}">Perdió</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    <tbody>
+                        <tr th:each="partida : ${partidas}">
+                            <td th:text="${partida.fecha}">
+                                01/01/2026
+                            </td>
 
-            <a th:href="@{/home}">
-                Volver
-            </a>
-        </div>
-    </main>
+                            <td>
+                            <span class="fw-bold"
+                                th:text="${partida.puntajeObtenido}">0</span>
+                            </td>
 
+                            <td>
+                                <span th:if="${partida.esVictoria}"
+                                class="badge bg-success">
+                                    Victoria
+                                </span>
+
+                                <span th:unless="${partida.esVictoria}"
+                                class="badge bg-danger">
+                                    Derrota
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        <a th:href="@{/home}" class="btn-quiz mt-4">
+            Volver al inicio
+        </a>
+    </div>
+</main>
 
     <footer class="quiz-footer mt-4">
         <div class="container small">
             &copy; 2026 - Taller Web I - Universidad Nacional de la Matanza
         </div>
     </footer>
-
 </body>
 </html>

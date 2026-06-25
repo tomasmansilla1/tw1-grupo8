@@ -47,13 +47,25 @@ public class ControladorJuego {
 
     @RequestMapping(path = "/buscar-juego", method = RequestMethod.GET)
     public ModelAndView buscarJuego() {
+
         ModelMap model = new ModelMap();
-        model.put("pregunta", new Pregunta());
-        return new ModelAndView("elegir-categoria", model);
+        model.put("categoriaActual", categoriaService.obtenerCategoriaActiva());
+
+        return new ModelAndView("categoria-del-dia", model);
     }
 
-    @RequestMapping(path = "/juego", method = RequestMethod.POST)
-    public ModelAndView mostrarJuego(@ModelAttribute("preguntaDto") Pregunta preguntaDto, HttpServletRequest request) {
+    @RequestMapping(path = "/tutorial", method = RequestMethod.GET)
+    public ModelAndView irATutorial() {
+        return new ModelAndView("tutorial");
+    }
+    @RequestMapping(path = "/como-jugar", method = RequestMethod.GET)
+    public ModelAndView comoJugar() {
+        return new ModelAndView("simulador-juego");
+    }
+
+    @RequestMapping(path = "/juego", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView mostrarJuego(@ModelAttribute("pregunta") Pregunta pregunta, HttpServletRequest request) {
+       
         ModelMap model = new ModelMap();
         Partida partida = new Partida();
 
@@ -66,7 +78,7 @@ public class ControladorJuego {
                     "error",
                     "No existen preguntas para la categoría del día"
                 );
-                return new ModelAndView("elegir-categoria",model);
+                return new ModelAndView("home", model); 
             }
             Collections.shuffle(preguntas);
 

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Categoría del día</title>
+
+<style>
+body {
+    background: linear-gradient(
+        -45deg,
+        #FFE3EA,
+        #A9D9FF,
+        #D5F4E6,
+        #FFF1B8
+    );
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.category-card {
+    background: rgba(255,255,255,.95);
+
+    backdrop-filter: blur(10px);
+
+    border-radius: 30px;
+
+    padding: 60px 80px;
+
+    text-align: center;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15),
+        0 0 25px rgba(77,163,217,.15);
+
+    max-width: 700px;
+}
+
+.category-title {
+    color: #6c757d;
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+}
+
+.category-name {
+    font-size: 4rem;
+    font-weight: 800;
+
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    opacity: 0;
+
+    animation:
+        aparecer 1.5s ease forwards,
+        pulse 2s infinite;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: scale(.6);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.loading-text {
+    margin-top: 25px;
+    color: #6c757d;
+    font-size: 1rem;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="category-card">
+
+    <h1 class="category-title">
+        La categoría del día es...
+    </h1>
+
+    <div class="category-name"
+         th:text="${categoriaActual}">
+    </div>
+
+    <div class="loading-text">
+        Preparando preguntas...
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    setTimeout(() => {
+        window.location.href = /*[[@{/juego}]]*/ '';
+    }, 3000);
+</script>
+
+</body>
+</html>

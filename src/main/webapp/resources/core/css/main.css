@@ -1,88 +1,211 @@
-/* Fondo general */
+/* Fondo general animado */
 body.home-body {
-    background: linear-gradient(135deg, #FFE3EA, #A9D9FF);
+    background: linear-gradient(-45deg,
+        #FFE3EA,
+        #A9D9FF,
+        #D5F4E6,
+        #FFF1B8);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
 }
 
-/* Contenedor centrado (home/login/menu) */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Contenedor */
 main.container {
-    min-height: 80vh;
+    min-height: 85vh;
 }
 
-/* CARD BASE */
+/* CARD PRINCIPAL */
 .quiz-card {
-    background-color: #FFFFFF;
-    border-radius: 18px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 30px;
+    padding: 3rem;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15),
+        0 0 25px rgba(77,163,217,.15);
+
+    transition: transform .3s ease;
 }
 
-/* Variante para pantallas pequeñas (login/menu/home) */
+.quiz-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Variante angosta */
 .quiz-card.narrow {
-    max-width: 600px;
+    max-width: 700px;
     margin: auto;
 }
 
 /* Título */
 .title {
-    color: #4DA3D9;
+    font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 15px;
+    color: #4DA3D9;
+    margin-bottom: 10px;
 }
 
 /* Subtítulo */
 .subtitle {
-    color: #6c757d;
-    font-size: 1.1rem;
-    margin-top: 10px;
+    color: #666;
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+    line-height: 1.6;
 }
 
 /* Línea decorativa */
 .divider {
-    width: 90px;
-    height: 4px;
-    background-color: #F8A8B8;
-    margin: 15px auto;
-    border-radius: 5px;
+    width: 100px;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        #F8A8B8,
+        #4DA3D9
+    );
+
+    margin: 20px auto;
+    border-radius: 999px;
 }
 
+/* Inputs */
 .input-group .form-control {
-    border-radius: 10px 0 0 10px;
+    border-radius: 12px 0 0 12px;
     border: 2px solid #A9D9FF;
+    padding: 12px;
 }
 
+.input-group .form-control:focus {
+    border-color: #4DA3D9;
+    box-shadow: 0 0 10px rgba(77,163,217,.2);
+}
+
+/* Botón junto al input */
 .input-group .btn-quiz {
-    border-radius: 0 10px 10px 0;
-    margin-top: 0;
     width: auto;
+    margin-top: 0;
+    border-radius: 0 12px 12px 0;
 }
 
 /* Botón principal */
 .btn-quiz {
-    display: block;
+    display: inline-block;
     width: 100%;
-    background-color: #F8A8B8;
-    color: white;
-    padding: 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: all 0.2s ease-in-out;
+
+    padding: 14px 20px;
+
     border: none;
+    border-radius: 50px;
+
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
+
+    box-shadow: 0 10px 25px rgba(123,97,255,.35);
+
+    transition: all .3s ease;
 }
 
 .btn-quiz:hover {
-    background-color: #4DA3D9;
-    transform: scale(1.03);
+    color: white;
+    transform: translateY(-4px) scale(1.03);
+
+    box-shadow:
+        0 15px 35px rgba(123,97,255,.5);
+}
+
+/* Cards internas (tutorial) */
+.step-card {
+    border-radius: 20px;
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+
+    transition: all .3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
+}
+
+.step-card h4 {
+    color: #4DA3D9;
+    font-weight: 700;
+}
+
+.step-card p {
+    color: #666;
+    margin-bottom: 0;
 }
 
 /* Footer */
 .quiz-footer {
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     color: #4DA3D9;
-    font-size: 0.9rem;
+    font-size: .95rem;
+    font-weight: 600;
+}
+
+table {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+thead {
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
+    color: white;
+}
+
+thead th {
+    border: none !important;
+    padding: 15px !important;
+}
+
+tbody tr {
+    transition: .2s ease;
+}
+
+tbody tr:hover {
+    background: #f8fbff;
+    transform: scale(1.01);
+}
+
+.badge {
+    padding: 8px 14px;
+    border-radius: 20px;
+}
+
+.alert-light {
+    border-radius: 15px;
+    padding: 20px;
 }

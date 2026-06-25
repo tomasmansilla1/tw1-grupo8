@@ -7,138 +7,215 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/main.css}">
 
-    <style>
-        /* Reset básico y tipografía */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+.quiz-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
 
-        body {
-            background: linear-gradient(135deg, #cbd3da 0%, #a1b4c4 50%, #8ca4b9 100%);
-            min-height: 100vh;
-        }
+.option-container input[type="radio"] {
+    display: none;
+}
 
-        /* Contenedor principal estilo videojuego casual */
-        .game-card {
-            max-width: 700px;
-            margin: 0 auto;
-        }
+.option-label {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .25s ease;
+    user-select: none;
+}
 
-        .progress-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
+.option-label::before {
+    content: attr(data-letter);
 
-        /* Contenedor de la Consigna/Pregunta */
-        .question-header {
-            margin-bottom: 30px;
-        }
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 
-        .question-header h2 {
-            color: #2b5c7a;
-            font-size: 1.6rem;
-            font-weight: bold;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
+    min-width: 34px;
+    height: 34px;
 
-        /* Formulario y estructura de opciones */
-        .quiz-form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+    margin-right: 15px;
 
-        /* Ocultamos el checkbox/radio circular por defecto */
-        .option-container input[type="radio"] {
-            display: none;
-        }
+    border-radius: 50%;
 
-        /* Convertimos el label/span en un botón interactivo gigante */
-        .option-label {
-            display: flex;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.55);
-            border: 2px solid #b2c4d4;
-            border-radius: 14px;
-            padding: 16px 20px;
-            font-size: 1.05rem;
-            color: #43515e;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.25s ease;
-            user-select: none;
-        }
+    background: rgba(0,0,0,.08);
 
-        /* Efecto hover al pasar el mouse por encima */
-        .option-label:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-color: #3b7da3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(59, 125, 163, 0.1);
-        }
+    font-weight: bold;
+}
 
-        /* Cuando la opción está seleccionada (Checked) */
-        .option-container input[type="radio"]:checked + .option-label {
-            background-color: #3b7da3;
-            border-color: #2b5c7a;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(59, 125, 163, 0.3);
-        }
+.option-container input[type="radio"]:checked + .option-label::before {
+    background: rgba(255,255,255,.25);
+}
 
-        /* Pequeño indicador de letra (A, B, C, D) para darle onda de trivia */
-        .option-label::before {
-            content: attr(data-letter);
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            min-width: 28px;
-            height: 28px;
-            background-color: rgba(0, 0, 0, 0.06);
-            border-radius: 50%;
-            margin-right: 15px;
-            font-size: 0.9rem;
-            color: inherit;
-        }
+.stats-box strong {
+    display: block;
+    color: #4DA3D9;
+    margin-bottom: 5px;
+}
 
-        .option-container input[type="radio"]:checked + .option-label::before {
-            background-color: rgba(255, 255, 255, 0.25);
-        }
+.question-header {
+    margin: 30px 0;
+    text-align: center;
+}
 
-        /* Botón de Enviar Respuesta (Rosa viejo como el botón de "Entrar") */
-        .btn-submit {
-            margin-top: 15px;
-            width: 100%;
-            padding: 15px;
-            font-size: 1.15rem;
-            font-weight: bold;
-            color: #ffffff;
-            background-color: #be7b8a;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 5px 10px rgba(190, 123, 138, 0.2);
-        }
+.question-header h2 {
+    line-height: 1.5;
+}
 
-        .btn-submit:hover {
-            background-color: #ad6b79;
-        }
+.quiz-footer {
+    text-align: center;
+    color: #4DA3D9;
+    font-size: .9rem;
+}
 
-        .btn-submit:active {
-            transform: scale(0.98);
-        }
-    </style>
+body.home-body {
+    background: linear-gradient(
+        -45deg,
+        #FFE3EA,
+        #A9D9FF,
+        #D5F4E6,
+        #FFF1B8
+    );
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    min-height: 100vh;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.game-card {
+    max-width: 800px;
+    margin: auto;
+
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 25px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15),
+        0 0 25px rgba(77,163,217,.15);
+}
+
+.stats-box {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+}
+
+.badge-cat {
+    background: #4DA3D9;
+    padding: 10px 18px;
+    border-radius: 25px;
+    color: white;
+    display: inline-block;
+}
+
+.question-header h2 {
+    color: #4DA3D9;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.option-container input[type="radio"]:checked + .option-label {
+    background:
+        linear-gradient(
+            135deg,
+            #4DA3D9,
+            #7B61FF
+        );
+    border-color: transparent;
+    color: white;
+}
+
+.option-label:hover {
+    border-color: #4DA3D9;
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 20px rgba(77,163,217,.15);
+}
+
+.option-label {
+    background: white;
+    border: 2px solid #A9D9FF;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+
+    border: none;
+    border-radius: 50px;
+
+    font-size: 1.1rem;
+    font-weight: bold;
+
+    color: white;
+    background:
+        linear-gradient(
+            135deg,
+            #4DA3D9,
+            #7B61FF
+        );
+
+    box-shadow:
+        0 10px 25px rgba(123,97,255,.35);
+
+    transition: .3s ease;
+}
+
+.btn-submit:hover {
+    transform:
+        translateY(-3px)
+        scale(1.02);
+
+    box-shadow:
+        0 15px 35px rgba(123,97,255,.45);
+}
+
+.progress {
+    height: 28px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.progress-bar {
+    background:
+        linear-gradient(
+            135deg,
+            #4DA3D9,
+            #7B61FF
+        );
+
+    font-weight: bold;
+}
+
+.alert-success {
+    border-radius: 15px;
+}
+
+.alert-danger {
+    border-radius: 15px;
+}
+</style>
 
 </head>
 
-<body>
+<body class="home-body">
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
@@ -147,34 +224,41 @@
 
     <div class="row text-center mb-4">
 
-        <div class="col">
-            <strong>Pregunta</strong><br>
-            <span th:text="${session.indiceActual + 1}"></span> 
-                de 
-            <span th:text="${cantidadPreguntas}"></span>
+        <div class="col-md-3 mb-3">
+            <div class="stats-box">
+                <strong>Pregunta</strong>
+                <span th:text="${session.indiceActual + 1}"></span>
+                    de
+                <span th:text="${cantidadPreguntas}"></span>
+            </div>
         </div>
 
-        <div class="col">
-            <strong>Categoría</strong><br>
-            <span class="badge bg-primary fs-6" th:text="${categoriaActual}"> </span>
+        <div class="col-md-3 mb-3">
+            <div class="stats-box">
+                <strong>Categoría</strong><br>
+                <span class="badge-cat" th:text="${categoriaActual}"></span>
+            </div>
         </div>
 
-        <div class="col">
-            <strong>Puntaje</strong><br>
-            <span th:text="${puntaje != null ? puntaje : 0}"></span>
+        <div class="col-md-3 mb-3">
+            <div class="stats-box">
+                <strong>Puntaje</strong><br>
+                <span th:text="${puntaje != null ? puntaje : 0}"></span>
+            </div>
         </div>
 
-        <div class="col">
-            <strong>Racha</strong><br>
-            <span th:text="${racha != null ? racha : 0}"></span>
+        <div class="col-md-3 mb-3">
+            <div class="stats-box">
+                <strong>Racha</strong><br>
+                <span th:text="${racha != null ? racha : 0}"></span>
+            </div>
         </div>
     </div>
 
     <div class="progress mb-4" style="height:25px;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated"
-            role="progressbar"
-            th:style="'width:' + ((session.indiceActual + 1) * 100 / cantidadPreguntas) + '%'"
-        >
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+        th:style="'width:' + ((session.indiceActual + 1) * 100 / cantidadPreguntas) + '%'">
+
             <span th:text="${(session.indiceActual + 1) * 100 / cantidadPreguntas} + '%'"></span>
         </div>
     </div>
