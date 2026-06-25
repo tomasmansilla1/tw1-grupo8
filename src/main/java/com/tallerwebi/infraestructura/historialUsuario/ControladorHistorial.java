@@ -2,13 +2,13 @@ package com.tallerwebi.infraestructura.historialUsuario;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tallerwebi.dominio.juego.ServicioJuego;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tallerwebi.dominio.ServicioJuego;
 import com.tallerwebi.dominio.usuario.Usuario;
 
 @Controller

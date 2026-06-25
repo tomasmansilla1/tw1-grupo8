@@ -88,7 +88,7 @@ public class ControladorEstadisticasTest {
 
         Usuario usuario = new Usuario();
         usuario.setUsername("Mauricio");
-        usuario.setRespuestasAcertadasSeguidas(15);
+        usuario.setPartidasGanadasSeguidas(15);
 
         usuarios.add(usuario);
 

@@ -55,7 +55,7 @@ public class JuegoController {
         }
     }
 
-    @PostMapping("/responder")
+    @PostMapping("/responders")
     public String responder(
             @RequestParam String respuesta,
             Model model) {

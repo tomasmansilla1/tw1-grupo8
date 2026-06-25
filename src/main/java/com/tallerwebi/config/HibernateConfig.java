@@ -29,7 +29,7 @@ public class HibernateConfig {
     if (dbPort == null) dbPort = "3306";
     if (dbName == null) dbName = "preguntados_db";
     if (dbUser == null) dbUser = "root";
-    if (dbPassword == null) dbPassword = "1234";
+    if (dbPassword == null) dbPassword = "villaluzuriaga";
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
