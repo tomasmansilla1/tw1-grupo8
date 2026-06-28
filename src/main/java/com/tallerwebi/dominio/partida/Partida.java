@@ -26,7 +26,7 @@ public class Partida {
   private Boolean esVictoria;
 
   @ManyToOne
-  @JoinColumn(name = "usuario_id")
+  @JoinColumn(name = "usuarios_id")
   private Usuario usuario;
 
   @OneToOne(cascade = CascadeType.ALL)

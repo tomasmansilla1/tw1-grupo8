@@ -1,6 +1,6 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.estadisticas;
 
-import com.tallerwebi.dominio.RepositorioEstadisticas;
+import com.tallerwebi.dominio.estadisticas.RepositorioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
 import org.hibernate.SessionFactory;
@@ -35,7 +35,7 @@ public class RepositorioEstadisticasImpl implements RepositorioEstadisticas {
     @Override
     public List<Usuario> buscarUsuariosConMejorRachas() {
         return sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.gt("respuestasAcertadasSeguidas", 0))
-                .addOrder(Order.desc("respuestasAcertadasSeguidas")).list();
+                .add(Restrictions.gt("partidasGanadasSeguidas", 0))
+                .addOrder(Order.desc("partidasGanadasSeguidas")).list();
     }
 }

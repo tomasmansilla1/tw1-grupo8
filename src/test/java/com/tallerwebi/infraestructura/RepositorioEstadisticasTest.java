@@ -1,12 +1,11 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioEstadisticas;
-import com.tallerwebi.dominio.juego.RepositorioJuego;
+import com.tallerwebi.dominio.estadisticas.RepositorioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateTestConfig;
 import com.tallerwebi.infraestructura.config.SpringWebTestConfig;
-import com.tallerwebi.infraestructura.juego.RepositorioJuegoImpl;
+import com.tallerwebi.infraestructura.estadisticas.RepositorioEstadisticasImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

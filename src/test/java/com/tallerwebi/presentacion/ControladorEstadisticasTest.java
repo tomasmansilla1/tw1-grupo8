@@ -1,9 +1,10 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.RankingTiempo;
-import com.tallerwebi.dominio.ServicioEstadisticas;
+import com.tallerwebi.dominio.estadisticas.RankingTiempo;
+import com.tallerwebi.dominio.estadisticas.ServicioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.presentacion.estadisticas.ControladorEstadisticas;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -54,7 +55,7 @@ public class ControladorEstadisticasTest {
 
         when(servicioEstadisticas.obtenerPartidasVictoriosas()).thenReturn(listaPartidas);
 
-        ModelAndView nav = controladorEstadisticas.esatdisticasTiempo();
+        ModelAndView nav = controladorEstadisticas.esatdisticasTiempo("");
 
         assertThat(nav.getViewName(), equalToIgnoringCase("tiempo"));
         assertThat(nav.getModel().get("listaVacio"), is(listaPartidas));
@@ -72,9 +73,9 @@ public class ControladorEstadisticasTest {
         rankingTiempos.add(rankingTiempo);
 
         when(servicioEstadisticas.obtenerPartidasVictoriosas()).thenReturn(listaPartidas);
-        when(servicioEstadisticas.usuariosConMejorTiempo(listaPartidas)).thenReturn(rankingTiempos);
+        when(servicioEstadisticas.usuariosConMejorTiempo(listaPartidas, "")).thenReturn(rankingTiempos);
 
-        ModelAndView nav = controladorEstadisticas.esatdisticasTiempo();
+        ModelAndView nav = controladorEstadisticas.esatdisticasTiempo("");
 
         List<RankingTiempo> resultado = (List<RankingTiempo>) nav.getModel().get("usuariosTiempo");
 

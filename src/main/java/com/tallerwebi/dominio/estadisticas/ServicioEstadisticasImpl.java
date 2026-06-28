@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.estadisticas;
 
 import com.tallerwebi.dominio.excepcion.ListaUsuariosVaciaException;
 import com.tallerwebi.dominio.partida.Partida;
@@ -23,11 +23,21 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Partida> buscarTodasPartidasCategorias() {
-        return repositorioEstadisticas.buscarPartidasFinalizadas();
+        List<Partida> buscarPartidasPorCategoria = repositorioEstadisticas.buscarPartidasFinalizadas();
+
+        if (buscarPartidasPorCategoria.isEmpty()) {
+            return null;
+        }
+
+        return buscarPartidasPorCategoria;
     }
 
     @Override
     public Map<String, Integer> filtrarCantidadPorCategoria(List<Partida> listaPartidas) {
+        if (listaPartidas.isEmpty()) {
+            return null;
+        }
+
         Map<String, Integer> cantidadPorCategoria = new HashMap<>();
 
         for (Partida partida : listaPartidas) {
@@ -45,11 +55,17 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Partida> obtenerPartidasVictoriosas() {
-        return repositorioEstadisticas.obtenerPartidasVictoriosas();
+        List<Partida> listaPartidasVictoriosas = repositorioEstadisticas.obtenerPartidasVictoriosas();
+
+        if (listaPartidasVictoriosas.isEmpty()) {
+            return null;
+        }
+
+        return listaPartidasVictoriosas;
     }
 
     @Override
-    public List<RankingTiempo> usuariosConMejorTiempo(List<Partida> listaPartida) {
+    public List<RankingTiempo> usuariosConMejorTiempo(List<Partida> listaPartida, String ordenamiento) {
         List<RankingTiempo> rankingTiempos = new ArrayList<>();
         Map<Usuario, Long> mejoresTiempo = obtenerTiempoUsuario(listaPartida);
 
@@ -57,7 +73,13 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
             rankingTiempos.add(new RankingTiempo(entry.getKey(), entry.getValue()));
         }
 
-        rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo));
+        if (ordenamiento == null || ordenamiento.isEmpty() || ordenamiento.equalsIgnoreCase("ASC")) {
+            rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo));
+        }
+
+        if ("DESC".equalsIgnoreCase(ordenamiento)) {
+            rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo).reversed());
+        }
 
         return rankingTiempos;
     }

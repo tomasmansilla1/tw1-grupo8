@@ -1,5 +1,9 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.estadisticas.RankingTiempo;
+import com.tallerwebi.dominio.estadisticas.RepositorioEstadisticas;
+import com.tallerwebi.dominio.estadisticas.ServicioEstadisticas;
+import com.tallerwebi.dominio.estadisticas.ServicioEstadisticasImpl;
 import com.tallerwebi.dominio.excepcion.ListaUsuariosVaciaException;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
@@ -87,7 +91,7 @@ public class ServicioEstadisticasTest {
         partidas.add(partida2);
         partidas.add(partida3);
 
-        List<RankingTiempo> ranking = servicioEstadisticas.usuariosConMejorTiempo(partidas);
+        List<RankingTiempo> ranking = servicioEstadisticas.usuariosConMejorTiempo(partidas, null);
 
         assertThat(ranking, hasSize(3));
         assertThat(ranking.get(0).getUsuario(), equalTo(usuario2));

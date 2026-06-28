@@ -1,24 +1,22 @@
-DELETE FROM pregunta;
-DELETE FROM partida;
-DELETE FROM usuario;
+INSERT INTO usuarios(id, email, username, password, rol, activo)
+SELECT null, 'test@unlam.edu.ar', 'admin', 'test', 'ADMIN', true
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'test@unlam.edu.ar'
+);
 
+INSERT IGNORE INTO usuarios(id, email, username, password, rol, puntaje, partidasGanadasSeguidas)VALUES
+(2, 'mauricio@unlam.edu.ar', 'mauricio', '1234', 'JUGADOR', 120, 15),
+(3, 'juan@unlam.edu.ar', 'juan', '1234', 'JUGADOR', 95, 8),
+(4, 'ana@unlam.edu.ar', 'ana', '1234', 'JUGADOR', 150, 22),
+(5, 'pedro@unlam.edu.ar', 'pedro', '1234', 'JUGADOR', 75, 4),
+(6, 'lucia@unlam.edu.ar', 'lucia', '1234', 'JUGADOR', 180, 30),
+(7, 'martin@unlam.edu.ar', 'martin', '1234', 'JUGADOR', 110, 12),
+(8, 'camila@unlam.edu.ar', 'camila', '1234', 'JUGADOR', 135, 18),
+(9, 'sofia@unlam.edu.ar', 'sofia', '1234', 'JUGADOR', 60, 2),
+(10, 'nicolas@unlam.edu.ar', 'nicolas', '1234', 'JUGADOR', 200, 35),
+(11, 'florencia@unlam.edu.ar', 'florencia', '1234', 'JUGADOR', 145, 20);
 
-INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
-INSERT INTO Usuario(id, email, password, rol, activo) VALUES(1, 'mauricio@gmail.com', '1234', 'USER', true);
-
-INSERT INTO usuario(id, username, puntaje, respuestasAcertadasSeguidas)VALUES
-(2, 'mauricio', 120, 15),
-(3, 'juan', 95, 8),
-(4, 'ana', 150, 22),
-(5, 'pedro', 75, 4),
-(6, 'lucia', 180, 30),
-(7, 'martin', 110, 12),
-(8, 'camila', 135, 18),
-(9, 'sofia', 60, 2),
-(10, 'nicolas', 200, 35),
-(11, 'florencia', 145, 20);
-
-INSERT INTO partida(categoria, fecha, puntajeObtenido, inicio_partida, final_partida, esVictoria, usuario_id, respuesta_id)VALUES
+INSERT INTO partida(categoria, fecha, puntajeObtenido, inicio_partida, final_partida, esVictoria, usuarios_id, respuesta_id)VALUES
 ('Historia', '2026-08-01 10:00:00', 10, '10:00:00', '10:01:30', true,  2, null),
 ('Deporte', '2026-08-01 11:00:00',  8, '11:00:00', '11:02:00', true,  3, null),
 ('Arte', '2026-08-01 12:00:00',  6, '12:00:00', '12:04:00', true, 4, null),
