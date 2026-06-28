@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* min-height: 100vh; */
+            /* display: flex; */
+            justify-content: center;
+            /* align-items: center; */
+            /* padding: 20px; */
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            margin: 60px auto 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .puntaje {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: #333;
+            margin: 30px 0;
+            line-height: 1.5;
+            font-size: 1.4em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .opcion {
+            position: relative;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        label:hover {
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <div class="header">
+        <div class="puntaje" th:text="'Puntaje: ' + ${puntaje}"></div>
+        <div class="categoria-badge" th:text="${categoria.nombre}"></div>
+    </div>
+
+    <h2 th:text="${pregunta.preguntaDecodificada}"></h2>
+
+    <form method="post" th:action="@{/categoria/responder}">
+        <input type="hidden" name="categoriaId" th:value="${categoriaId}">
+
+        <div th:each="opcion, stat : ${pregunta.opcionesDecodificadas}" class="opcion">
+            <input type="radio"
+                   th:id="'opcion_' + ${stat.index}"
+                   name="respuesta"
+                   th:value="${opcion}"
+                   required>
+
+            <label th:for="'opcion_' + ${stat.index}"
+                   th:text="${opcion}">
+            </label>
+        </div>
+
+        <button type="submit">RESPONDER</button>
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

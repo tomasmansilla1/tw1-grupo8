@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>¡Completado!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .emoji {
+            font-size: 5em;
+            margin-bottom: 30px;
+            animation: bounce 0.8s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .puntaje {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 30px 0;
+        }
+
+        a {
+            display: inline-block;
+            padding: 15px 50px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 30px;
+            font-size: 1.1em;
+        }
+
+        a:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <div class="emoji">👑</div>
+    <h1>¡COMPLETADO!</h1>
+    <p style="font-size: 1.3em; color: #666;">Respondiste todas las categorías</p>
+
+    <div class="puntaje" th:text="'Puntaje Final: ' + ${puntajeFinal} + ' de ' + ${totalCategorias}"></div>
+
+    <a href="@{/categoria}">JUGAR DE NUEVO</a>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
