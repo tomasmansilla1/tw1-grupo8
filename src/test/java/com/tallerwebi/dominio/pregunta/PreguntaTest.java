@@ -16,9 +16,9 @@ public class PreguntaTest {
     @Test
     public void deberiaSetearYObtenerPregunta() {
         String textoPregunta = "¿Cuál es la capital de Argentina?";
-        pregunta.setTextoPregunta(textoPregunta);
+        pregunta.setConsigna(textoPregunta);
 
-        assertEquals(textoPregunta, pregunta.getTextoPregunta());
+        assertEquals(textoPregunta, pregunta.getConsigna());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PreguntaTest {
     @Test
     public void deberiaSetearYObtenerTodosLosCampos() {
 
-        pregunta.setTextoPregunta("Pregunta");
+        pregunta.setConsigna("Pregunta");
         pregunta.setCorrecta("A");
         pregunta.setOpcionA("Opcion A");
         pregunta.setOpcionB("Opcion B");
@@ -80,12 +80,56 @@ public class PreguntaTest {
         pregunta.setOpcionD("Opcion D");
         pregunta.setCategoria("Historia");
 
-        assertEquals("Pregunta", pregunta.getTextoPregunta());
+        assertEquals("Pregunta", pregunta.getConsigna());
         assertEquals("A", pregunta.getCorrecta());
         assertEquals("Opcion A", pregunta.getOpcionA());
         assertEquals("Opcion B", pregunta.getOpcionB());
         assertEquals("Opcion C", pregunta.getOpcionC());
         assertEquals("Opcion D", pregunta.getOpcionD());
         assertEquals("Historia", pregunta.getCategoria());
+    }
+
+    @Test
+    public void debeCrearPreguntaConTodosLosDatos() {
+
+        Pregunta pregunta = new Pregunta(
+            "CIENCIA",
+            "¿Cuál es el planeta más grande?",
+            "Tierra",
+            "Marte",
+            "Júpiter",
+            "Venus",
+            "C"
+        );
+
+        assertEquals("CIENCIA", pregunta.getCategoria());
+        assertEquals("¿Cuál es el planeta más grande?", pregunta.getConsigna());
+        assertEquals("Tierra", pregunta.getOpcionA());
+        assertEquals("Marte", pregunta.getOpcionB());
+        assertEquals("Júpiter", pregunta.getOpcionC());
+        assertEquals("Venus", pregunta.getOpcionD());
+        assertEquals("C", pregunta.getCorrecta());
+    }
+
+    @Test
+    public void debeGuardarYObtenerDatosDePregunta() {
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setCategoria("HISTORIA");
+        pregunta.setConsigna("¿Quién descubrió América?");
+        pregunta.setOpcionA("Colón");
+        pregunta.setOpcionB("San Martín");
+        pregunta.setOpcionC("Belgrano");
+        pregunta.setOpcionD("Sarmiento");
+        pregunta.setCorrecta("A");
+
+        assertEquals("HISTORIA", pregunta.getCategoria());
+        assertEquals("¿Quién descubrió América?", pregunta.getConsigna());
+        assertEquals("Colón", pregunta.getOpcionA());
+        assertEquals("San Martín", pregunta.getOpcionB());
+        assertEquals("Belgrano", pregunta.getOpcionC());
+        assertEquals("Sarmiento", pregunta.getOpcionD());
+        assertEquals("A", pregunta.getCorrecta());
     }
 }

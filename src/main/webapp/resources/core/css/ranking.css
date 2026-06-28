@@ -1,85 +1,161 @@
-/* Fondo general */
+/* Fondo general animado */
 body.home-body {
-    background: linear-gradient(135deg, #FFE3EA, #A9D9FF);
+    background: linear-gradient(-45deg,
+        #FFE3EA,
+        #A9D9FF,
+        #D5F4E6,
+        #FFF1B8);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
 }
 
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 /* Card principal */
 .quiz-card {
-    background-color: #FFFFFF;
-    border-radius: 18px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 30px;
+    padding: 2.5rem;
+
     max-width: 900px;
     margin: auto;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15),
+        0 0 25px rgba(77,163,217,.15);
 }
 
 /* Título */
 .title {
     color: #4DA3D9;
-    font-weight: bold;
+    font-size: 2.5rem;
+    font-weight: 800;
     margin-bottom: 10px;
 }
 
 /* Subtítulo */
 .subtitle {
-    color: #6c757d;
+    color: #666;
     font-size: 1.1rem;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-/* Línea divisoria decorativa */
+/* Línea decorativa */
 .divider {
-    width: 80px;
-    height: 4px;
-    background-color: #F8A8B8;
-    margin: 10px auto 20px auto;
-    border-radius: 5px;
+    width: 100px;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        #F8A8B8,
+        #4DA3D9
+    );
+
+    margin: 15px auto 30px;
+    border-radius: 999px;
 }
 
 /* Tabla */
 table {
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
+    background: white;
 }
 
 thead {
-    background-color: #4DA3D9;
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
     color: white;
+}
+
+thead th {
+    padding: 15px !important;
+}
+
+/* Filas */
+tbody tr {
+    transition: all .25s ease;
 }
 
 tbody tr:hover {
-    background-color: #FFE3EA;
-    transition: 0.2s;
+    background-color: #f8fbff;
+    transform: scale(1.01);
 }
 
-/* Posiciones (podés mejorar UX visual) */
+/* Top 3 */
 tbody tr:nth-child(1) {
-    background-color: #FFE3EA;
+    background: linear-gradient(
+        90deg,
+        #FFF5CC,
+        #FFE082
+    );
     font-weight: bold;
 }
 
-/* Botón volver */
+tbody tr:nth-child(2) {
+    background: #F3F4F6;
+}
+
+tbody tr:nth-child(3) {
+    background: #FDE7D3;
+}
+
+/* Celdas */
+td {
+    vertical-align: middle;
+    padding: 14px !important;
+}
+
+/* Botón */
 .btn-quiz {
     display: inline-block;
-    background-color: #F8A8B8;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
+
+    padding: 12px 28px;
+
+    border: none;
+    border-radius: 50px;
+
     font-weight: bold;
-    transition: 0.2s ease;
+    text-decoration: none;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
+
+    box-shadow: 0 10px 25px rgba(123,97,255,.35);
+
+    transition: all .3s ease;
 }
 
 .btn-quiz:hover {
-    background-color: #4DA3D9;
     color: white;
-    transform: scale(1.05);
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 35px rgba(123,97,255,.5);
 }
 
 /* Mensaje vacío */
 .text-muted {
     text-align: center;
     font-style: italic;
+    font-size: 1.1rem;
+    color: #666 !important;
+    padding: 20px;
 }

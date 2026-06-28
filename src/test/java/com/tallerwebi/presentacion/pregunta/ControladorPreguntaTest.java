@@ -2,8 +2,9 @@ package com.tallerwebi.presentacion.pregunta;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -15,6 +16,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import com.tallerwebi.config.SessionUtil;
+import com.tallerwebi.dominio.categoriaDia.CategoriaEnum;
 import com.tallerwebi.dominio.pregunta.Pregunta;
 import com.tallerwebi.dominio.pregunta.PreguntaService;
 
@@ -25,9 +27,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public class ControladorPreguntaTest {
 
-    // obj simulado para no usar bd real
     private PreguntaService preguntaService;
     private SessionUtil sessionUtil;
+
     private HttpSession session;
     private Model model;
     private RedirectAttributes redirectAttributes;
@@ -36,272 +38,600 @@ public class ControladorPreguntaTest {
 
     @BeforeEach
     public void init() {
-        // mocks manuales
+
         this.preguntaService = mock(PreguntaService.class);
         this.sessionUtil = mock(SessionUtil.class);
+
         this.session = mock(HttpSession.class);
         this.model = mock(Model.class);
         this.redirectAttributes = mock(RedirectAttributes.class);
 
-        // controller real
         this.controller = new ControllerPregunta(preguntaService, sessionUtil);
+
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
     }
 
+    // --------------------------------------------------
+    // 1. FORMULARIO
+    // --------------------------------------------------
+    @Test
+    public void debeRedirigirLoginSiNoEsAdminEnFormulario() {
 
-  @Test
-  public void debeAgregarMensajesAlModel() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(session.getAttribute("ok")).thenReturn("todo bien");
-    when(session.getAttribute("error")).thenReturn("hubo error");
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    controller.listarPreguntas(session, model);
+        String vista = controller.mostrarFormulario(session, model);
 
-    verify(model).addAttribute("ok", "todo bien");
-    verify(model).addAttribute("error", "hubo error");
-  }
+        assertEquals("redirect:/login", vista);
+    }
 
-  @Test
-  public void debeRedirigirALoginSiNoEsAdminEnEditar() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    @Test
+    public void debeMostrarFormularioSiEsAdmin() {
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("redirect:/login", vista);
-  }
-  @Test
-  public void debeContinuarSiEsAdminEnEditar() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta());
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("admin/editarPregunta", vista);
-  }
+        String vista = controller.mostrarFormulario(session, model);
 
-  @Test
-  public void noDebeLimpiarMensajesSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        assertEquals("admin/crearPregunta", vista);
 
-    controller.listarPreguntas(session, model);
+        verify(model).addAttribute(eq("pregunta"), any(Pregunta.class));
+    }
 
-    verify(session, never()).removeAttribute("ok");
-    verify(session, never()).removeAttribute("error");
-  }
+    // --------------------------------------------------
+    // 2. LISTAR
+    // --------------------------------------------------
 
-  
+    @Test
+    public void debeAgregarMensajesAlModel() {
 
-  // MOSTRAR FORM
-  @Test
-  public void debeMostrarFormSiEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    String vista = controller.mostrarFormulario(session, model);
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    assertEquals("admin/crearPregunta", vista);
-    verify(model).addAttribute("pregunta",any(Pregunta.class));
-  }
+        when(preguntaService.listar()).thenReturn(List.of(new Pregunta()));
 
-  @Test
-  public void debeRedirigirLoginSiNoEsAdminEnForm() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        when(session.getAttribute("ok")).thenReturn("ok");
+        when(session.getAttribute("error")).thenReturn("error");
 
-    String vista = controller.mostrarFormulario(session, model);
+        controller.listarPreguntas(session, model);
 
-    assertEquals("redirect:/login", vista);
-  }
+        verify(model).addAttribute("ok", "ok");
+        verify(model).addAttribute("error", "error");
+        verify(model).addAttribute(eq("preguntas"), any());
+    }
 
-  //GUARDAR PREGUNTA
-  @Test
-  public void debeGuardarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    @Test
+    public void noDebeListarSiNoEsAdmin() {
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.guardarPregunta(pregunta, session);
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(preguntaService).guardar(pregunta);
+        String vista = controller.listarPreguntas(session, model);
 
-    verify(session).setAttribute("ok", "Pregunta creada correctamente");
-  }
+        assertEquals("redirect:/login", vista);
 
-  @Test
-  public void noDebeGuardarSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        verify(preguntaService, never()).listar();
+    }
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.guardarPregunta(pregunta, session);
+    // --------------------------------------------------
+    // 3. EDITAR GET
+    // --------------------------------------------------
+    @Test
+    public void debeRedirigirLoginSiNoEsAdminEnEditar() {
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).guardar(pregunta);
-  }
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  // LISTAR PREGUNTA
-  @Test
-  public void debeListarPreguntasSiEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.listar()).thenReturn(new ArrayList<>());
+        String vista = controller.editarPregunta(1L, session, model);
 
-    String vista = controller.listarPreguntas(session, model);
+        assertEquals("redirect:/login", vista);
+    }
 
-    assertEquals("admin/pregunta", vista);
-    verify(preguntaService).listar();
-    verify(model).addAttribute("pregunta",anyList());
-  }
+    @Test
+    public void debeMostrarEditarPregunta() {
 
-  @Test
-  public void noDebeListarPreguntasSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-    String vista = controller.listarPreguntas(session, model);
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    assertEquals("redirect:/login",vista);
-    verify(preguntaService, never()).listar();
-  }
+        Pregunta pregunta = new Pregunta();
+        when(preguntaService.obtenerPorId(1L)).thenReturn(pregunta);
 
-  @Test
-  public void debeListarPreguntas() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    List<Pregunta> preguntas = new ArrayList<>();
+        String vista = controller.editarPregunta(1L, session, model);
 
-    when(preguntaService.listar()).thenReturn(preguntas);
-    String vista = controller.listarPreguntas(session,model);
+        assertEquals("admin/editarPregunta", vista);
 
-    assertEquals("admin/pregunta",vista);
-    verify(model).addAttribute("pregunta",preguntas);
-  }
+        verify(model).addAttribute("pregunta", pregunta);
+    }
 
-  @Test
-  public void debeLimpiarMensajesDeSesion() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    @Test
+    public void debeRedirigirSiPreguntaNoExiste() {
 
-    controller.listarPreguntas(session, model);
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.obtenerPorId(1L)).thenReturn(null);
 
-    verify(session).removeAttribute("ok");
-    verify(session).removeAttribute("error");
-  }
+        String vista = controller.editarPregunta(1L, session, model);
 
-  // EDITAR PREGUNTA
-  @Test
-  public void debeMostrarEditarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        assertEquals("redirect:/admin/preguntas", vista);
 
-    Pregunta pregunta = new Pregunta();
-    when(preguntaService.obtenerPorId(1L)).thenReturn(pregunta);
+        verify(session).setAttribute("error", "Pregunta no encontrada");
+    }
 
-    String vista = controller.editarPregunta(1L, session, model);
-    assertEquals("admin/editarPregunta", vista);
+    // --------------------------------------------------
+    // 4. GUARDAR
+    // --------------------------------------------------
+    @Test
+    public void noDebeGuardarSiNoEsAdmin() {
 
-    verify(model).addAttribute("pregunta", pregunta);
-  }
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-  @Test
-  public void debeRedirigirSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        Pregunta pregunta = new Pregunta();
 
-    String vista = controller.editarPregunta(null, session, model);
+        String vista = controller.guardarPregunta(pregunta, session);
 
-    assertEquals("redirect:/admin/preguntas", vista);
+        assertEquals("redirect:/login", vista);
 
-    verify(session).setAttribute("error", "ID erroneo");
-  }
+        verify(preguntaService, never()).guardar(any());
+    }
 
-  @Test
-  public void noDeberiaBuscarPreguntaSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+    @Test
+    public void debeGuardarPreguntaCorrectamente() {
 
-    controller.editarPregunta(null, session, model);
-    verify(preguntaService, never()).obtenerPorId(anyLong());
-  }
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-  @Test
-  public void debeRedirigirSiPreguntaNoExiste() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(null);
+        Pregunta pregunta = new Pregunta();
+        pregunta.setConsigna("test");
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+        pregunta.setCategoria("Historia");
+        pregunta.setCorrecta("A");
 
-    String vista = controller.editarPregunta(1L, session, model);
+        String vista = controller.guardarPregunta(pregunta, session);
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(session).setAttribute("error", "Pregunta no encontrada");
-  }
+        assertEquals("redirect:/admin/preguntas", vista);
 
-  // ACTUALIZAR PREGUNTA
-  @Test
-  public void noDebeActualizarPreguntaSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+        verify(preguntaService).guardar(pregunta);
+        verify(session).setAttribute("ok", "Pregunta creada correctamente");
+    }
 
-    Pregunta pregunta = new Pregunta();
-    String vista = controller.actualizarPregunta(pregunta, session);
+    // --------------------------------------------------
+    // 5. EDITAR POST
+    // --------------------------------------------------
+    @Test
+    public void debeActualizarPregunta() {
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).guardar(pregunta);
-  }
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-  @Test
-  public void debeActualizarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        Pregunta pregunta = new Pregunta();
 
-    Pregunta pregunta = new Pregunta();
+        String vista = controller.actualizarPregunta(pregunta, session);
 
-    String vista = controller.actualizarPregunta(pregunta, session);
+        assertEquals("redirect:/admin/preguntas", vista);
 
-    assertEquals("redirect:/admin/preguntas", vista);
-    verify(preguntaService).guardar(pregunta);
-  }
+        verify(preguntaService).guardar(pregunta);
+        verify(session).setAttribute("ok", "Pregunta actualizada");
+    }
 
-  // ELIMINAR PREGUNTA
-  @Test
-  public void noDebeEliminarSiNoEsAdmin() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+    // --------------------------------------------------
+    // 6. ELIMINAR
+    // --------------------------------------------------
+    @Test
+    public void noDebeEliminarSiNoEsAdmin() {
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
 
-    assertEquals("redirect:/login", vista);
-    verify(preguntaService, never()).eliminar(1L);
-  }
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
 
-  @Test
-  public void debeEliminarPregunta() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    // Existe la pregunta?
-    when(preguntaService.obtenerPorId(1L)).thenReturn(new Pregunta()); 
+        assertEquals("redirect:/login", vista);
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        verify(preguntaService, never()).eliminar(anyLong());
+    }
 
-    assertEquals("redirect:/admin/pregunta",vista);
-    verify(preguntaService).eliminar(1L);
+    // =======================
+// GUARDAR PREGUNTA (POST)
+// =======================
 
-    verify(redirectAttributes).addFlashAttribute(
-      "ok", 
-      "Pregunta eliminada correctamente");
+    @Test
+    public void noDebeGuardarPreguntaSiOpcionesInvalidas() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+        pregunta.setOpcionA("");
+        pregunta.setOpcionB("");
+        pregunta.setOpcionC("");
+        pregunta.setOpcionD("");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        assertEquals("redirect:/admin/mostrarCrearPregunta", vista);
+        verify(preguntaService, never()).guardar(any());
+        verify(session).setAttribute(eq("error"), anyString());
+    }
+
+    @Test
+    public void noDebeGuardarPreguntaSiConsignaVacia() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+        pregunta.setConsigna("");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        assertEquals("redirect:/admin/mostrarCrearPregunta", vista);
+        verify(preguntaService, never()).guardar(any());
+    }
+
+    @Test
+    public void noDebeGuardarPreguntaSiCategoriaInvalida() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+        pregunta.setConsigna("Pregunta?");
+        pregunta.setCategoria("INVALIDA");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        assertEquals("redirect:/admin/mostrarCrearPregunta", vista);
+        verify(preguntaService, never()).guardar(any());
+    }
+
+// =======================
+// ELIMINAR PREGUNTA
+// =======================
+
+
+    @Test
+    public void debeRedirigirConErrorSiIdNullEnEliminar() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        String vista = controller.eliminarPregunta(null, session, redirectAttributes);
+
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), anyString());
+        verify(preguntaService, never()).eliminar(any());
+    }
     
-  }
+    @Test
+    public void debeRedirigirSiPreguntaNoExisteEnEliminar() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        when(preguntaService.obtenerPorId(1L)).thenReturn(null);
 
-  @Test
-  public void noDebeEliminarPreguntaSiIdEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
 
-    String vista = controller.eliminarPregunta(1L,session,redirectAttributes);
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(redirectAttributes).addFlashAttribute(
+            eq("error"),
+            eq("La pregunta no existe")
+        );
+        verify(preguntaService, never()).eliminar(anyLong());
+    }
 
-    assertEquals("redirect:/login", vista);
+    @Test
+    public void debeEliminarPreguntaCorrectamente() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    verify(preguntaService, never()).eliminar(1L);
-  }
+        Pregunta pregunta = new Pregunta();
+        when(preguntaService.obtenerPorId(1L)).thenReturn(pregunta);
 
-  @Test
-  public void debeRedirigirSiIdEliminarEsNull() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
 
-    String vista = controller.eliminarPregunta(null, session, redirectAttributes);
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(preguntaService).eliminar(1L);
+        verify(redirectAttributes).addFlashAttribute(
+            eq("ok"),
+            eq("Pregunta eliminada correctamente")
+        );
+    }
 
-    assertEquals("redirect:/admin/pregunta",vista);
-    verify(redirectAttributes).addFlashAttribute("error", "ID inválido");
-  } 
+// =======================
+// LISTAR PREGUNTAS
+// =======================
 
-  @Test
-  public void debeRedirigirSiPreguntaAEliminarNoExiste() {
-    when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-    when(preguntaService.obtenerPorId(1L)).thenReturn(null); // No existe
+    @Test
+    public void debeListarPreguntasCorrectamente() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-    String vista = controller.eliminarPregunta(1L, session, redirectAttributes);
+        when(preguntaService.listar()).thenReturn(new ArrayList<>());
 
-    assertEquals("redirect:/admin/pregunta", vista);
-    verify(redirectAttributes).addFlashAttribute("error", "La pregunta no existe");
-    verify(preguntaService, never()).eliminar(1L);
-  }
+        String vista = controller.listarPreguntas(session, model);
+
+        assertEquals("redirect:/admin/preguntas", vista);
+        verify(model).addAttribute(eq("preguntas"), any());
+    }
+
+    @Test
+    public void debeNoListarSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+
+        String vista = controller.listarPreguntas(session, model);
+
+        assertEquals("redirect:/login", vista);
+        verify(preguntaService, never()).listar();
+    }
+
+    @Test
+    void debeRechazarRespuestaIncorrecta() {
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("HISTORIA");
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setCorrecta("X");
+
+        String vista =
+        controller.guardarPregunta(
+            pregunta,
+            session
+        );
+
+        verify(session).setAttribute(
+            "error",
+            "La respuesta correcta debe ser A, B, C o D"
+        );
+
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    void debeRechazarCategoriaInvalida() {
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("CUALQUIERA");
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setCorrecta("A");
+
+        String vista = controller.guardarPregunta(
+            pregunta,
+            session
+        );
+
+        verify(session).setAttribute(
+            "error",
+            "Categoría invalida"
+        );
+
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+    @Test
+    void debeGuardarPreguntaValida() {
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setConsigna("Pregunta");
+
+        pregunta.setCategoria(
+            CategoriaEnum.HISTORIA.name()
+        );
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setCorrecta("A");
+
+        String vista = controller.guardarPregunta(
+            pregunta,
+            session
+        );
+
+        verify(preguntaService).guardar(pregunta);
+
+        assertEquals(
+            "redirect:/admin/preguntas",
+            vista
+        );
+    }
+
+    @Test
+    public void debeRedirigirALoginSiNoEsAdmin() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+
+        Pregunta pregunta = new Pregunta();
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        assertEquals("redirect:/login", vista);
+    }
+
+    @Test
+    public void debeMostrarErrorSiFaltanOpciones() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "Todas las opciones son obligatorias"
+        );
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        )  ;
+    }
+
+    @Test
+    public void debeMostrarErrorSiLaConsignaEsVacia() {
+
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+        pregunta.setConsigna("");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "La consigna es obligatoria"
+        );
+
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    public void debeMostrarErrorSiLaCategoriaEsVacia() {
+
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "La categoría es obligatoria"
+        );
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    public void debeMostrarErrorSiNoHayRespuestaCorrecta() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("HISTORIA");
+
+        pregunta.setCorrecta("");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "Debe indicar la respuesta correcta"
+        );
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    public void debeMostrarErrorSiLaRespuestaNoEsABCD() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("HISTORIA");
+
+        pregunta.setCorrecta("X");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "La respuesta correcta debe ser A, B, C o D"
+        );
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    public void debeMostrarErrorSiLaCategoriaNoExiste() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Pregunta pregunta = new Pregunta();
+
+        pregunta.setOpcionA("A");
+        pregunta.setOpcionB("B");
+        pregunta.setOpcionC("C");
+        pregunta.setOpcionD("D");
+
+        pregunta.setConsigna("Pregunta");
+        pregunta.setCategoria("CUALQUIERA");
+
+        pregunta.setCorrecta("A");
+
+        String vista = controller.guardarPregunta(pregunta, session);
+
+        verify(session).setAttribute(
+            "error",
+            "Categoría invalida"
+        );
+        assertEquals(
+            "redirect:/admin/mostrarCrearPregunta",
+            vista
+        );
+    }
+
+    @Test
+    public void debeMostrarErrorSiIdEsNull() {
+        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        Model model = mock(Model.class);
+
+        String vista = controller.editarPregunta(
+            null,
+            session,
+            model
+        );
+
+        verify(session).setAttribute(
+            "error",
+            "ID erroneo"
+        );
+
+        assertEquals(
+            "redirect:/admin/preguntas",
+            vista
+        );
+    }
 }

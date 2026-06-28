@@ -13,6 +13,7 @@ import com.tallerwebi.dominio.usuario.Usuario;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class ServiceLoginTest {
 
@@ -100,5 +101,95 @@ public class ServiceLoginTest {
 
     datos.setPassword("123456");
     assertEquals("123456", datos.getPassword());
+  }
+
+  @Test
+  public void consultarUsuarioDebeRetornarNullSiUsuarioNoExiste() {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    when(repo.buscar("test@mail.com")).thenReturn(null);
+    Usuario resultado = service.consultarUsuario("test@mail.com","Pass123!");
+
+    assertNull(resultado);
+  }
+
+  @Test
+  public void consultarUsuarioDebeRetornarNullSiUsuarioEstaInactivo() {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    Usuario usuario = new Usuario();
+    usuario.setActivo(false);
+
+    when(repo.buscar("test@mail.com")).thenReturn(usuario);
+    Usuario resultado = service.consultarUsuario("test@mail.com","Pass123!");
+
+    assertNull(resultado);
+  }
+
+  @Test
+  public void consultarUsuarioDebeRetornarNullSiPasswordEsIncorrecta() {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    Usuario usuario = new Usuario();
+    usuario.setActivo(true);
+    usuario.setPassword("Correcta123!");
+
+    when(repo.buscar("test@mail.com")).thenReturn(usuario);
+    Usuario resultado = service.consultarUsuario("test@mail.com","Incorrecta123!");
+
+    assertNull(resultado);
+  }
+
+  @Test
+  public void consultarUsuarioDebeRetornarUsuarioSiDatosSonCorrectos() {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    Usuario usuario = new Usuario();
+    usuario.setActivo(true);
+    usuario.setPassword("Pass123!");
+
+    when(repo.buscar("test@mail.com")).thenReturn(usuario);
+    Usuario resultado = service.consultarUsuario("test@mail.com", "Pass123!");
+
+    assertEquals(usuario, resultado);
+  } 
+
+  @Test
+  public void registrarDebeLanzarExcepcionSiUsuarioYaExiste() {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    Usuario usuario = new Usuario();
+    usuario.setEmail("test@mail.com");
+
+    when(repo.buscar("test@mail.com")).thenReturn(usuario);
+
+    assertThrows(
+      UsuarioExistente.class,
+      () -> service.registrar(usuario));
+  }
+
+  @Test
+  public void registrarDebeGuardarUsuarioSiNoExiste() throws UsuarioExistente {
+
+    RepositoryUsuario repo = Mockito.mock(RepositoryUsuario.class);
+    ServiceLoginImpl service = new ServiceLoginImpl(repo);
+
+    Usuario usuario = new Usuario();
+    usuario.setEmail("test@mail.com");
+
+    when(repo.buscar("test@mail.com")).thenReturn(null);
+    service.registrar(usuario);
+
+    verify(repo).guardar(usuario);
   }
 }

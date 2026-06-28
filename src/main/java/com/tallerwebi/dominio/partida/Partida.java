@@ -1,22 +1,26 @@
 package com.tallerwebi.dominio.partida;
 
+import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.usuario.Usuario;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "partidas")
 public class Partida {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String categoria;
   @Column(nullable = false)
   private LocalDateTime fecha;
-
   @Column(nullable = false)
   private Integer puntajeObtenido;
+  @Column(name = "inicio_partida", columnDefinition = "TIME")
+  private LocalTime inicioPartida;
+  @Column(name = "final_partida", columnDefinition = "TIME")
+  private LocalTime finalPartida;
 
   @Column(nullable = false)
   private Boolean esVictoria;
@@ -25,15 +29,21 @@ public class Partida {
   @JoinColumn(name = "usuario_id")
   private Usuario usuario;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "respuesta_id")
+  private Respuesta respuesta;
+
+
   // --- GETTERS Y SETTERS ---
   public Partida() {
 
   }
-  public Partida(LocalDateTime fecha, Integer puntajeObtenido, Boolean esVictoria, Usuario usuario) {
+  public Partida(LocalDateTime fecha, Integer puntajeObtenido, Boolean esVictoria, Usuario usuario, Respuesta respuesta) {
     this.fecha = fecha;
     this.puntajeObtenido = puntajeObtenido;
     this.esVictoria = esVictoria;
     this.usuario = usuario;
+    this.respuesta = respuesta;
   }
 
   public Long getId() {
@@ -70,4 +80,36 @@ public class Partida {
   public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
   }
+
+    public Respuesta getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(Respuesta respuesta) {
+        this.respuesta = respuesta;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public LocalTime getInicioPartida() {
+        return inicioPartida;
+    }
+
+    public void setInicioPartida(LocalTime inicioPartida) {
+        this.inicioPartida = inicioPartida;
+    }
+
+    public LocalTime getFinalPartida() {
+        return finalPartida;
+    }
+
+    public void setFinalPartida(LocalTime finalPartida) {
+        this.finalPartida = finalPartida;
+    }
 }

@@ -3,23 +3,33 @@ package com.tallerwebi.presentacion.admin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import com.tallerwebi.config.SessionUtil;
+import com.tallerwebi.dominio.categoriaDia.CategoriaService;
+import com.tallerwebi.dominio.pregunta.Pregunta;
+import com.tallerwebi.dominio.pregunta.PreguntaService;
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.Usuario;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
 
 public class ControllerAdminTest {
-    // obj simulado para no usar bd real
+
     private SessionUtil sessionUtil;
+    private PreguntaService preguntaService;
+    private CategoriaService categoriaService;
+    private RepositoryUsuario repositoryUsuario;
+
     private HttpSession session;
     private Model model;
 
@@ -27,194 +37,141 @@ public class ControllerAdminTest {
 
     @BeforeEach
     public void init() {
-        // mocks manuales
+
         this.sessionUtil = mock(SessionUtil.class);
+        this.preguntaService = mock(PreguntaService.class);
+        this.categoriaService = mock(CategoriaService.class);
+        this.repositoryUsuario = mock(RepositoryUsuario.class);
+
         this.session = mock(HttpSession.class);
         this.model = mock(Model.class);
 
-        // controller real
-        this.adminController = new ControllerAdmin(sessionUtil);
-    }
-
-    @SuppressWarnings("null")
-    @Test
-    public void debeRedirigirALoginSiNoEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-
-        String vista = adminController.panelAdmin(session, model);
-        assertEquals("redirect:/login", vista);
-
-        verify(sessionUtil, times(1)).verificarAdmin(session);
-        verify(model, never()).addAttribute(
-            anyString(), 
-            any(Object.class)
+        this.adminController = new ControllerAdmin(
+                sessionUtil,
+                preguntaService,
+                categoriaService,
+                repositoryUsuario, null
         );
     }
 
-    @Test
-    public void debeVerificarAdminUnaVez() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        
-        adminController.panelAdmin(session, model);
+    // -------------------------------
+    // 1. SI NO ES ADMIN → LOGIN
+    // -------------------------------
 
-        verify(sessionUtil, times(1)).verificarAdmin(session);
+    @Test
+    public void debeRedirigirALoginSiNoEsAdmin() {
+
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+
+        String vista = adminController.panelAdmin(session, model);
+
+        assertEquals("redirect:/login", vista);
+
+        verify(sessionUtil).verificarAdmin(session);
+
+        verify(model, never()).addAttribute(anyString(), any());
     }
 
-    @SuppressWarnings("null")
+    // -------------------------------
+    // 2. NO BORRA MENSAJES SI NO ES ADMIN
+    // -------------------------------
+    @Test
+    public void noDeberiaLimpiarMensajesSiNoEsAdmin() {
+
+        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
+
+        adminController.panelAdmin(session, model);
+
+        verify(session, never()).getAttribute("ok");
+        verify(session, never()).removeAttribute("ok");
+
+        verify(session, never()).getAttribute("error");
+        verify(session, never()).removeAttribute("error");
+    }
+
+    // -------------------------------
+    // 3. SI ES ADMIN → CARGA PANEL
+    // -------------------------------
     @Test
     public void debeMostrarPanelAdminSiEsAdmin() {
+
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        when(session.getAttribute("ok")).thenReturn("Operación exitosa");
+        when(preguntaService.listar()).thenReturn(List.of(new Pregunta(), new Pregunta(), new Pregunta()));
+        when(categoriaService.obtenerCategoriaActiva()).thenReturn("Historia");
+        when(repositoryUsuario.listarTodos()).thenReturn(List.of(new Usuario(), new Usuario()));
+
+        when(session.getAttribute("ok")).thenReturn(null);
         when(session.getAttribute("error")).thenReturn(null);
 
         String vista = adminController.panelAdmin(session, model);
 
         assertEquals("admin/panelAdmin", vista);
 
-        verify(model).addAttribute(
-            "mensaje", 
-            "Bienvenido administrador"
-        );
-        verify(model).addAttribute(
-            "ok", 
-            "Operación exitosa"
-        );
-
-        verify(model, never()).addAttribute(eq("error"), any());
+        verify(model).addAttribute("mensaje", "Bienvenido administrador");
+        verify(model).addAttribute("cantidadPreguntas", 3);
+        verify(model).addAttribute("categoriaActual", "Historia");
+        verify(model).addAttribute("cantidadUsuarios", 2);
     }
 
+    // -------------------------------
+    // 4. MENSAJE OK SE AGREGA
+    // -------------------------------
     @Test
-    public void deberiaMostrarPanelAunqueNoHayaMensajes() {
+    public void debeAgregarMensajeOkSiExiste() {
 
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        when(session.getAttribute("ok")).thenReturn(null);
-        when(session.getAttribute("error")).thenReturn(null);
 
-        String vista = adminController.panelAdmin(session, model);
+        when(preguntaService.listar()).thenReturn(List.of());
+        when(categoriaService.obtenerCategoriaActiva()).thenReturn("Ciencia");
+        when(repositoryUsuario.listarTodos()).thenReturn(List.of());
 
-        assertEquals("admin/panelAdmin",vista);
-    }
-
-    // MENSAJES DE ERROR Y OK
-    @Test
-    public void deberiaLimpiarSoloMensajeOkDeSesion() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        when(session.getAttribute("ok")).thenReturn("Operacion correcta");
+        when(session.getAttribute("ok")).thenReturn("Operacion exitosa");
         when(session.getAttribute("error")).thenReturn(null);
 
         adminController.panelAdmin(session, model);
 
+        verify(model).addAttribute("ok", "Operacion exitosa");
         verify(session).removeAttribute("ok");
-        verify(session, never()).removeAttribute("error");
     }
 
+    // -------------------------------
+    // 5. MENSAJE ERROR SE AGREGA
+    // -------------------------------
     @Test
-    public void deberiaLimpiarSoloMensajeErrorDeSesion() {
+    public void debeAgregarMensajeErrorSiExiste() {
+
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
+
+        when(preguntaService.listar()).thenReturn(List.of());
+        when(categoriaService.obtenerCategoriaActiva()).thenReturn("Ciencia");
+        when(repositoryUsuario.listarTodos()).thenReturn(List.of());
+
         when(session.getAttribute("ok")).thenReturn(null);
-        when(session.getAttribute("error")).thenReturn("Hubo un error");
+        when(session.getAttribute("error")).thenReturn("Error grave");
 
         adminController.panelAdmin(session, model);
 
-        verify(session, never()).removeAttribute("ok");
+        verify(model).addAttribute("error", "Error grave");
         verify(session).removeAttribute("error");
     }
 
+    // -------------------------------
+    // 6. VERIFICA LLAMADA A SERVICIOS
+    // -------------------------------
     @Test
-    public void deberiaLimpiarAmbosMensajesDeSesion() {
+    public void debeLlamarServiciosUnaVez() {
+
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
 
-        when(session.getAttribute("ok")).thenReturn("OK");
-        when(session.getAttribute("error")).thenReturn("ERROR");
+        when(preguntaService.listar()).thenReturn(List.of());
+        when(categoriaService.obtenerCategoriaActiva()).thenReturn("Geo");
+        when(repositoryUsuario.listarTodos()).thenReturn(List.of());
 
         adminController.panelAdmin(session, model);
 
-        verify(session).removeAttribute("ok");
-        verify(session).removeAttribute("error");
-    }
-
-    @Test
-    public void debeAgregarMensajeErrorAlModel() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-        
-        when(session.getAttribute("ok")).thenReturn(null);
-        when(session.getAttribute("error")).thenReturn("Hubo un error");
-
-        adminController.panelAdmin(session, model);
-
-        verify(model).addAttribute(
-            "error",
-            "Hubo un error"
-        );
-    }
-    @Test
-    public void debeAgregarMensajeOkAlModel() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-
-        when(session.getAttribute("ok"))
-            .thenReturn("Operación correcta");
-
-        adminController.panelAdmin(session, model);
-
-        verify(model).addAttribute(
-            "ok",
-            "Operación correcta"
-        );
-    }
-
-    @Test
-    public void noDeberiaLimpiarMensajesSiNoEsAdmin() {
-
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-        adminController.panelAdmin(session, model);
-
-        verify(session, never()).removeAttribute("ok");
-        verify(session, never()).removeAttribute("error");
-    }
-
-    // TEST SI ES ADMIN O NO
-    @Test
-    public void debeRedirigirALoginSiNoEsAdminEnPregunta() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-
-        String vista = adminController.gestionarPreguntas(session);
-        assertEquals("redirect:/login", vista);
-    }
-    @Test
-    public void debeIrAPaginaPreguntaSiEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-
-        String vista = adminController.gestionarPreguntas(session);
-        assertEquals("admin/pregunta", vista);
-    }
-    @Test
-    public void debeRedirigirALoginSiNoEsAdminEnCrearPregunta() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-
-        String vista = adminController.crearPregunta(session);
-        assertEquals("redirect:/login", vista);
-    }
-    @Test
-    public void debeIrACrearPreguntaSiEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-
-        String vista = adminController.crearPregunta(session);
-        assertEquals("admin/crearPregunta", vista);
-    }
-
-    @Test
-    public void debeRedirigirALoginSiNoEsAdminEnCategoriaDia() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(false);
-
-        String vista = adminController.categoriaDia(session);
-        assertEquals("redirect:/login", vista);
-    }
-    @Test
-    public void debeIrACategoriaDiaSiEsAdmin() {
-        when(sessionUtil.verificarAdmin(session)).thenReturn(true);
-
-        String vista = adminController.categoriaDia(session);
-        assertEquals("admin/categoriaDia", vista);
+        verify(preguntaService, times(1)).listar();
+        verify(categoriaService, times(1)).obtenerCategoriaActiva();
+        verify(repositoryUsuario, times(1)).listarTodos();
     }
 }

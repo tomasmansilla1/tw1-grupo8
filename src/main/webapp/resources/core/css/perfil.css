@@ -1,0 +1,188 @@
+.profile-card {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Avatar */
+
+.avatar-container {
+    margin-bottom: 25px;
+}
+
+#avatarImg {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 5px solid #A9D9FF;
+    background: white;
+
+    transition:
+        transform .4s ease,
+        box-shadow .3s ease;
+}
+
+#avatarImg:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(77,163,217,.25);
+}
+
+.girar {
+    transform: scale(.8) rotate(720deg) !important;
+}
+
+/* Caja de datos */
+
+.profile-data-box {
+    background: #ffffff;
+    border: 2px solid #EAF6FF;
+
+    border-radius: 16px;
+
+    padding: 16px 20px;
+    margin-bottom: 15px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: all .25s ease;
+}
+
+.profile-data-box:hover {
+    transform: translateY(-2px);
+
+    border-color: #A9D9FF;
+
+    box-shadow:
+        0 8px 20px rgba(77,163,217,.15);
+}
+
+.data-label {
+    font-weight: 700;
+    color: #4DA3D9;
+}
+
+.data-value {
+    font-weight: 700;
+    color: #495057;
+}
+
+/* Badges */
+
+.badge-level {
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: .9rem;
+}
+
+.badge-novato {
+    background: #adb5bd;
+    color: white;
+}
+
+.badge-veterano {
+    background: #4DA3D9;
+    color: white;
+}
+
+.badge-leyenda {
+    background: #F8A8B8;
+    color: white;
+}
+
+/* Tooltip */
+
+.custom-tooltip {
+    position: relative;
+}
+
+.tooltip-box {
+    visibility: hidden;
+
+    width: 240px;
+
+    background: #4DA3D9;
+    color: white;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    padding: 10px;
+
+    position: absolute;
+
+    bottom: 135%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    opacity: 0;
+
+    transition: .25s ease;
+
+    z-index: 100;
+}
+
+.tooltip-box::after {
+    content: "";
+
+    position: absolute;
+
+    top: 100%;
+    left: 50%;
+
+    margin-left: -5px;
+
+    border-width: 5px;
+    border-style: solid;
+
+    border-color:
+        #4DA3D9
+        transparent
+        transparent
+        transparent;
+}
+
+.custom-tooltip:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Ruleta */
+
+.btn-avatar {
+    display: inline-block;
+
+    padding: 12px 25px;
+
+    border: none;
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4DA3D9,
+            #7B61FF
+        );
+
+    color: white;
+
+    font-weight: bold;
+
+    transition: .3s ease;
+}
+
+.btn-avatar:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(123,97,255,.3);
+}
+
+/* Puntaje destacado */
+
+.score-highlight {
+    color: #F8A8B8;
+    font-size: 1.1rem;
+}

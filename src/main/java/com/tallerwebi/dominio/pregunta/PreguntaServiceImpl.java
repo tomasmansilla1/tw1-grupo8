@@ -3,6 +3,7 @@ package com.tallerwebi.dominio.pregunta;
 import java.util.List;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class PreguntaServiceImpl implements PreguntaService {
     private RepositoryPreguntas repository;
 
+    @Autowired
     public PreguntaServiceImpl(RepositoryPreguntas repository) {
         this.repository = repository;
     }
@@ -37,4 +39,10 @@ public class PreguntaServiceImpl implements PreguntaService {
     public void eliminar(Long id) {
         repository.deleteById(id);
     }
+
+    public List<Pregunta> obtenerPorCategoria(String categoria) {
+        return repository.buscarPorCategoria(categoria);
+    }
+
+
 }

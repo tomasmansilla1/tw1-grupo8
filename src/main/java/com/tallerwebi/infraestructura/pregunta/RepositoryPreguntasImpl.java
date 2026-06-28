@@ -16,12 +16,9 @@ public class RepositoryPreguntasImpl implements RepositoryPreguntas {
   private SessionFactory sessionFactory;
 
   @Autowired
-    public RepositoryPreguntasImpl(SessionFactory sessionFactory) {
+  public RepositoryPreguntasImpl(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
-
-  // constructor vacío para tests/manual
-  public RepositoryPreguntasImpl() {}
 
   @Override
   public void save(Pregunta pregunta) {
@@ -48,5 +45,15 @@ public class RepositoryPreguntasImpl implements RepositoryPreguntas {
     if (pregunta != null) {
       sessionFactory.getCurrentSession().delete(pregunta);
     }
+  }
+
+  @Override
+  public List<Pregunta> buscarPorCategoria(String categoria) {
+
+    return sessionFactory.getCurrentSession().createQuery(
+      "FROM Pregunta WHERE categoria = :categoria",
+      Pregunta.class
+    )
+    .setParameter("categoria", categoria).list();
   }
 }

@@ -97,4 +97,31 @@ public class ServicePreguntaTest {
 
     assertNull(resultado);
   }
+
+  @Test
+  public void debeObtenerPreguntasPorCategoria() {
+
+    String categoria = "CIENCIA";
+
+    List<Pregunta> preguntasEsperadas = List.of(
+      new Pregunta(
+        "CIENCIA",
+        "¿Cuál es el planeta más grande?",
+        "Tierra",
+        "Marte",
+        "Júpiter",
+        "Venus",
+        "C"
+        )
+      );
+
+    when(repositoryMock.buscarPorCategoria(categoria)).thenReturn(preguntasEsperadas);
+
+    List<Pregunta> resultado = preguntasService.obtenerPorCategoria(categoria);
+
+    assertEquals(1, resultado.size());
+    assertEquals("CIENCIA", resultado.get(0).getCategoria());
+
+    verify(repositoryMock).buscarPorCategoria(categoria);
+  }
 }

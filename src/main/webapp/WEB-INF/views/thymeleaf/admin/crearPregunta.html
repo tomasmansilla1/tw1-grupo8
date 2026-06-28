@@ -26,16 +26,24 @@
     <!-- CARD -->
     <div class="quiz-card">
 
-        <form th:action="@{/admin/crearPregunta}" method="post">
+        <form th:action="@{/admin/guardarCrearPregunta}" method="post">
+
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${ok}" class="alert alert-success">
+                <span th:text="${ok}"></span>
+            </div>
 
             <!-- pregunta -->
             <label class="subtitle">Pregunta</label>
 
-            <textarea name="pregunta"
-                      class="form-control mt-2"
-                      rows="3"
-                      placeholder="Escribí la pregunta..."
-                      required>
+            <textarea 
+                name="pregunta"
+                class="form-control mt-2"
+                rows="3"
+                placeholder="Escribí la pregunta..."
+                required>
             </textarea>
 
             <hr>
@@ -43,10 +51,10 @@
             <!-- opciones -->
             <label class="subtitle">Opciones</label>
 
-            <input class="form-control mt-2 mb-2" name="a" placeholder="Opción A" required>
-            <input class="form-control mb-2" name="b" placeholder="Opción B" required>
-            <input class="form-control mb-2" name="c" placeholder="Opción C" required>
-            <input class="form-control mb-2" name="d" placeholder="Opción D" required>
+            <input class="form-control mt-2 mb-2" name="opcionA" placeholder="Opción A" required>
+            <input class="form-control mb-2" name="opcionB" placeholder="Opción B" required>
+            <input class="form-control mb-2" name="opcionC" placeholder="Opción C" required>
+            <input class="form-control mb-2" name="opcionD" placeholder="Opción D" required>
 
             <!-- correcta -->
             <label class="subtitle mt-3">Respuesta correcta</label>
@@ -72,15 +80,14 @@
 
             <!-- botones -->
             <div class="d-flex gap-2 justify-content-end mt-4">
-
-                <a th:href="@{/admin/pregunta}" class="btn-quiz" style="width:auto;">
+                
+                <a th:href="@{/admin/preguntas}" class="btn-quiz" style="width:auto;">
                     Cancelar
                 </a>
 
                 <button type="submit" class="btn-quiz" style="width:auto;">
                     Guardar
                 </button>
-
             </div>
 
         </form>

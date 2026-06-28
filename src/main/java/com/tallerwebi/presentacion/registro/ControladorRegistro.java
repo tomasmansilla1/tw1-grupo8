@@ -21,13 +21,11 @@ public class ControladorRegistro {
   }
 
   @RequestMapping("/formulario-registro-jugador")
-  public String formularioRegistroJugador() {
-    return "formulario-registro-jugador";
-  }
+  public ModelAndView formularioRegistroJugador() {
+    ModelMap modelo = new ModelMap();
+    modelo.put("datosFormulario", new DatosRegistroDTO());
 
-  @RequestMapping("/iniciar-sesion")
-  public ModelAndView irALogin() {
-    return new ModelAndView("iniciar-sesion");
+    return new ModelAndView("formulario-registro-jugador", modelo);
   }
 
   @RequestMapping("/registro")
@@ -49,24 +47,7 @@ public class ControladorRegistro {
 
     modelo.put("mensaje", "Registro exitoso");
 
-    return new ModelAndView("redirect:/iniciar-sesion");
+    return new ModelAndView("redirect:/login");
   }
 
-  @RequestMapping("/inicio")
-  public ModelAndView iniciarSesion(
-    @ModelAttribute("datosFormulario") DatosRegistroDTO datosRegistroDTO
-  ) {
-    ModelMap modelo = new ModelMap();
-
-    try {
-      servicioRegistro.iniciarSesion(datosRegistroDTO.getEmail(), datosRegistroDTO.getPassword());
-    } catch (IllegalArgumentException e) {
-      modelo.put("error", e.getMessage());
-      return new ModelAndView("iniciar-sesion", modelo);
-    }
-
-    modelo.put("mensaje", "Inicio de sesion exitoso");
-
-    return new ModelAndView("redirect:/home");
-  }
 }

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Categorías más elegidas</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:linear-gradient(to right,#ead5dc,#cfe7f8);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .card{
+            width:900px;
+            background:white;
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+            padding:35px;
+        }
+
+        h1{
+            text-align:center;
+            color:#3b82b5;
+            font-size:38px;
+        }
+
+        .linea{
+            width:90px;
+            height:4px;
+            background:#d68da0;
+            margin:10px auto 30px;
+            border-radius:5px;
+        }
+
+        /* ----------- NAVEGACIÓN ----------- */
+
+        .nav{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:30px;
+        }
+
+        .nav a{
+            text-decoration:none;
+            color:#3b82b5;
+            border:1px solid #87c4ec;
+            border-radius:8px;
+            padding:10px 18px;
+            font-weight:bold;
+            transition:.2s;
+        }
+
+        .nav a:hover{
+            background:#f4fbff;
+        }
+
+        /* Página actual */
+        .activo{
+            background:#d68da0 !important;
+            color:white !important;
+            border-color:#d68da0 !important;
+        }
+
+        canvas{
+            width:100%;
+            max-height:450px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+
+    <h1>Estadísticas</h1>
+    <div class="linea"></div>
+
+    <div class="nav">
+        <a class="activo" th:href="@{/estadisticas/categorias}">Categorías</a>
+        <a th:href="@{/estadisticas/tiempo}">Tiempo</a>
+        <a th:href="@{/estadisticas/racha}">Racha</a>
+        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+    </div>
+    <canvas id="graficoCategorias"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+    let datos = [[${listaCategorias}]];
+
+    let categorias = Object.keys(datos);
+    let cantidades = Object.values(datos);
+
+    new Chart(document.getElementById("graficoCategorias"), {
+        type: 'bar',
+        data: {
+            labels: categorias,
+            datasets: [{
+                label: 'Cantidad de partidas',
+                data: cantidades,
+                backgroundColor: '#87c4ec',
+                borderRadius: 5
+            }]
+        },
+        options:{
+            responsive:true
+        }
+    });
+</script>
+
+</body>
+</html>

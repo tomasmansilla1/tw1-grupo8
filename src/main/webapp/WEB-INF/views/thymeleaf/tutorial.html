@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>¿Cómo jugar?</title>
+
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<style>
+.step-card {
+    opacity: 0;
+    transform: translateY(30px);
+
+    transition: all .8s ease;
+
+    background: rgba(255,255,255,.9);
+    border-radius: 20px;
+    padding: 20px;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+
+    border-left: 5px solid #4DA3D9;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
+}
+
+.step-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.step-card h4 {
+    color: #4DA3D9;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.step-card p {
+    color: #666;
+    margin-bottom: 0;
+}
+</style>
+
+<body class="home-body">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container d-flex justify-content-center align-items-center py-5">
+
+    <div class="quiz-card narrow text-center">
+
+        <h1 class="title">¿Cómo jugar?</h1>
+
+        <div class="divider"></div>
+
+        <p class="subtitle">
+            Demostrá cuánto sabés respondiendo preguntas segun la categoría del día.
+        </p>
+
+        <div class="text-start mt-4">
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Objetivo</h4>
+                <p>Responder correctamente la mayor cantidad de preguntas posible.</p>
+            </div>
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Categoría del día</h4>
+                <p>La categoría es elegida por el administrador.</p>
+            </div>
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Preguntas</h4>
+                <p>Cada pregunta tiene varias opciones de respuesta.</p>
+            </div>
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Puntaje</h4>
+                <p>Cada respuesta correcta suma puntos.</p>
+            </div>
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Ranking</h4>
+                <p>Los jugadores con más puntos aparecerán en el ranking general.</p>
+            </div>
+
+            <div class="step-card quiz-card mb-3">
+                <h4>Historial</h4>
+                <p>Si iniciás sesión podrás consultar tus partidas anteriores.</p>
+            </div>
+
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a th:href="@{/como-jugar}" class="btn-quiz" style="width:auto; padding:20px 100px;">
+                Probar simulador
+            </a>
+            <a th:href="@{/buscar-juego}" class="btn-quiz" style="width:auto; padding:20px 100px;">
+                Empezar a jugar
+            </a>
+        </div>  
+    </div>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const cards = document.querySelectorAll(".step-card");
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add("visible");
+            }
+        });
+    }, {
+        threshold: 0.2
+    });
+
+    cards.forEach(card => observer.observe(card));
+
+});
+</script>
+
+</body>
+</html>

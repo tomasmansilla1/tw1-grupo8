@@ -1,43 +1,125 @@
 package com.tallerwebi.dominio.ranking;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class RankingServiceTest {
 
+  private RankingService rankingService;
+  private RepositoryUsuario repositoryUsuarioMock;
+
+  @BeforeEach
+  public void init() {
+    // Mockeamos el repositorio para los tests de ranking
+    repositoryUsuarioMock = mock(RepositoryUsuario.class);
+    // Instanciamos el servicio con el mock
+    rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+  }
+
+  // --- TESTS DE LÓGICA DE PUNTOS ---
+
   @Test
-  public void siElUsuarioAciertaUnaPreguntaNormalDebeSumarCincuentaPuntosYNoDarBonus() {
-    // Preparación (Usuario con racha de 1 acierto, puntaje inicial de 0)
-    RankingService rankingService = new RankingServiceImpl();
+  public void siElUsuarioTieneUnaRachaDeUnAciertoDebeSumarSoloCincuentaPuntos() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
     Usuario usuario = new Usuario();
-    usuario.setRespuestasAcertadasSeguidas(1);
-    Integer puntajeBase = 0;
+    usuario.setPartidasGanadasSeguidas(1);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 0);
+
+    assertEquals(50, resultado);
+    assertEquals(1, usuario.getPartidasGanadasSeguidas());
+  }
+
+  @Test
+  public void siElUsuarioAlcanzaTresAciertosSeguidosDebeRecibirBonusDeDoscientosPuntos() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(3);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 0);
+
+    assertEquals(250, resultado);
+    assertEquals(0, usuario.getPartidasGanadasSeguidas());
+  }
+
+  @Test
+  public void debeSumarAlPuntajeExistente() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(1);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 100);
+
+    assertEquals(150, resultado);
+  }
+
+  @Test
+  public void debeAgregarBonusAlPuntajeExistente() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(3);
+
+    Integer resultado = rankingService.calcularPuntaje(usuario, 100);
+
+    assertEquals(350, resultado);
+  }
+
+  @Test
+  public void noDebeResetearLaRachaSiTodaviaNoLlegoATres() {
+
+    RankingService rankingService = new RankingServiceImpl(repositoryUsuarioMock);
+
+    Usuario usuario = new Usuario();
+    usuario.setPartidasGanadasSeguidas(2);
+
+    rankingService.calcularPuntaje(usuario, 0);
+  }
+
+  // --- TEST DE INTEGRACIÓN DE RANKING ---
+
+  @Test
+  public void queSePuedaObtenerElTop10DeUsuariosUsandoElRepositorio() {
+    // Preparación
+    List<Usuario> usuariosTop = new ArrayList<>();
+    usuariosTop.add(new Usuario());
+
+    when(repositoryUsuarioMock.obtenerTopUsuarios()).thenReturn(usuariosTop);
 
     // Ejecución
-    Double resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
+    List<Usuario> resultado = rankingService.obtenerTop10();
 
-    // Verificación: 0 + 50 = 50.0. La racha de aciertos se debe mantener en 1
-    assertEquals(50.0, resultado);
-    assertEquals(1, usuario.getRespuestasAcertadasSeguidas());
+    // Validación
+    assertThat(resultado, equalTo(usuariosTop));
+    verify(repositoryUsuarioMock, times(1)).obtenerTopUsuarios();
   }
 
   @Test
   public void siElUsuarioLlegaALaTerceraRespuestaSeguidaDebeSumarCincuentaPuntosMasDoscientosDeBonusYResetearRacha() {
-    // Preparación (Usuario que ya tenía 2 aciertos y mete el 3, puntaje inicial de 0)
-    RankingService rankingService = new RankingServiceImpl();
     Usuario usuario = new Usuario();
-    usuario.setRespuestasAcertadasSeguidas(3);
+    usuario.setPartidasGanadasSeguidas(3); // Ya tiene 3
     Integer puntajeBase = 0;
 
-    // Ejecución
-    Double resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
+    Integer resultado = rankingService.calcularPuntaje(usuario, puntajeBase);
 
-    // Verificación: 0 + 50 (normal) + 200 (bonus) = 250.0
-    assertEquals(250.0, resultado);
-
-    // Verificación de negocio: El contador de rachas debe haber vuelto a 0
-    assertEquals(0, usuario.getRespuestasAcertadasSeguidas());
+    assertEquals(250, resultado); // 0 + 50 + 200
+    assertEquals(0, usuario.getPartidasGanadasSeguidas()); // Se resetea
   }
 }

@@ -1,92 +1,171 @@
-/* Fondo igual al resto del sistema */
+/* Fondo animado */
 body.home-body {
-    background: linear-gradient(135deg, #FFE3EA, #A9D9FF);
+    background: linear-gradient(
+        -45deg,
+        #FFE3EA,
+        #A9D9FF,
+        #D5F4E6,
+        #FFF1B8
+    );
+
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Card reutilizada del home */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Card */
 .quiz-card {
-    background-color: #FFFFFF;
-    border-radius: 18px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    max-width: 420px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 30px;
+    padding: 3rem;
+
+    max-width: 450px;
     width: 100%;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15),
+        0 0 25px rgba(77,163,217,.15);
+
+    transition: all .3s ease;
+}
+
+.quiz-card:hover {
+    transform: translateY(-3px);
 }
 
 /* Título */
 .title {
     color: #4DA3D9;
+    font-size: 2.3rem;
     font-weight: 800;
+    margin-bottom: 10px;
 }
 
 /* Subtítulo */
 .subtitle {
-    color: #6c757d;
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 25px;
 }
 
-/* Línea decorativa */
+/* Línea */
 .divider {
-    width: 90px;
-    height: 4px;
-    background-color: #F8A8B8;
-    margin: 15px auto;
-    border-radius: 5px;
+    width: 100px;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        #F8A8B8,
+        #4DA3D9
+    );
+
+    margin: 15px auto 25px;
+    border-radius: 999px;
 }
 
-/* Inputs del login */
+/* Inputs */
 .input-game {
-    border-radius: 10px;
     border: 2px solid #A9D9FF;
-    padding: 10px;
-    transition: 0.2s ease;
+    border-radius: 15px;
+
+    padding: 12px 15px;
+
+    transition: all .25s ease;
 }
 
-/* Focus input */
 .input-game:focus {
     border-color: #4DA3D9;
-    box-shadow: 0 0 0 0.2rem rgba(77, 163, 217, 0.25);
+
+    box-shadow:
+        0 0 0 4px rgba(77,163,217,.15);
+
+    outline: none;
 }
 
-/* Botón (reusa estilo del juego) */
-/* botón secundario tipo link-game */
+/* Botón principal */
+.btn-quiz {
+    width: 100%;
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 50px;
+
+    font-weight: bold;
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #4DA3D9,
+        #7B61FF
+    );
+
+    box-shadow:
+        0 10px 25px rgba(123,97,255,.35);
+
+    transition: all .3s ease;
+}
+
+.btn-quiz:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 35px rgba(123,97,255,.5);
+}
+
+/* Botón secundario */
 .btn-link-game {
     display: block;
+
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+
     margin-top: 15px;
 
-    border-radius: 10px;
+    border-radius: 50px;
     border: 2px solid #A9D9FF;
 
-    color: #4DA3D9;
-    font-weight: bold;
     text-decoration: none;
+    font-weight: bold;
 
-    transition: all 0.2s ease;
+    color: #4DA3D9;
+    background: rgba(255,255,255,.7);
+
+    transition: all .3s ease;
 }
 
 .btn-link-game:hover {
-    background-color: #A9D9FF;
+    background: #4DA3D9;
     color: white;
-    transform: scale(1.02);
+    transform: translateY(-2px);
 }
 
-/* Link de registro */
+/* Links */
 a {
     color: #4DA3D9;
-    font-weight: 500;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 a:hover {
-    color: #F8A8B8;
+    color: #7B61FF;
 }
 
 /* Footer */
 .quiz-footer {
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     color: #4DA3D9;
-    font-size: 0.9rem;
+    font-size: .95rem;
+    font-weight: 600;
 }

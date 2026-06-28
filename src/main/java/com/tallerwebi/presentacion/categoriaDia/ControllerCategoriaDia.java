@@ -1,6 +1,8 @@
 package com.tallerwebi.presentacion.categoriaDia;
 
 import com.tallerwebi.config.SessionUtil;
+import com.tallerwebi.dominio.categoriaDia.CategoriaService;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,14 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ControllerCategoriaDia {
 
   private SessionUtil sessionUtil;
+  private CategoriaService categoriaService;
 
   @Autowired
-  public ControllerCategoriaDia(SessionUtil sessionUtil) {
+  public ControllerCategoriaDia(SessionUtil sessionUtil, CategoriaService categoriaService) {
     this.sessionUtil = sessionUtil;
+    this.categoriaService = categoriaService;
   }
 
   // Mostrar formulario
-  @RequestMapping(value = "/mostrarCategoriaDia", method = RequestMethod.GET)
+  @RequestMapping(value = "/categoriaDia", method = RequestMethod.GET)
   public String mostrarCategoriaDia(HttpSession session, Model model) {
 
     // verificar admin
@@ -32,20 +36,27 @@ public class ControllerCategoriaDia {
     // enviar categoría actual a la vista
     model.addAttribute(
       "categoriaDia", 
-      session.getAttribute("categoria_dia")
+      categoriaService.obtenerCategoriaActiva()
+    );
+    // enviar un historial a la vista
+    model.addAttribute(
+      "historial",
+      categoriaService.obtenerHistorial()
     );
 
-    // Devuelve: WEB-INF/views/thymeleaf/admin/categoriaDia.html
+    model.addAttribute("ok",session.getAttribute("ok"));
+    model.addAttribute("error",session.getAttribute("error"));
+
+    // limpiar mensajes
+    session.removeAttribute("ok");
+    session.removeAttribute("error");
+
     return "admin/categoriaDia";
   }
 
   // Guardar categoría
   @RequestMapping(value = "/guardarCategoriaDia", method = RequestMethod.POST)
-  public String guardarCategoria(
-    @RequestParam(value = "categoria", required = false) 
-    String categoria,
-    HttpSession session,
-    Model model) 
+  public String guardarCategoria(@RequestParam("categoria") String categoria,HttpSession session) 
   {
     // verificar admin
     if (!sessionUtil.verificarAdmin(session)) {
@@ -53,15 +64,16 @@ public class ControllerCategoriaDia {
     }
     // validar categoría
     if (categoria == null || categoria.trim().isEmpty()) {
-      model.addAttribute(
-        "error", 
-        "Seleccionar una categoría"
+      
+      session.setAttribute(
+        "error",
+        "Debe seleccionar una categoría"
       );
-      return "admin/categoriaDia";
+
+      return "redirect:/admin/categoriaDia";
     }
 
-    // guardar en sesión
-    session.setAttribute("categoria_dia", categoria);
+    categoriaService.guardarNuevaCategoria(categoria);
 
     // mensaje éxito
     session.setAttribute("ok", "Categoría actualizada correctamente");
