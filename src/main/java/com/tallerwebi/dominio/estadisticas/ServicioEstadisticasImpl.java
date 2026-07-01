@@ -1,6 +1,5 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.estadisticas;
 
-import com.tallerwebi.dominio.excepcion.ListaUsuariosVaciaException;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,21 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Partida> buscarTodasPartidasCategorias() {
-        return repositorioEstadisticas.buscarPartidasFinalizadas();
+        List<Partida> buscarPartidasPorCategoria = repositorioEstadisticas.buscarPartidasFinalizadas();
+
+        if (buscarPartidasPorCategoria.isEmpty()) {
+            return null;
+        }
+
+        return buscarPartidasPorCategoria;
     }
 
     @Override
     public Map<String, Integer> filtrarCantidadPorCategoria(List<Partida> listaPartidas) {
+        if (listaPartidas.isEmpty()) {
+            return null;
+        }
+
         Map<String, Integer> cantidadPorCategoria = new HashMap<>();
 
         for (Partida partida : listaPartidas) {
@@ -49,7 +58,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     }
 
     @Override
-    public List<RankingTiempo> usuariosConMejorTiempo(List<Partida> listaPartida) {
+    public List<RankingTiempo> usuariosConMejorTiempo(List<Partida> listaPartida, String ordenamiento) {
         List<RankingTiempo> rankingTiempos = new ArrayList<>();
         Map<Usuario, Long> mejoresTiempo = obtenerTiempoUsuario(listaPartida);
 
@@ -57,7 +66,13 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
             rankingTiempos.add(new RankingTiempo(entry.getKey(), entry.getValue()));
         }
 
-        rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo));
+        if (ordenamiento == null || ordenamiento.isEmpty() || ordenamiento.equalsIgnoreCase("ASC")) {
+            rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo));
+        }
+
+        if ("DESC".equalsIgnoreCase(ordenamiento)) {
+            rankingTiempos.sort(Comparator.comparing(RankingTiempo::getTiempo).reversed());
+        }
 
         return rankingTiempos;
     }
@@ -87,13 +102,43 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
 
     @Override
-    public List<Usuario> usuariosConMejorRacha() {
-        List<Usuario> listaUsuarios = repositorioEstadisticas.buscarUsuariosConMejorRachas();
+    public List<RankingVictorias> usuariosConMejorPartida() {
+        List<Partida> partidas = repositorioEstadisticas.buscarPartidasFinalizadas();
 
-        if (listaUsuarios == null) {
-            throw new ListaUsuariosVaciaException("no hay usuarios con rachas cargadas");
+        if (partidas.isEmpty()) {
+            return null;
         }
 
-        return listaUsuarios;
+        return calcularPorcentajeVictorias(partidas);
+    }
+
+    private List<RankingVictorias> calcularPorcentajeVictorias(List<Partida> partidas) {
+        Map<Usuario, Integer> jugadas = new HashMap<>();
+        Map<Usuario, Integer> ganadas = new HashMap<>();
+
+        for (Partida partida : partidas) {
+            Usuario usuario = partida.getUsuario();
+
+            jugadas.put(usuario, jugadas.getOrDefault(usuario, 0) + 1);
+
+            if (partida.getEsVictoria()) {
+                ganadas.put(usuario, ganadas.getOrDefault(usuario, 0) + 1);
+            }
+        }
+
+        List<RankingVictorias> ranking = new ArrayList<>();
+
+        for (Usuario usuario : jugadas.keySet()) {
+            int totalJugadas = jugadas.get(usuario);
+            int totalGanadas = ganadas.getOrDefault(usuario, 0);
+
+            double porcentaje = ((double) totalGanadas * 100) / totalJugadas;
+
+            ranking.add(new RankingVictorias(usuario, totalJugadas, totalGanadas, porcentaje));
+        }
+
+        ranking.sort(Comparator.comparing(RankingVictorias::getPorcentajeVictorias).reversed());
+
+        return ranking;
     }
 }

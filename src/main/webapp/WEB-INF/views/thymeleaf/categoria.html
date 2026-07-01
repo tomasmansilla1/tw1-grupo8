@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Categorías más elegidas</title>
 
     <style>
-
         *{
             margin:0;
             padding:0;
@@ -74,13 +73,43 @@
             border-color:#d68da0 !important;
         }
 
+        /* ----------- ALERTA DE ERROR ----------- */
+        .alerta-error {
+            background-color: #fce8ec;
+            border: 1px solid #f5bccc;
+            color: #c94f6d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
         canvas{
             width:100%;
             max-height:450px;
         }
 
-    </style>
+        /* ----------- MENSAJE SIN DATOS ----------- */
+        .mensaje-vacio{
+            padding:20px;
+            text-align:center;
+            border:1px solid #87c4ec;
+            border-radius:10px;
+            background:#f4fbff;
+        }
 
+        .mensaje-vacio h3{
+            color:#3b82b5;
+            margin-bottom:8px;
+        }
+
+        .mensaje-vacio p{
+            color:#666;
+            font-size:15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -92,10 +121,15 @@
     <div class="nav">
         <a class="activo" th:href="@{/estadisticas/categorias}">Categorías</a>
         <a th:href="@{/estadisticas/tiempo}">Tiempo</a>
-        <a th:href="@{/estadisticas/racha}">Racha</a>
-        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+        <a th:href="@{/estadisticas/porcentaje-victorias}">victorias</a>
     </div>
-    <canvas id="graficoCategorias"></canvas>
+
+    <div class="mensaje-vacio" th:if="${error != null}">
+        <h3>No hay estadísticas disponibles</h3>
+        <p th:text="${error}"></p>
+    </div>
+
+    <canvas id="graficoCategorias" th:unless="${error != null}"></canvas>
 
 </div>
 

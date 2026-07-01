@@ -156,6 +156,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estadisticas}">
+                        Estadisticas
+                    </a>
+                </li>
+
                 <li class="nav-item"
                     th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}">
                     <a class="nav-link text-warning fw-bold"
