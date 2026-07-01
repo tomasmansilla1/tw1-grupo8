@@ -90,6 +90,25 @@
             width:100%;
             max-height:450px;
         }
+
+        /* ----------- MENSAJE SIN DATOS ----------- */
+        .mensaje-vacio{
+            padding:20px;
+            text-align:center;
+            border:1px solid #87c4ec;
+            border-radius:10px;
+            background:#f4fbff;
+        }
+
+        .mensaje-vacio h3{
+            color:#3b82b5;
+            margin-bottom:8px;
+        }
+
+        .mensaje-vacio p{
+            color:#666;
+            font-size:15px;
+        }
     </style>
 </head>
 <body>
@@ -102,15 +121,15 @@
     <div class="nav">
         <a class="activo" th:href="@{/estadisticas/categorias}">Categorías</a>
         <a th:href="@{/estadisticas/tiempo}">Tiempo</a>
-        <a th:href="@{/estadisticas/racha}">Racha</a>
-        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+        <a th:href="@{/estadisticas/porcentaje-victorias}">victorias</a>
     </div>
 
-    <div class="alerta-error" th:if="${error != null}">
+    <div class="mensaje-vacio" th:if="${error != null}">
+        <h3>No hay estadísticas disponibles</h3>
         <p th:text="${error}"></p>
     </div>
 
-    <canvas id="graficoCategorias"></canvas>
+    <canvas id="graficoCategorias" th:unless="${error != null}"></canvas>
 
 </div>
 

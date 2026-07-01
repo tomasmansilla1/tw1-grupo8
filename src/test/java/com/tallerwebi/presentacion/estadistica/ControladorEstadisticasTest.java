@@ -1,6 +1,7 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.estadistica;
 
 import com.tallerwebi.dominio.estadisticas.RankingTiempo;
+import com.tallerwebi.dominio.estadisticas.RankingVictorias;
 import com.tallerwebi.dominio.estadisticas.ServicioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
@@ -58,7 +59,7 @@ public class ControladorEstadisticasTest {
         ModelAndView nav = controladorEstadisticas.esatdisticasTiempo("");
 
         assertThat(nav.getViewName(), equalToIgnoringCase("tiempo"));
-        assertThat(nav.getModel().get("listaVacio"), is(listaPartidas));
+        assertThat(nav.getModel().get("listaVacio"), nullValue());
     }
 
     @Test
@@ -84,23 +85,27 @@ public class ControladorEstadisticasTest {
     }
 
     @Test
-    public void dadoQueExistenUsuariosConRachaCuandoSeConsultanLasEstadisticasSeObtieneElRanking() {
-        List<Usuario> usuarios = new ArrayList<>();
+    public void dadoQueExistenUsuariosConPartidasTantoVictoriosasYPerdidasObtendreSuPorcentajeMasSuTotalDePartidas() {
+        Usuario usuario1 = new Usuario();
+        usuario1.setUsername("Mauricio");
 
-        Usuario usuario = new Usuario();
-        usuario.setUsername("Mauricio");
-        usuario.setPartidasGanadasSeguidas(15);
+        Usuario usuario2 = new Usuario();
+        usuario2.setUsername("Juan");
 
-        usuarios.add(usuario);
+        List<RankingVictorias> ranking = new ArrayList<>();
+        ranking.add(new RankingVictorias(usuario1, 10, 8, 80.0));
+        ranking.add(new RankingVictorias(usuario2, 20, 15, 75.0));
 
-        when(servicioEstadisticas.usuariosConMejorRacha()).thenReturn(usuarios);
+        when(servicioEstadisticas.usuariosConMejorPartida()).thenReturn(ranking);
 
-        ModelAndView nav = controladorEstadisticas.estadisticasRacha();
+        ModelAndView nav = controladorEstadisticas.estadisticasPorcentajeVictorias();
 
-        List<Usuario> resultado = (List<Usuario>) nav.getModel().get("usuariosRacha");
+        assertThat(nav.getViewName(), equalToIgnoringCase("porcentaje-victorias"));
 
-        assertThat(nav.getViewName(), equalToIgnoringCase("racha"));
-        assertThat(resultado, hasSize(1));
-        assertThat(resultado.get(0).getUsername(), equalTo("Mauricio"));
+        List<RankingVictorias> resultado = (List<RankingVictorias>) nav.getModel().get("rankingVictorias");
+
+        assertThat(resultado.size(), equalTo(2));
+        assertThat(resultado.get(0).getUsuario().getUsername(), equalToIgnoringCase("Mauricio"));
+        assertThat(resultado.get(0).getPorcentajeVictorias(), equalTo(80.0));
     }
 }

@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio.estadisticas;
 
-import com.tallerwebi.dominio.excepcion.ListaUsuariosVaciaException;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +54,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Partida> obtenerPartidasVictoriosas() {
-        List<Partida> listaPartidasVictoriosas = repositorioEstadisticas.obtenerPartidasVictoriosas();
-
-        if (listaPartidasVictoriosas.isEmpty()) {
-            return null;
-        }
-
-        return listaPartidasVictoriosas;
+        return repositorioEstadisticas.obtenerPartidasVictoriosas();
     }
 
     @Override
@@ -109,13 +102,43 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
 
     @Override
-    public List<Usuario> usuariosConMejorRacha() {
-        List<Usuario> listaUsuarios = repositorioEstadisticas.buscarUsuariosConMejorRachas();
+    public List<RankingVictorias> usuariosConMejorPartida() {
+        List<Partida> partidas = repositorioEstadisticas.buscarPartidasFinalizadas();
 
-        if (listaUsuarios == null) {
-            throw new ListaUsuariosVaciaException("no hay usuarios con rachas cargadas");
+        if (partidas.isEmpty()) {
+            return null;
         }
 
-        return listaUsuarios;
+        return calcularPorcentajeVictorias(partidas);
+    }
+
+    private List<RankingVictorias> calcularPorcentajeVictorias(List<Partida> partidas) {
+        Map<Usuario, Integer> jugadas = new HashMap<>();
+        Map<Usuario, Integer> ganadas = new HashMap<>();
+
+        for (Partida partida : partidas) {
+            Usuario usuario = partida.getUsuario();
+
+            jugadas.put(usuario, jugadas.getOrDefault(usuario, 0) + 1);
+
+            if (partida.getEsVictoria()) {
+                ganadas.put(usuario, ganadas.getOrDefault(usuario, 0) + 1);
+            }
+        }
+
+        List<RankingVictorias> ranking = new ArrayList<>();
+
+        for (Usuario usuario : jugadas.keySet()) {
+            int totalJugadas = jugadas.get(usuario);
+            int totalGanadas = ganadas.getOrDefault(usuario, 0);
+
+            double porcentaje = ((double) totalGanadas * 100) / totalJugadas;
+
+            ranking.add(new RankingVictorias(usuario, totalJugadas, totalGanadas, porcentaje));
+        }
+
+        ranking.sort(Comparator.comparing(RankingVictorias::getPorcentajeVictorias).reversed());
+
+        return ranking;
     }
 }

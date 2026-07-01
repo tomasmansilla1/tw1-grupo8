@@ -1,10 +1,9 @@
 package com.tallerwebi.presentacion.estadisticas;
 
 import com.tallerwebi.dominio.estadisticas.RankingTiempo;
+import com.tallerwebi.dominio.estadisticas.RankingVictorias;
 import com.tallerwebi.dominio.estadisticas.ServicioEstadisticas;
-import com.tallerwebi.dominio.excepcion.ListaUsuariosVaciaException;
 import com.tallerwebi.dominio.partida.Partida;
-import com.tallerwebi.dominio.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -61,10 +60,7 @@ public class ControladorEstadisticas {
 
         List<Partida> partidasVictoriosas = servicioEstadisticas.obtenerPartidasVictoriosas();
 
-        if (partidasVictoriosas == null) {
-            model.put("listaVacio", partidasVictoriosas);
-            return new ModelAndView("tiempo", model);
-        }
+        model.put("partidas", partidasVictoriosas);
 
         List<RankingTiempo> usuariosTiempo = servicioEstadisticas.usuariosConMejorTiempo(partidasVictoriosas, ordenamiento);
 
@@ -72,18 +68,14 @@ public class ControladorEstadisticas {
         return new ModelAndView("tiempo", model);
     }
 
-    @RequestMapping(path = "/estadisticas/racha", method = RequestMethod.GET)
-    public ModelAndView estadisticasRacha() {
+    @RequestMapping(path = "/estadisticas/porcentaje-victorias", method = RequestMethod.GET)
+    public ModelAndView estadisticasPorcentajeVictorias() {
         ModelMap model = new ModelMap();
 
-        try {
-            List<Usuario> listaUsuarios = servicioEstadisticas.usuariosConMejorRacha();
-            model.put("usuariosRacha", listaUsuarios);
-        }catch (ListaUsuariosVaciaException e) {
-            model.put("error", e.getMessage());
-            return new ModelAndView("racha", model);
-        }
+        List<RankingVictorias> rankingVictorias = servicioEstadisticas.usuariosConMejorPartida();
 
-        return new ModelAndView("racha", model);
+        model.put("rankingVictorias", rankingVictorias);
+
+        return new ModelAndView("porcentaje-victorias", model);
     }
 }

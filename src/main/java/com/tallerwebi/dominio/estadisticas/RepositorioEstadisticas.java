@@ -10,5 +10,4 @@ public interface RepositorioEstadisticas {
 
     List<Partida> obtenerPartidasVictoriosas();
 
-    List<Usuario> buscarUsuariosConMejorRachas();
 }

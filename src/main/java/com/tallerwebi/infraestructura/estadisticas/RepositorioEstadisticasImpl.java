@@ -2,9 +2,7 @@ package com.tallerwebi.infraestructura.estadisticas;
 
 import com.tallerwebi.dominio.estadisticas.RepositorioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
-import com.tallerwebi.dominio.usuario.Usuario;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,10 +30,4 @@ public class RepositorioEstadisticasImpl implements RepositorioEstadisticas {
                 .add(Restrictions.eq("esVictoria", true)).list();
     }
 
-    @Override
-    public List<Usuario> buscarUsuariosConMejorRachas() {
-        return sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.gt("partidasGanadasSeguidas", 0))
-                .addOrder(Order.desc("partidasGanadasSeguidas")).list();
-    }
 }

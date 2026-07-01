@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Ranking de Rachas</title>
+    <title>Ranking de Victorias</title>
 
     <style>
 
@@ -22,7 +22,7 @@
         }
 
         .card{
-            width:850px;
+            width:900px;
             background:white;
             border-radius:18px;
             box-shadow:0 10px 25px rgba(0,0,0,.15);
@@ -42,6 +42,8 @@
             margin:10px auto 30px;
             border-radius:5px;
         }
+
+        /* Navegación */
 
         .nav{
             display:flex;
@@ -71,6 +73,8 @@
             border-color:#d68da0 !important;
         }
 
+        /* Tabla */
+
         table{
             width:100%;
             border-collapse:collapse;
@@ -80,6 +84,7 @@
             background:#87c4ec;
             color:white;
             padding:14px;
+            font-size:16px;
         }
 
         td{
@@ -96,6 +101,8 @@
             background:#eef8ff;
         }
 
+        /* Mensaje cuando no hay datos */
+
         .mensaje-vacio{
             padding:20px;
             text-align:center;
@@ -104,9 +111,13 @@
             background:#f4fbff;
         }
 
-        .mensaje-vacio p{
+        .mensaje-vacio h3{
             color:#3b82b5;
-            font-weight:bold;
+            margin-bottom:8px;
+        }
+
+        .mensaje-vacio p{
+            color:#666;
         }
 
     </style>
@@ -116,32 +127,40 @@
 
 <div class="card">
 
-    <h1>Ranking de Rachas</h1>
+    <h1>Estadisticas</h1>
     <div class="linea"></div>
 
     <div class="nav">
         <a th:href="@{/estadisticas/categorias}">Categorías</a>
         <a th:href="@{/estadisticas/tiempo}">Tiempo</a>
-        <a class="activo" th:href="@{/estadisticas/racha}">Racha</a>
-        <a th:href="@{/estadisticas/victorias}">Preguntas</a>
+        <a class="activo" th:href="@{/estadisticas/victorias}">Victorias</a>
     </div>
 
-    <div th:if="${error != null}" class="mensaje-vacio">
-        <p th:text="${error}"></p>
+    <div th:if="${#lists.isEmpty(rankingVictorias)}" class="mensaje-vacio">
+        <h3>No hay estadísticas disponibles</h3>
+        <p>Todavía no existen partidas registradas para calcular el ranking.</p>
     </div>
 
-    <table th:if="${usuariosRacha != null}">
+    <table th:unless="${#lists.isEmpty(rankingVictorias)}">
+        <thead>
         <tr>
-            <th>Top</th>
             <th>Usuario</th>
-            <th>Racha</th>
+            <th>Partidas Jugadas</th>
+            <th>Partidas Ganadas</th>
+            <th>% de Victorias</th>
         </tr>
-        <tr th:each="usuario, estado : ${usuariosRacha}">
-            <td th:text="${estado.count}"></td>
-            <td th:text="${usuario.username}"></td>
-            <td th:text="${usuario.respuestasAcertadasSeguidas}"></td>
+        </thead>
+
+        <tbody>
+        <tr th:each="ranking : ${rankingVictorias}">
+            <td th:text="${ranking.usuario.username}"></td>
+            <td th:text="${ranking.partidasJugadas}"></td>
+            <td th:text="${ranking.partidasGanadas}"></td>
+            <td th:text="${#numbers.formatDecimal(ranking.porcentajeVictorias,1,2)} + '%'"></td>
         </tr>
+        </tbody>
     </table>
+
 </div>
 
 </body>
