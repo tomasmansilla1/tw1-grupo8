@@ -75,15 +75,15 @@ public class RepositorioEstadisticasTest {
     public void dadoQueExistenUsuariosConRachasCuandoLosBuscoObtengoSoloLosQueTienenRachaMayorACeroOrdenadosDescendentemente() {
         Usuario usuario1 = new Usuario();
         usuario1.setUsername("Juan");
-        usuario1.setRespuestasAcertadasSeguidas(5);
+        usuario1.setPartidasGanadasSeguidas(5);
 
         Usuario usuario2 = new Usuario();
         usuario2.setUsername("Pedro");
-        usuario2.setRespuestasAcertadasSeguidas(10);
+        usuario2.setPartidasGanadasSeguidas(10);
 
         Usuario usuario3 = new Usuario();
         usuario3.setUsername("Ana");
-        usuario3.setRespuestasAcertadasSeguidas(0);
+        usuario3.setPartidasGanadasSeguidas(0);
 
         sessionFactory.getCurrentSession().save(usuario1);
         sessionFactory.getCurrentSession().save(usuario2);
@@ -103,7 +103,7 @@ public class RepositorioEstadisticasTest {
 
         Usuario usuario1 = new Usuario();
         usuario1.setUsername("Juan");
-        usuario1.setRespuestasAcertadasSeguidas(0);
+        usuario1.setPartidasGanadasSeguidas(0);
 
         sessionFactory.getCurrentSession().save(usuario1);
 

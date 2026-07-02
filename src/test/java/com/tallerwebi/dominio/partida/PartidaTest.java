@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.tallerwebi.dominio.Respuesta;
+import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.usuario.Usuario;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

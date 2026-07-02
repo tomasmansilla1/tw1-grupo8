@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import com.tallerwebi.dominio.juego.ServicioJuego;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tallerwebi.dominio.ServicioJuego;
 import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.infraestructura.historialUsuario.ControladorHistorial;

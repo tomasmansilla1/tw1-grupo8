@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <style>
         * {
             margin: 0;
@@ -85,35 +86,65 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container">
+<!-- Contenido -->
+<div class="main-content">
+    <div class="container">
+        <div class="emoji" th:if="${acierto}">🎉</div>
+        <div class="emoji" th:unless="${acierto}">❌</div>
 
-    <div class="emoji" th:if="${acierto}">🎉</div>
-    <div class="emoji" th:unless="${acierto}">❌</div>
+        <h1 th:if="${acierto}">¡CORRECTO!</h1>
+        <h1 th:unless="${acierto}">INCORRECTO</h1>
 
-    <h1 th:if="${acierto}">¡CORRECTO!</h1>
-    <h1 th:unless="${acierto}">INCORRECTO</h1>
+        <div class="categoria-badge" th:text="${categoria.nombre}"></div>
 
-    <div class="categoria-badge" th:text="${categoria.nombre}">
-        Categoría
+        <div class="puntaje" th:text="'Puntaje: ' + ${puntaje}"></div>
+
+        <div th:if="${!acierto}" class="respuesta-correcta">
+            <p style="margin-bottom: 10px;">Respuesta correcta:</p>
+            <p style="font-weight: bold; font-size: 1.1em;" th:text="${respuestaCorrecta}"></p>
+        </div>
+
+        <!-- ← BOTONES SIMPLIFICADOS -->
+        <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
+
+            <!-- Si NO es última pregunta -->
+            <th:block th:if="${!esUltimaPregunta}">
+                <a href="/categoria" style="
+        padding: 12px 30px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    ">
+                    SIGUIENTE PREGUNTA →
+                </a>
+            </th:block>
+
+            <!-- Si ES última pregunta -->
+            <th:block th:if="${esUltimaPregunta}">
+                <a href="/categoria" style="
+        padding: 12px 30px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    ">
+                    SIGUIENTE CATEGORÍA →
+                </a>
+            </th:block>
     </div>
-
-    <div class="puntaje" th:text="'Puntaje: ' + ${puntaje}">
-        Puntaje: 0
-    </div>
-
-    <div th:if="${!acierto}" class="respuesta-correcta">
-        <p><strong>Respuesta correcta:</strong></p>
-        <p th:text="${respuestaCorrecta}"></p>
-    </div>
-
-    <form method="post" th:action="@{/categoria/obtener}">
-        <button type="submit" class="btn">
-            SIGUIENTE PREGUNTA
-        </button>
-    </form>
-
 </div>
 
+<!-- Footer -->
 <div th:replace="fragments/footer :: footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
