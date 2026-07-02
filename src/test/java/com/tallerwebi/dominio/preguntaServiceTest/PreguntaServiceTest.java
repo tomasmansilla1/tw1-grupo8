@@ -2,7 +2,7 @@ package com.tallerwebi.dominio.preguntaServiceTest;
 
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
 import com.tallerwebi.dominio.apiResponse.ApiResponse;
-import com.tallerwebi.dominio.servicioPregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
@@ -18,17 +18,17 @@ import static org.mockito.Mockito.*;
 
 class PreguntaServiceTest {
 
-    private PreguntaService preguntaService;
+    private PreguntaApiService preguntaService;
     private RestTemplate restTemplateMock;
 
     @BeforeEach
     void init() throws Exception {
 
-        preguntaService = new PreguntaService();
+        preguntaService = new PreguntaApiService(null);
 
         restTemplateMock = mock(RestTemplate.class);
 
-        Field field = PreguntaService.class.getDeclaredField("restTemplate");
+        Field field = PreguntaApiService.class.getDeclaredField("restTemplate");
         field.setAccessible(true);
         field.set(preguntaService, restTemplateMock);
     }

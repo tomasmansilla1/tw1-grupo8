@@ -2,13 +2,19 @@ package com.tallerwebi.dominio.servicioPregunta;
 
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
 import com.tallerwebi.dominio.apiResponse.ApiResponse;
+import com.tallerwebi.dominio.pregunta.Pregunta;
+import com.tallerwebi.dominio.pregunta.RepositoryPreguntas;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 @Service
-public class PreguntaService {
+public class PreguntaApiService {
 
     private final RestTemplate restTemplate;
     private final String API_URL = "https://opentdb.com/api.php";
@@ -16,13 +22,17 @@ public class PreguntaService {
 
     private static final Map<String, String> cacheTraduccion = new java.util.HashMap<>();
 
-    public PreguntaService() {
+    private final RepositoryPreguntas repository;
+
+    @Autowired
+    public PreguntaApiService(RepositoryPreguntas repository){
+        this.repository = repository;
         this.restTemplate = new RestTemplate();
     }
 
     public List<ApiPregunta> obtenerPreguntas(int cantidad) {
         try {
-            String url = API_URL + "?amount=" + cantidad;
+            String url = API_URL + "?amount=" + cantidad + "&type=multiple";
             ApiResponse response = restTemplate.getForObject(url, ApiResponse.class);
 
             if (response != null && response.getResponseCode() == 0) {
@@ -82,15 +92,15 @@ public class PreguntaService {
         String preguntaTraducida = traducir(preguntaOriginal);
         pregunta.setQuestion(preguntaTraducida);
 
-        String respuestaOriginal = pregunta.getCorrectAnswer();
-        String respuestaTraducida = traducir(respuestaOriginal);
-        pregunta.setCorrectAnswer(respuestaTraducida);
+        String opcionesOriginal = pregunta.getCorrectAnswer();
+        String opcionesTraducida = traducir(opcionesOriginal);
+        pregunta.setCorrectAnswer(opcionesTraducida);
 
         if (pregunta.getIncorrectAnswers() != null) {
             for (int i = 0; i < pregunta.getIncorrectAnswers().size(); i++) {
-                String respuestaIncorrectaOriginal = pregunta.getIncorrectAnswers().get(i);
-                String respuestaIncorrectaTraducida = traducir(respuestaIncorrectaOriginal);
-                pregunta.getIncorrectAnswers().set(i, respuestaIncorrectaTraducida);
+                String opcionesIncorrectaOriginal = pregunta.getIncorrectAnswers().get(i);
+                String opcionesIncorrectaTraducida = traducir(opcionesIncorrectaOriginal);
+                pregunta.getIncorrectAnswers().set(i, opcionesIncorrectaTraducida);
             }
         }
     }
@@ -134,5 +144,42 @@ public class PreguntaService {
                 .replace("&gt;", ">")
                 .replace("&#039;", "'")
                 .replace("&rsquo;", "'");
+    }
+
+    @Transactional
+    public int sincronizarApi() {
+
+        List<ApiPregunta> preguntasApi = obtenerPreguntas(20);
+
+        int cantidad = 0;
+
+        for (ApiPregunta api : preguntasApi) {
+
+            List<String> opciones = api.getOpcionesDecodificadas();
+
+            if (opciones.size() < 4) {
+                continue;
+            }
+
+            Pregunta pregunta = new Pregunta();
+
+            pregunta.setCategoria(api.getCategory());
+            pregunta.setConsigna(api.getPreguntaDecodificada());
+
+            pregunta.setOpcionA(opciones.get(0));
+            pregunta.setOpcionB(opciones.get(1));
+            pregunta.setOpcionC(opciones.get(2));
+            pregunta.setOpcionD(opciones.get(3));
+
+            pregunta.setCorrecta(api.getRespuestaCorrectaDecodificada());
+
+            if (repository.buscarPorConsigna(api.getPreguntaDecodificada()) == null) {
+
+                repository.save(pregunta);
+                cantidad++;
+            }
+        }
+
+        return cantidad;
     }
 }

@@ -3,7 +3,7 @@ package com.tallerwebi.presentacion.categoriaController;
 import com.tallerwebi.dominio.Categoria.Categoria;
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
 import com.tallerwebi.dominio.servicioCategoria.ServicioCategoria;
-import com.tallerwebi.dominio.servicioPregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ControllerCategoria {
 
     @Autowired
-    private PreguntaService preguntaService;
+    private PreguntaApiService preguntaService;
 
     @Autowired
     private ServicioCategoria categoriaService;

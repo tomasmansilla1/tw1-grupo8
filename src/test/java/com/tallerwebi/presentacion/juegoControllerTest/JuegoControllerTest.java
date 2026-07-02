@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion.juegoControllerTest;
 
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
-import com.tallerwebi.dominio.servicioPregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import com.tallerwebi.presentacion.juegoController.JuegoController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,14 @@ import static org.mockito.Mockito.*;
 public class JuegoControllerTest {
 
     private JuegoController juegoController;
-    private PreguntaService preguntaService;
+    private PreguntaApiService preguntaService;
     private Model model;
 
     @BeforeEach
     public void init() {
         juegoController = new JuegoController();
 
-        preguntaService = Mockito.mock(PreguntaService.class);
+        preguntaService = Mockito.mock(PreguntaApiService.class);
         model = Mockito.mock(Model.class);
 
         ReflectionTestUtils.setField(

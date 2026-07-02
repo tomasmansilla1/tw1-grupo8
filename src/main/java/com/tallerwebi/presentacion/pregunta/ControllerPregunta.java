@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tallerwebi.dominio.pregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 
 
 @Controller
@@ -22,11 +23,13 @@ public class ControllerPregunta {
 
   private PreguntaService preguntaService;
   private SessionUtil sessionUtil;
+  private PreguntaApiService preguntaApiService;
 
   @Autowired
-  public ControllerPregunta(PreguntaService preguntaService, SessionUtil sessionUtil) {
+  public ControllerPregunta(PreguntaService preguntaService, PreguntaApiService preguntaApiService, SessionUtil sessionUtil) {
     this.preguntaService = preguntaService;
     this.sessionUtil = sessionUtil;
+    this.preguntaApiService = preguntaApiService;
   }
 
   // Mostrar formulario para crear pregunta
@@ -107,8 +110,10 @@ public class ControllerPregunta {
     if (!sessionUtil.verificarAdmin(session) ) {
       return "redirect:/login";
     }
-    // traer preguntas de bd
+    // Preguntas de la base de datos
     model.addAttribute("preguntas", preguntaService.listar());
+    // Preguntas obtenidas desde la API
+    model.addAttribute("preguntasApi", preguntaApiService.obtenerPreguntas(20));
 
     model.addAttribute("ok", session.getAttribute("ok"));
     model.addAttribute("error", session.getAttribute("error"));
@@ -116,7 +121,7 @@ public class ControllerPregunta {
     session.removeAttribute("ok");
     session.removeAttribute("error");
 
-    return "redirect:/admin/preguntas";
+    return "admin/preguntas";
   }
 
   // Mostrar form editar

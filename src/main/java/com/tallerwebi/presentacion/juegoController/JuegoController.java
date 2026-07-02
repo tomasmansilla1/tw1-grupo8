@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion.juegoController;
 
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
-import com.tallerwebi.dominio.servicioPregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class JuegoController {
 
     @Autowired
-    private PreguntaService preguntaService;
+    private PreguntaApiService preguntaService;
 
     private List<ApiPregunta> preguntasActuales = new ArrayList<>();
     private int preguntaActual = 0;
