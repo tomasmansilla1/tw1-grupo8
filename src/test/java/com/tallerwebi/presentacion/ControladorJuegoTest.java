@@ -1,6 +1,5 @@
 package com.tallerwebi.presentacion;
 
-
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.juego.ServicioJuego;

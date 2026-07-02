@@ -116,7 +116,7 @@ public class ControladorJuego {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/responder", method = RequestMethod.POST)
+    @RequestMapping(path = "/responders", method = RequestMethod.POST)
     public ModelAndView responder(@RequestParam("respuesta") String respuestaElegida, HttpServletRequest request) {
        
         ModelMap model = new ModelMap();
