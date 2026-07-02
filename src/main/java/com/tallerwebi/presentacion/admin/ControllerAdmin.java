@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -78,5 +79,56 @@ public class ControllerAdmin {
         return servicioUsuario.listarTodos().size();
     }
 
-    // hacer de la API
+    @RequestMapping(value="/usuarios", method=RequestMethod.GET)
+    public String usuarios(HttpSession session, Model model){
+
+        if(!sessionUtil.verificarAdmin(session)){
+            return "redirect:/login";
+        }
+
+        model.addAttribute("usuarios",
+            servicioUsuario.listarJugadores());
+
+        return "admin/usuarios";
+    }
+
+    @RequestMapping(value="/ban1/{id}", method=RequestMethod.POST)
+    public String ban1(@PathVariable Long id){
+
+        servicioUsuario.banear(id,1,"Suspendido por administrador");
+
+        return "redirect:/admin/usuarios";
+    }
+
+    @RequestMapping(value="/ban7/{id}", method=RequestMethod.POST)
+    public String ban7(@PathVariable Long id){
+
+        servicioUsuario.banear(id,7,"Suspendido por administrador");
+
+        return "redirect:/admin/usuarios";
+    }
+
+    @RequestMapping(value="/banpermanente/{id}", method=RequestMethod.POST)
+    public String banPermanente(@PathVariable Long id){
+
+        servicioUsuario.banPermanente(id,"Ban permanente");
+
+        return "redirect:/admin/usuarios";
+    }
+
+    @RequestMapping(value="/desban/{id}", method=RequestMethod.POST)
+    public String desbanear(@PathVariable Long id){
+
+        servicioUsuario.desbanear(id);
+
+        return "redirect:/admin/usuarios";
+    }
+
+    @RequestMapping(value="/advertir/{id}", method=RequestMethod.POST)
+    public String advertir(@PathVariable Long id){
+
+        servicioUsuario.advertir(id);
+
+        return "redirect:/admin/usuarios";
+    }
 }

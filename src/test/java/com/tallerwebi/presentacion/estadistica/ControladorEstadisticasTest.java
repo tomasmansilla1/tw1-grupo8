@@ -62,6 +62,7 @@ public class ControladorEstadisticasTest {
         assertThat(nav.getModel().get("listaVacio"), nullValue());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void dadoQueElUsuarioEntreALasEstadisticasDeTiempoPodraVerUnRankingConLosMenoresTiemposEnPartida() {
         List<Partida> listaPartidas = new ArrayList<>();
@@ -84,6 +85,7 @@ public class ControladorEstadisticasTest {
         assertThat(resultado, hasSize(1));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void dadoQueExistenUsuariosConPartidasTantoVictoriosasYPerdidasObtendreSuPorcentajeMasSuTotalDePartidas() {
         Usuario usuario1 = new Usuario();

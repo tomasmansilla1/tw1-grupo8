@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.tallerwebi.dominio.usuario.RepositoryUsuario;
+import com.tallerwebi.dominio.usuario.Roles;
 
 @Repository("repositorioUsuario")
 public class RepositoryUsuarioImpl implements RepositoryUsuario {
@@ -87,4 +88,15 @@ public class RepositoryUsuarioImpl implements RepositoryUsuario {
   public Usuario buscar(Long id) {
     return (Usuario) sessionFactory.getCurrentSession().get(Usuario.class, id);
   }
+
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  @Override
+  public List<Usuario> listarJugadores() {
+
+    return sessionFactory.getCurrentSession()
+    .createCriteria(Usuario.class)
+    .add(Restrictions.eq("rol", Roles.JUGADOR))
+    .list();
+  }
+  
 }

@@ -1,11 +1,15 @@
 package com.tallerwebi.dominio.usuario;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "usuarios")
@@ -32,6 +36,15 @@ public class Usuario {
   private Integer puntaje;
 
   private Integer partidasGanadasSeguidas;
+
+  private Boolean baneado = false;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date fechaFinBan;
+
+  private String motivoBan;
+
+  private Integer advertencias = 0;
 
   // constructor vacio
   public Usuario() {
@@ -128,5 +141,81 @@ public class Usuario {
       this.puntajeTotal = 0;
     }
     this.puntajeTotal += puntos;
+  }
+
+  public Boolean getBaneado() {
+    return baneado;
+  }
+
+  public void setBaneado(Boolean baneado) {
+    this.baneado = baneado;
+  }
+
+  public String getMotivoBan() {
+    return motivoBan;
+  }
+
+  public void setMotivoBan(String motivoBan) {
+    this.motivoBan = motivoBan;
+  }
+
+  public Integer getAdvertencias() {
+    return advertencias;
+  }
+
+  public void setAdvertencias(Integer advertencias) {
+    this.advertencias = advertencias;
+  }
+
+  public Date getFechaFinBan() {
+    return fechaFinBan;
+  }
+
+  public void setFechaFinBan(Date fechaFinBan) {
+    this.fechaFinBan = fechaFinBan;
+  }
+
+  public boolean estaBaneado() {
+
+    if (!Boolean.TRUE.equals(baneado)) {
+      return false;
+    }
+
+    if (fechaFinBan == null) {
+      // Ban permanente
+      return true; 
+    }
+
+    if (new Date().after(fechaFinBan)) {
+
+      baneado = false;
+      fechaFinBan = null;
+      motivoBan = null;
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public void banear(Date fechaFin, String motivo) {
+
+    this.baneado = true;
+    this.fechaFinBan = fechaFin;
+    this.motivoBan = motivo;
+  }
+
+  public void banPermanente(String motivo) {
+
+    this.baneado = true;
+    this.fechaFinBan = null;
+    this.motivoBan = motivo;
+  }
+
+  public void desbanear() {
+    
+    baneado = false;
+    fechaFinBan = null;
+    motivoBan = null;
   }
 }

@@ -31,7 +31,7 @@ public class ControllerLoginTest {
   @BeforeEach
   public void init() {
     servicioLogin = mock(ServiceLogin.class);
-    controllerLogin = new ControllerLogin(servicioLogin);
+    controllerLogin = new ControllerLogin(servicioLogin, null);
     adminIniciador = mock(AdminIniciador.class);
 
     InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

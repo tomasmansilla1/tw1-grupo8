@@ -16,4 +16,6 @@ public interface RepositoryUsuario {
   Usuario buscarPorUsername(String username);
   List<Usuario> listarTodos();
   List<Usuario> obtenerTopUsuarios();
+
+  List<Usuario> listarJugadores();
 }

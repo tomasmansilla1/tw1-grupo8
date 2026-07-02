@@ -19,11 +19,13 @@ public class RepositorioEstadisticasImpl implements RepositorioEstadisticas {
         this.sessionFactory = sessionFactory;
     }
 
+    @SuppressWarnings({ "deprecation", "unchecked" })
     @Override
     public List<Partida> buscarPartidasFinalizadas() {
         return sessionFactory.getCurrentSession().createCriteria(Partida.class).list();
     }
 
+    @SuppressWarnings({ "deprecation", "unchecked" })
     @Override
     public List<Partida> obtenerPartidasVictoriosas() {
         return sessionFactory.getCurrentSession().createCriteria(Partida.class)
