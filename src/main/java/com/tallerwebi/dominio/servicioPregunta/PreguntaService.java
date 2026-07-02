@@ -95,6 +95,7 @@ public class PreguntaService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private String traducir(String texto) {
         try {
             texto = decodeHtml(texto);

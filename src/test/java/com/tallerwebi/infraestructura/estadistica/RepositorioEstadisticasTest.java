@@ -1,12 +1,10 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.estadistica;
 
-import com.tallerwebi.dominio.RepositorioEstadisticas;
-import com.tallerwebi.dominio.juego.RepositorioJuego;
+import com.tallerwebi.dominio.estadisticas.RepositorioEstadisticas;
 import com.tallerwebi.dominio.partida.Partida;
-import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateTestConfig;
 import com.tallerwebi.infraestructura.config.SpringWebTestConfig;
-import com.tallerwebi.infraestructura.juego.RepositorioJuegoImpl;
+import com.tallerwebi.infraestructura.estadisticas.RepositorioEstadisticasImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +16,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @ExtendWith(SpringExtension.class)
@@ -69,6 +65,7 @@ public class RepositorioEstadisticasTest {
         assertThat(resultado, hasSize(2));
     }
 
+<<<<<<< HEAD:src/test/java/com/tallerwebi/infraestructura/RepositorioEstadisticasTest.java
     @Test
     @Transactional
     @Rollback
@@ -111,4 +108,6 @@ public class RepositorioEstadisticasTest {
 
         assertThat(resultado.isEmpty(), equalTo(true));
     }
+=======
+>>>>>>> 363290f1c377ef3671b9698aae304ae645d1bccc:src/test/java/com/tallerwebi/infraestructura/estadistica/RepositorioEstadisticasTest.java
 }

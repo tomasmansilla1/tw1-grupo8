@@ -1,5 +1,9 @@
 package com.tallerwebi.presentacion;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 363290f1c377ef3671b9698aae304ae645d1bccc
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.juego.ServicioJuego;

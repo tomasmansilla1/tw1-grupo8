@@ -3,7 +3,12 @@ package com.tallerwebi.presentacion.login;
 import com.tallerwebi.dominio.admin.AdminIniciador;
 import com.tallerwebi.dominio.login.DatosLogin;
 import com.tallerwebi.dominio.login.ServiceLogin;
+import com.tallerwebi.dominio.usuario.ServicioUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -18,14 +23,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControllerLogin {
 
-    private ServiceLogin servicioLogin;
+  private ServiceLogin servicioLogin;
+  private ServicioUsuario servicioUsuario;
 
   @Autowired
   private AdminIniciador adminIniciador;
 
   @Autowired
-  public ControllerLogin(ServiceLogin servicioLogin) {
+  public ControllerLogin(ServiceLogin servicioLogin, ServicioUsuario servicioUsuario) {
     this.servicioLogin = servicioLogin;
+    this.servicioUsuario = servicioUsuario;
   }
 
   @RequestMapping("/login")
@@ -42,21 +49,63 @@ public class ControllerLogin {
     @ModelAttribute("datosLogin") DatosLogin datosLogin,
     HttpServletRequest request
   ) {
+
     Usuario usuarioBuscado = servicioLogin.consultarUsuario(
       datosLogin.getEmail(),
       datosLogin.getPassword()
     );
 
     if (usuarioBuscado != null) {
+
+      // Si el ban temporal terminó, se desbanea automáticamente
+      if (usuarioBuscado.getFechaFinBan() != null && 
+        new Date().after(usuarioBuscado.getFechaFinBan())) 
+      {
+        usuarioBuscado.desbanear();
+        servicioUsuario.modificar(usuarioBuscado);
+      }
+
+      // Verificar si está baneado
+      if (usuarioBuscado.estaBaneado()) {
+        ModelMap model = new ModelMap();
+
+        if (usuarioBuscado.getFechaFinBan() == null) {
+
+          model.put(
+            "error", 
+            "Tu cuenta fue suspendida permanentemente. <br>Motivo: "
+            + usuarioBuscado.getMotivoBan()
+          );
+
+        } else {
+          SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+          model.put(
+            "error", 
+            "Tu cuenta está suspendida hasta "
+            + formato.format(usuarioBuscado.getFechaFinBan())
+            + "<br>Motivo: "
+            + usuarioBuscado.getMotivoBan()
+          );
+        }
+
+        model.put("datosLogin", new DatosLogin());
+
+        return new ModelAndView("login", model);
+      }
+
       request.getSession().setAttribute("usuario", usuarioBuscado);
       request.getSession().setAttribute("rol", usuarioBuscado.getRol());
-      return new ModelAndView("redirect:/home");
-    } else {
-      ModelMap model = new ModelMap();
-      model.put("error", "Usuario o clave incorrecta");
 
-      return new ModelAndView("login", model);
+      return new ModelAndView("redirect:/home");
     }
+
+    ModelMap model = new ModelMap();
+
+    model.put("error", "Usuario o clave incorrecta");
+    model.put("datosLogin", new DatosLogin());
+
+    return new ModelAndView("login", model);
   }
 
   @RequestMapping(path = "/home", method = RequestMethod.GET)

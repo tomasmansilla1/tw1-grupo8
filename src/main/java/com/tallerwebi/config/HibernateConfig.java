@@ -29,7 +29,7 @@ public class HibernateConfig {
     if (dbPort == null) dbPort = "3306";
     if (dbName == null) dbName = "preguntados_db";
     if (dbUser == null) dbUser = "root";
-    if (dbPassword == null) dbPassword = "1234";
+    if (dbPassword == null) dbPassword = "villaluzuriaga";
 
     String url = String.format(
       "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
@@ -67,7 +67,7 @@ public class HibernateConfig {
     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
     properties.setProperty("hibernate.show_sql", "true");
     properties.setProperty("hibernate.format_sql", "true");
-    properties.setProperty("hibernate.hbm2ddl.auto", "update");
+    properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
     properties.setProperty("hibernate.connection.characterEncoding", "utf8");
     properties.setProperty("hibernate.connection.CharSet", "utf8");
     properties.setProperty("hibernate.connection.useUnicode", "true");
