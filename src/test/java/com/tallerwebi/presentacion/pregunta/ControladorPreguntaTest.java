@@ -46,7 +46,7 @@ public class ControladorPreguntaTest {
         this.model = mock(Model.class);
         this.redirectAttributes = mock(RedirectAttributes.class);
 
-        this.controller = new ControllerPregunta(preguntaService, sessionUtil);
+        this.controller = new ControllerPregunta(preguntaService, null, sessionUtil);
 
         when(sessionUtil.verificarAdmin(session)).thenReturn(true);
     }

@@ -49,7 +49,7 @@ public class ControllerAdminTest {
         this.adminController = new ControllerAdmin(
                 sessionUtil,
                 preguntaService,
-                categoriaService,
+                null, categoriaService,
                 repositoryUsuario, null
         );
     }

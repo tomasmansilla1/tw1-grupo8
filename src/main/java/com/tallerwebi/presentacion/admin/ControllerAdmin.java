@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.tallerwebi.config.SessionUtil;
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.pregunta.PreguntaService;
+import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.ServicioUsuario;
 
@@ -24,16 +26,19 @@ public class ControllerAdmin {
     private PreguntaService preguntaService;
     private CategoriaService categoriaService;
     private ServicioUsuario servicioUsuario;
+    private PreguntaApiService preguntaApiService;
 
     @Autowired
     public ControllerAdmin(
         SessionUtil sessionUtil,
         PreguntaService preguntaService,
+        PreguntaApiService preguntaApiService,
         CategoriaService categoriaService,
         RepositoryUsuario repositoryUsuario,
         ServicioUsuario servicioUsuario)
     {
         this.sessionUtil = sessionUtil;
+        this.preguntaApiService = preguntaApiService;
         this.preguntaService = preguntaService;
         this.categoriaService = categoriaService;
         this.servicioUsuario = servicioUsuario;
@@ -130,5 +135,31 @@ public class ControllerAdmin {
         servicioUsuario.advertir(id);
 
         return "redirect:/admin/usuarios";
+    }
+
+    @GetMapping("/importarApi")
+    public String importarApi(HttpSession session) {
+
+        if (!sessionUtil.verificarAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        try {
+            int cantidad = preguntaApiService.sincronizarApi();
+
+            session.setAttribute(
+                "ok",
+                "Se importaron " + cantidad + " preguntas."
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            session.setAttribute(
+                "error",
+                "No se pudieron importar las preguntas."
+            );
+        }
+        return "redirect:/admin";
     }
 }

@@ -56,4 +56,19 @@ public class RepositoryPreguntasImpl implements RepositoryPreguntas {
     )
     .setParameter("categoria", categoria).list();
   }
+
+  @Override
+  public Pregunta buscarPorConsigna(String consigna) {
+
+    List<Pregunta> preguntas = sessionFactory.getCurrentSession().createQuery(
+      "FROM Pregunta WHERE consigna = :consigna",
+      Pregunta.class)
+    .setParameter("consigna", consigna).getResultList();
+
+    if (preguntas.isEmpty()) {
+      return null;
+    }
+
+    return preguntas.get(0);
+  }
 }

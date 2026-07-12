@@ -8,4 +8,5 @@ public interface RepositoryPreguntas {
     Pregunta findById(Long id);
     void deleteById(Long id);
     List<Pregunta> buscarPorCategoria(String categoria);
+    Pregunta buscarPorConsigna(String consigna);
 }
