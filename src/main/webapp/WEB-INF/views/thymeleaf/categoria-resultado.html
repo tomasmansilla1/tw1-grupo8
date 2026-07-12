@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+A<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -109,36 +109,21 @@
 
             <!-- Si NO es última pregunta -->
             <th:block th:if="${!esUltimaPregunta}">
-                <a href="/categoria" style="
-        padding: 12px 30px;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-    ">
+            <form th:action="@{/categoria/siguiente}" method="post">
+                <button type="submit">
                     SIGUIENTE PREGUNTA →
-                </a>
+                </button>
+            </form>
             </th:block>
+
 
             <!-- Si ES última pregunta -->
             <th:block th:if="${esUltimaPregunta}">
-                <a href="/categoria" style="
-        padding: 12px 30px;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-    ">
-                    SIGUIENTE CATEGORÍA →
-                </a>
+                <form th:action="@{/categoria/siguiente-categoria}" method="post">
+                    <button type="submit">
+                        SIGUIENTE CATEGORÍA →
+                    </button>
+                </form>
             </th:block>
     </div>
 </div>

@@ -22,7 +22,9 @@ public class ControllerCategoria {
     @Autowired
     private ServicioCategoria categoriaService;
 
+    //Lista para guardar las categorias mas usadas
     private List<Integer> categoriasUsadas = new ArrayList<>();
+
     private int puntaje = 0;
     private ApiPregunta preguntaActual = null;
     private int categoriaActualId = 0;
@@ -47,7 +49,9 @@ public class ControllerCategoria {
 
     @PostMapping("/obtener")
     public String obtenerCategoria(
+            //Obtengo la cantida de preguntas que se envia de la vista "categoria-inicio"
             @RequestParam int cantidad,
+
             HttpSession session,
             Model model) {
 

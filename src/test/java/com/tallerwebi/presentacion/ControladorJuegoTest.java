@@ -1,9 +1,5 @@
 package com.tallerwebi.presentacion;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 363290f1c377ef3671b9698aae304ae645d1bccc
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.juego.Respuesta;
 import com.tallerwebi.dominio.juego.ServicioJuego;
@@ -14,6 +10,7 @@ import com.tallerwebi.dominio.registro.DatosRegistroDTO;
 import com.tallerwebi.dominio.registro.ServicioRegistro;
 import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.presentacion.juegoController.ControladorJuego;
 import com.tallerwebi.presentacion.registro.ControladorRegistro;
 
 import org.junit.jupiter.api.BeforeEach;

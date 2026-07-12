@@ -91,14 +91,12 @@ public class ControladorEstadisticasTest {
         Usuario usuario1 = new Usuario();
         usuario1.setUsername("Mauricio");
 
-<<<<<<< HEAD:src/test/java/com/tallerwebi/presentacion/ControladorEstadisticasTest.java
         Usuario usuario = new Usuario();
         usuario.setUsername("Mauricio");
         usuario.setPartidasGanadasSeguidas(15);
-=======
+
         Usuario usuario2 = new Usuario();
         usuario2.setUsername("Juan");
->>>>>>> 363290f1c377ef3671b9698aae304ae645d1bccc:src/test/java/com/tallerwebi/presentacion/estadistica/ControladorEstadisticasTest.java
 
         List<RankingVictorias> ranking = new ArrayList<>();
         ranking.add(new RankingVictorias(usuario1, 10, 8, 80.0));

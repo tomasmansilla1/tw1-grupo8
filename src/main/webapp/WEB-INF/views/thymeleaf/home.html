@@ -59,6 +59,10 @@
                         Ranking completo
                     </a>
 
+                    <a th:href="@{/estadisticas}" class="btn-quiz">
+                        Estadisticas
+                    </a>
+
                     <a th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}"
                        th:href="@{/admin}"
                        class="btn-quiz">

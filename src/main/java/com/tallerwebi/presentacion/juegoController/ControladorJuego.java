@@ -1,4 +1,4 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.juegoController;
 
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.excepcion.OpcionInvalidaException;
@@ -63,7 +63,7 @@ public class ControladorJuego {
         return new ModelAndView("simulador-juego");
     }
 
-    @RequestMapping(path = "/juegos", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path = "/juego", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView mostrarJuego(@ModelAttribute("pregunta") Pregunta pregunta, HttpServletRequest request) {
        
         ModelMap model = new ModelMap();
@@ -116,7 +116,7 @@ public class ControladorJuego {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/responders", method = RequestMethod.POST)
+    @RequestMapping(path = "/responder", method = RequestMethod.POST)
     public ModelAndView responder(@RequestParam("respuesta") String respuestaElegida, HttpServletRequest request) {
        
         ModelMap model = new ModelMap();
