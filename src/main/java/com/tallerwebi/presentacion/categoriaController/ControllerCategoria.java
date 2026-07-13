@@ -22,19 +22,27 @@ public class ControllerCategoria {
     @Autowired
     private ServicioCategoria categoriaService;
 
-    //Lista para guardar las categorias mas usadas
-    private List<Integer> categoriasUsadas = new ArrayList<>();
-
-    private int puntaje = 0;
-    private ApiPregunta preguntaActual = null;
-    private int categoriaActualId = 0;
-    private String nombreUsuario = "tmansilla7";
-
-    private int cantidadPreguntasTotal = 0;
-    private int preguntasRespondidas = 0;
-
     @GetMapping
-    public String inicio(Model model) {
+    public String inicio(HttpSession session, Model model) {
+        List<Integer> categoriasUsadas = (List<Integer>) session.getAttribute("categoriasUsadas");
+
+        if (categoriasUsadas == null) {
+            categoriasUsadas = new ArrayList<>();
+            session.setAttribute("categoriasUsadas", categoriasUsadas);
+        }
+
+        Integer puntaje = (Integer) session.getAttribute("puntaje");
+        if (puntaje == null) {
+            puntaje = 0;
+            session.setAttribute("puntaje", puntaje);
+        }
+
+        String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+        if (nombreUsuario == null) {
+            nombreUsuario = "tmansilla7";
+            session.setAttribute("nombreUsuario", nombreUsuario);
+        }
+
         int total = categoriaService.obtenerTotal();
         int restantes = total - categoriasUsadas.size();
 
@@ -48,23 +56,38 @@ public class ControllerCategoria {
     }
 
     @PostMapping("/obtener")
-    public String obtenerCategoria(
-            //Obtengo la cantida de preguntas que se envia de la vista "categoria-inicio"
-            @RequestParam int cantidad,
-
-            HttpSession session,
-            Model model) {
-
+    public String obtenerCategoria(@RequestParam int cantidad, HttpSession session, Model model) {
         // Validar cantidad
         if (cantidad < 1 || cantidad > 50) {
             cantidad = 10;
         }
 
-        // ← GUARDAR en sesión
+        // Obtener categorías usadas
+        List<Integer> categoriasUsadas = (List<Integer>) session.getAttribute("categoriasUsadas");
+        if (categoriasUsadas == null) {
+            categoriasUsadas = new ArrayList<>();
+            session.setAttribute("categoriasUsadas", categoriasUsadas);
+        }
+
+        // Obtener puntaje
+        Integer puntaje = (Integer) session.getAttribute("puntaje");
+        if (puntaje == null) {
+            puntaje = 0;
+            session.setAttribute("puntaje", puntaje);
+        }
+
+        // Nombre de usuario (por ahora fijo)
+        String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+        if (nombreUsuario == null) {
+            nombreUsuario = "tmansilla7";
+            session.setAttribute("nombreUsuario", nombreUsuario);
+        }
+
+        // Guardar datos de la partida
         session.setAttribute("cantidadPreguntasTotal", cantidad);
         session.setAttribute("preguntasRespondidas", 0);
 
-        // Obtener categoría random
+        // Obtener categoría aleatoria
         Categoria categoria = categoriaService.obtenerCategoriaRandom(categoriasUsadas);
 
         if (categoria == null) {
@@ -74,21 +97,25 @@ public class ControllerCategoria {
             return "categoria-final";
         }
 
-        // Obtener pregunta
-        List<ApiPregunta> preguntas = preguntaService.obtenerPreguntasPorCategoria(1, categoria.getId());
+        // Obtener pregunta de la API
+        List<ApiPregunta> preguntas = preguntaService.obtenerPreguntasPorCategoria(cantidad, categoria.getId());
 
         if (preguntas.isEmpty()) {
             categoriasUsadas.add(categoria.getId());
             return obtenerCategoria(cantidad, session, model);
         }
 
-        ApiPregunta pregunta = preguntas.get(0);
-        preguntaActual = pregunta;
-        categoriaActualId = categoria.getId();
+        session.setAttribute("preguntas", preguntas);
+        session.setAttribute("indicePregunta", 0);
 
-        // Obtener valores de sesión
-        int cantidadTotal = (Integer) session.getAttribute("cantidadPreguntasTotal");
-        int preguntasRespondidas = (Integer) session.getAttribute("preguntasRespondidas");
+        ApiPregunta pregunta = preguntas.get(0);
+
+        // Guardar estado en sesión
+        session.setAttribute("preguntaActual", pregunta);
+        session.setAttribute("categoriaActualId", categoria.getId());
+
+        Integer cantidadTotal = (Integer) session.getAttribute("cantidadPreguntasTotal");
+        Integer preguntasRespondidas = (Integer) session.getAttribute("preguntasRespondidas");
 
         model.addAttribute("pregunta", pregunta);
         model.addAttribute("categoria", categoria);
@@ -102,25 +129,61 @@ public class ControllerCategoria {
     }
 
     @PostMapping("/siguiente")
-    public String siguientePregunta(Model model) {
+    public String siguientePregunta(HttpSession session, Model model) {
+
+        List<Integer> categoriasUsadas = (List<Integer>) session.getAttribute("categoriasUsadas");
+        if (categoriasUsadas == null) {
+            categoriasUsadas = new ArrayList<>();
+            session.setAttribute("categoriasUsadas", categoriasUsadas);
+        }
+
+        Integer puntaje = (Integer) session.getAttribute("puntaje");
+        if (puntaje == null) {
+            puntaje = 0;
+            session.setAttribute("puntaje", puntaje);
+        }
+
+        String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+        if (nombreUsuario == null) {
+            nombreUsuario = "tmansilla7";
+            session.setAttribute("nombreUsuario", nombreUsuario);
+        }
+
+        Integer categoriaActualId = (Integer) session.getAttribute("categoriaActualId");
+        Integer preguntasRespondidas = (Integer) session.getAttribute("preguntasRespondidas");
+        Integer cantidadPreguntasTotal = (Integer) session.getAttribute("cantidadPreguntasTotal");
+
+        if (categoriaActualId == null) {
+            return "redirect:/categoria";
+        }
 
         // Obtener siguiente pregunta de la categoría actual
-        List<ApiPregunta> preguntas = preguntaService.obtenerPreguntasPorCategoria(1, categoriaActualId);
+        List<ApiPregunta> preguntas = (List<ApiPregunta>) session.getAttribute("preguntas");
 
         if (preguntas.isEmpty()) {
             categoriasUsadas.add(categoriaActualId);
-            preguntaActual = null;
+            session.removeAttribute("preguntaActual");
+            session.removeAttribute("categoriaActualId");
 
             model.addAttribute("puntajeFinal", puntaje);
             model.addAttribute("totalCategorias", categoriaService.obtenerTotal());
             model.addAttribute("nombreUsuario", nombreUsuario);
+
             return "categoria-final";
         }
 
-        ApiPregunta pregunta = preguntas.get(0);
-        preguntaActual = pregunta;
+        Integer indice = (Integer) session.getAttribute("indicePregunta");
 
-        model.addAttribute("pregunta", pregunta);
+        indice++;
+
+        session.setAttribute("indicePregunta", indice);
+
+        ApiPregunta siguiente = preguntas.get(indice);
+
+        // Guardar nueva pregunta
+        session.setAttribute("preguntaActual", siguiente);
+
+        model.addAttribute("pregunta", siguiente);
         model.addAttribute("categoria", categoriaService.obtenerPorId(categoriaActualId));
         model.addAttribute("categoriaId", categoriaActualId);
         model.addAttribute("puntaje", puntaje);
@@ -138,31 +201,57 @@ public class ControllerCategoria {
             HttpSession session,
             Model model) {
 
-        if (preguntaActual == null || categoriaActualId != categoriaId) {
+        // Recuperar datos de la sesión
+        ApiPregunta preguntaActual = (ApiPregunta) session.getAttribute("preguntaActual");
+        Integer categoriaActualId = (Integer) session.getAttribute("categoriaActualId");
+        Integer cantidadTotal = (Integer) session.getAttribute("cantidadPreguntasTotal");
+        Integer preguntasRespondidas = (Integer) session.getAttribute("preguntasRespondidas");
+        Integer puntaje = (Integer) session.getAttribute("puntaje");
+        List<Integer> categoriasUsadas =
+                (List<Integer>) session.getAttribute("categoriasUsadas");
+        String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+
+        // Validaciones
+        if (preguntaActual == null || categoriaActualId == null || categoriaActualId != categoriaId) {
             return "redirect:/categoria";
         }
 
-        // ← OBTENER VALORES DE SESIÓN
-        int cantidadTotal = (Integer) session.getAttribute("cantidadPreguntasTotal");
-        int preguntasRespondidas = (Integer) session.getAttribute("preguntasRespondidas");
+        if (puntaje == null) {
+            puntaje = 0;
+        }
+
+        if (preguntasRespondidas == null) {
+            preguntasRespondidas = 0;
+        }
+
+        if (categoriasUsadas == null) {
+            categoriasUsadas = new ArrayList<>();
+            session.setAttribute("categoriasUsadas", categoriasUsadas);
+        }
 
         Categoria categoria = categoriaService.obtenerPorId(categoriaId);
-        boolean acierto = respuesta.equals(preguntaActual.getRespuestaCorrectaDecodificada());
+
+        boolean acierto = respuesta.equals(
+                preguntaActual.getRespuestaCorrectaDecodificada());
 
         if (acierto) {
             puntaje++;
+            session.setAttribute("puntaje", puntaje);
         }
 
-        String respuestaCorrecta = preguntaActual.getRespuestaCorrectaDecodificada();
-        preguntasRespondidas++;
+        String respuestaCorrecta =
+                preguntaActual.getRespuestaCorrectaDecodificada();
 
-        // ← ACTUALIZAR en sesión
+        preguntasRespondidas++;
         session.setAttribute("preguntasRespondidas", preguntasRespondidas);
 
-        // Si llegó al máximo
+        // ¿Terminó la categoría?
         if (preguntasRespondidas >= cantidadTotal) {
+
             categoriasUsadas.add(categoriaId);
-            preguntaActual = null;
+
+            session.removeAttribute("preguntaActual");
+            session.removeAttribute("categoriaActualId");
 
             model.addAttribute("acierto", acierto);
             model.addAttribute("categoria", categoria);
@@ -178,10 +267,15 @@ public class ControllerCategoria {
         }
 
         // Obtener siguiente pregunta
-        List<ApiPregunta> siguientes = preguntaService.obtenerPreguntasPorCategoria(1, categoriaId);
+        List<ApiPregunta> siguientes =
+                preguntaService.obtenerPreguntasPorCategoria(1, categoriaId);
 
         if (siguientes.isEmpty()) {
+
             categoriasUsadas.add(categoriaId);
+
+            session.removeAttribute("preguntaActual");
+            session.removeAttribute("categoriaActualId");
 
             model.addAttribute("acierto", acierto);
             model.addAttribute("categoria", categoria);
@@ -197,7 +291,9 @@ public class ControllerCategoria {
         }
 
         ApiPregunta siguiente = siguientes.get(0);
-        preguntaActual = siguiente;
+
+        // Guardar la siguiente pregunta en sesión
+        session.setAttribute("preguntaActual", siguiente);
 
         model.addAttribute("acierto", acierto);
         model.addAttribute("categoria", categoria);
@@ -215,13 +311,33 @@ public class ControllerCategoria {
     }
 
     @PostMapping("/siguiente-categoria")
-    public String siguienteCategoria(
-            HttpSession session,
-            Model model) {
+    public String siguienteCategoria(HttpSession session, Model model) {
 
-        // ← RECUPERAR cantidad de la sesión (sin parámetro)
-        Integer cantidadObj = (Integer) session.getAttribute("cantidadPreguntasTotal");
-        int cantidad = (cantidadObj != null) ? cantidadObj : 10;
+        // Recuperar datos de la sesión
+        Integer cantidad = (Integer) session.getAttribute("cantidadPreguntasTotal");
+        if (cantidad == null) {
+            cantidad = 10;
+        }
+
+        Integer puntaje = (Integer) session.getAttribute("puntaje");
+        if (puntaje == null) {
+            puntaje = 0;
+            session.setAttribute("puntaje", puntaje);
+        }
+
+        String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+        if (nombreUsuario == null) {
+            nombreUsuario = "tmansilla7";
+            session.setAttribute("nombreUsuario", nombreUsuario);
+        }
+
+        List<Integer> categoriasUsadas =
+                (List<Integer>) session.getAttribute("categoriasUsadas");
+
+        if (categoriasUsadas == null) {
+            categoriasUsadas = new ArrayList<>();
+            session.setAttribute("categoriasUsadas", categoriasUsadas);
+        }
 
         // Obtener siguiente categoría
         Categoria categoria = categoriaService.obtenerCategoriaRandom(categoriasUsadas);
@@ -234,18 +350,23 @@ public class ControllerCategoria {
         }
 
         // Obtener pregunta
-        List<ApiPregunta> preguntas = preguntaService.obtenerPreguntasPorCategoria(1, categoria.getId());
+        List<ApiPregunta> preguntas =
+                preguntaService.obtenerPreguntasPorCategoria(cantidad, categoria.getId());
 
         if (preguntas.isEmpty()) {
             categoriasUsadas.add(categoria.getId());
             return siguienteCategoria(session, model);
         }
 
-        ApiPregunta pregunta = preguntas.get(0);
-        preguntaActual = pregunta;
-        categoriaActualId = categoria.getId();
+        session.setAttribute("preguntas", preguntas);
 
-        // Resetear contador de preguntas respondidas
+        session.setAttribute("indicePregunta", 0);
+
+        ApiPregunta pregunta = preguntas.get(0);
+
+        // Guardar estado de la nueva categoría
+        session.setAttribute("preguntaActual", pregunta);
+        session.setAttribute("categoriaActualId", categoria.getId());
         session.setAttribute("preguntasRespondidas", 0);
 
         model.addAttribute("pregunta", pregunta);
@@ -261,14 +382,14 @@ public class ControllerCategoria {
 
     @PostMapping("/reiniciar")
     public String reiniciar(HttpSession session) {
-        categoriasUsadas.clear();
-        puntaje = 0;
-        preguntaActual = null;
-        categoriaActualId = 0;
 
-        // ← LIMPIAR sesión
-        session.setAttribute("cantidadPreguntasTotal", null);
-        session.setAttribute("preguntasRespondidas", null);
+        session.removeAttribute("categoriasUsadas");
+        session.removeAttribute("puntaje");
+        session.removeAttribute("preguntaActual");
+        session.removeAttribute("categoriaActualId");
+        session.removeAttribute("cantidadPreguntasTotal");
+        session.removeAttribute("preguntasRespondidas");
+        session.removeAttribute("nombreUsuario");
 
         return "redirect:/categoria";
     }

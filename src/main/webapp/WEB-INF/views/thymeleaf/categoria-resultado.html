@@ -125,6 +125,14 @@ A<!DOCTYPE html>
                     </button>
                 </form>
             </th:block>
+
+            <th:block th:if="${esUltimaPregunta}">
+                <form th:action="@{/categoria<}" method="post">
+                    <button type="submit">
+                        VOLVER
+                    </button>
+                </form>
+            </th:block>
     </div>
 </div>
 

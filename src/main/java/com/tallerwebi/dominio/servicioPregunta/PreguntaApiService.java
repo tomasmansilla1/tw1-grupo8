@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class PreguntaApiService {
 
     private final RestTemplate restTemplate;
