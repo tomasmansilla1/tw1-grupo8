@@ -14,9 +14,6 @@
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .container {
@@ -67,12 +64,16 @@
         a:hover {
             background: #764ba2;
         }
+
+        .resultado{
+            margin: 50px auto;
+        }
     </style>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="container resultado">
     <div th:if="${acierto}">
         <h2>✅ ¡Correcto!</h2>
     </div>
