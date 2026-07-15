@@ -8,4 +8,5 @@ public interface CategoriaRepository {
     CategoriaHistorial findUltima();
     List<CategoriaHistorial> findAll();
     void save(CategoriaHistorial categoria);
+    CategoriaHistorial buscarIdApiPreguntaCategoriaDia();
 }

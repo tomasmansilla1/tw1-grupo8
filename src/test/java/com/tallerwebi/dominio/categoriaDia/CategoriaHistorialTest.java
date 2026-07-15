@@ -23,7 +23,7 @@ public class CategoriaHistorialTest {
 
         LocalDate fecha = LocalDate.of(2026, 6, 10);
 
-        CategoriaHistorial categoria = new CategoriaHistorial("Historia", fecha);
+        CategoriaHistorial categoria = new CategoriaHistorial("Historia", 17 ,fecha);
 
         assertEquals("Historia",categoria.getNombre());
         assertEquals(fecha,categoria.getFecha());

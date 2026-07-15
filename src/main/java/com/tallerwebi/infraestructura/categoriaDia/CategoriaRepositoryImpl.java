@@ -1,11 +1,13 @@
 package com.tallerwebi.infraestructura.categoriaDia;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -47,5 +49,11 @@ public class CategoriaRepositoryImpl implements CategoriaRepository {
     public void save(CategoriaHistorial categoria) {
         Session session = sessionFactory.getCurrentSession();
         session.save(categoria);
+    }
+
+    @Override
+    public CategoriaHistorial buscarIdApiPreguntaCategoriaDia() {
+        return (CategoriaHistorial) sessionFactory.getCurrentSession().createCriteria(CategoriaHistorial.class)
+                .add(Restrictions.eq("fecha", LocalDate.now())).uniqueResult();
     }
 }

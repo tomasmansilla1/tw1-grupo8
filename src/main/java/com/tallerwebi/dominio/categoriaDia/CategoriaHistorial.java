@@ -20,6 +20,9 @@ public class CategoriaHistorial {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(name = "idapi_nombre")
+    private Integer apiIdNombre;
+
     @Column(nullable = false)
     private LocalDate fecha;
 
@@ -27,12 +30,20 @@ public class CategoriaHistorial {
     public CategoriaHistorial() {
     }
 
-    public CategoriaHistorial(String nombre, LocalDate fecha) {
+    public CategoriaHistorial(String nombre, Integer apiIdNombre ,LocalDate fecha) {
         this.nombre = nombre;
         this.fecha = fecha;
+        this.apiIdNombre = apiIdNombre;
     }
 
     // getters y setters
+    public Integer getApiIdNombre() {
+        return apiIdNombre;
+    }
+
+    public void setApiIdNombre(Integer apiIdNombre) {
+        this.apiIdNombre = apiIdNombre;
+    }
 
     public Long getId() {
         return id;

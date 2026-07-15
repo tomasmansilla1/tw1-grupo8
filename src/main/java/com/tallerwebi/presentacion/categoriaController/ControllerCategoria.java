@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion.categoriaController;
 
 import com.tallerwebi.dominio.Categoria.Categoria;
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
+import com.tallerwebi.dominio.categoriaDia.CategoriaHistorial;
+import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.servicioCategoria.ServicioCategoria;
 import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import com.tallerwebi.dominio.usuario.Usuario;
@@ -23,7 +25,10 @@ public class ControllerCategoria {
     private PreguntaApiService preguntaService;
 
     @Autowired
-    private ServicioCategoria categoriaService;
+    private CategoriaService categoriaDiaService;
+
+    @Autowired
+    private ServicioCategoria servicioCategoria;
 
     @RequestMapping(path = "", method = RequestMethod.GET)
         public ModelAndView inicio(HttpServletRequest request) {
@@ -41,7 +46,7 @@ public class ControllerCategoria {
             return new ModelAndView("redirect:/login");
         }
 
-        int total = categoriaService.obtenerTotal();
+        int total = servicioCategoria.obtenerTotal();
         int restantes = total - categoriasUsadas.size();
 
         model.put("puntaje", puntaje);
@@ -86,11 +91,13 @@ public class ControllerCategoria {
         request.getSession().setAttribute("preguntasRespondidas", 0);
 
         // Obtener categoría aleatoria
-        Categoria categoria = categoriaService.obtenerCategoriaRandom(categoriasUsadas);
+        CategoriaHistorial categoriaHistorial = categoriaDiaService.obtenerIdApiPregunta();
+
+        Categoria categoria = servicioCategoria.obtenerPorId(categoriaHistorial.getApiIdNombre());
 
         if (categoria == null) {
             model.put("puntajeFinal", puntaje);
-            model.put("totalCategorias", categoriaService.obtenerTotal());
+            model.put("totalCategorias", servicioCategoria.obtenerTotal());
             model.put("nombreUsuario", nombreUsuario);
             return new ModelAndView( "categoria-final", model);
         }
@@ -144,7 +151,6 @@ public class ControllerCategoria {
 
         String nombreUsuario = (String) request.getSession().getAttribute("nombreUsuario");
         if (nombreUsuario == null) {
-            nombreUsuario = "tmansilla7";
             request.getSession().setAttribute("nombreUsuario", nombreUsuario);
         }
 
@@ -159,21 +165,17 @@ public class ControllerCategoria {
         // Obtener siguiente pregunta de la categoría actual
         List<ApiPregunta> preguntas = (List<ApiPregunta>) request.getSession().getAttribute("preguntas");
 
-        if (preguntas.isEmpty()) {
-            categoriasUsadas.add(categoriaActualId);
-            request.getSession().removeAttribute("preguntaActual");
-            request.getSession().removeAttribute("categoriaActualId");
-
-            model.put("puntajeFinal", puntaje);
-            model.put("totalCategorias", categoriaService.obtenerTotal());
-            model.put("nombreUsuario", nombreUsuario);
-
-            return new ModelAndView("categoria-final", model);
+        if (preguntas == null || preguntas.isEmpty()) {
+            return new ModelAndView("redirect:/categoria");
         }
 
         Integer indice = (Integer) request.getSession().getAttribute("indicePregunta");
 
         indice++;
+
+        if (indice >= preguntas.size()) {
+            return new ModelAndView("redirect:/categoria");
+        }
 
         request.getSession().setAttribute("indicePregunta", indice);
 
@@ -183,10 +185,10 @@ public class ControllerCategoria {
         request.getSession().setAttribute("preguntaActual", siguiente);
 
         model.put("pregunta", siguiente);
-        model.put("categoria", categoriaService.obtenerPorId(categoriaActualId));
+        model.put("categoria", servicioCategoria.obtenerPorId(categoriaActualId));
         model.put("categoriaId", categoriaActualId);
         model.put("puntaje", puntaje);
-        model.put("preguntasRespondidas", preguntasRespondidas + 1);
+        model.put("preguntasRespondidas", preguntasRespondidas);
         model.put("cantidadPreguntasTotal", cantidadPreguntasTotal);
         model.put("nombreUsuario", nombreUsuario);
 
@@ -224,13 +226,13 @@ public class ControllerCategoria {
             request.getSession().setAttribute("categoriasUsadas", categoriasUsadas);
         }
 
-        Categoria categoria = categoriaService.obtenerPorId(categoriaId);
+        Categoria categoria = servicioCategoria.obtenerPorId(categoriaId);
 
         boolean acierto = respuesta.equals(
                 preguntaActual.getRespuestaCorrectaDecodificada());
 
         if (acierto) {
-            puntaje++;
+            puntaje+=10;
             request.getSession().setAttribute("puntaje", puntaje);
         }
 
@@ -243,7 +245,7 @@ public class ControllerCategoria {
         // ¿Terminó la categoría?
         if (preguntasRespondidas >= cantidadTotal) {
             categoriasUsadas.add(categoriaId);
-
+            request.getSession().setAttribute("categoriasUsadas", categoriasUsadas);
             request.getSession().removeAttribute("preguntaActual");
             request.getSession().removeAttribute("categoriaActualId");
 
@@ -252,35 +254,10 @@ public class ControllerCategoria {
             model.put("puntajeFinal", puntaje);
             model.put("categoria", categoria);
             model.put("nombreUsuario", nombreUsuario);
-            model.put("totalCategorias", categoriaService.obtenerTotal());
+            model.put("totalCategorias", servicioCategoria.obtenerTotal());
 
             return new ModelAndView("categoria-final", model);
         }
-        // Obtener siguiente pregunta
-        List<ApiPregunta> siguientes = preguntaService.obtenerPreguntasPorCategoria(1, categoriaId);
-
-        if (siguientes.isEmpty()) {
-            categoriasUsadas.add(categoriaId);
-            request.getSession().removeAttribute("preguntaActual");
-            request.getSession().removeAttribute("categoriaActualId");
-
-            model.put("acierto", acierto);
-            model.put("categoria", categoria);
-            model.put("puntaje", puntaje);
-            model.put("esUltimaPregunta", true);
-            model.put("nombreUsuario", nombreUsuario);
-
-            if (!acierto) {
-                model.put("respuestaCorrecta", respuestaCorrecta);
-            }
-
-            return new ModelAndView("categoria-resultado", model);
-        }
-
-        ApiPregunta siguiente = siguientes.get(0);
-
-        // Guardar la siguiente pregunta en sesión
-        request.getSession().setAttribute("preguntaActual", siguiente);
 
         model.put("acierto", acierto);
         model.put("categoria", categoria);
@@ -326,11 +303,11 @@ public class ControllerCategoria {
         }
 
         // Obtener siguiente categoría
-        Categoria categoria = categoriaService.obtenerCategoriaRandom(categoriasUsadas);
+        Categoria categoria = servicioCategoria.obtenerCategoriaRandom(categoriasUsadas);
 
         if (categoria == null) {
             model.put("puntajeFinal", puntaje);
-            model.put("totalCategorias", categoriaService.obtenerTotal());
+            model.put("totalCategorias", servicioCategoria.obtenerTotal());
             model.put("nombreUsuario", nombreUsuario);
             return new ModelAndView("categoria-final", model);
         }

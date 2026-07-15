@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,16 @@ public class CategoriaService {
         return "Sin categoría";
     }
 
+    public CategoriaHistorial obtenerIdApiPregunta() {
+        CategoriaHistorial idApi = repositorio.buscarIdApiPreguntaCategoriaDia();
+
+        if (idApi == null) {
+            return null;
+        }
+
+        return idApi;
+    }
+
     public List<CategoriaHistorial> obtenerHistorial() {
         return repositorio.findAll();
     }
@@ -42,7 +51,27 @@ public class CategoriaService {
         if (ultima != null && ultima.getNombre().equalsIgnoreCase(nombre)) {
             return;
         }
-        CategoriaHistorial nueva = new CategoriaHistorial(nombre, LocalDate.now());
+
+        Integer idApi;
+
+        switch (nombre) {
+            case "Deportes":
+                idApi = 21;
+                break;
+            case "Ciencia":
+                idApi = 17;
+                break;
+            case "Cultura":
+                idApi = 9;
+                break;
+            case "Entretenimiento":
+                idApi = 11;
+                break;
+            default:
+                throw new RuntimeException("Categoría inválida");
+        }
+
+        CategoriaHistorial nueva = new CategoriaHistorial(nombre, idApi ,LocalDate.now());
         
         repositorio.save(nueva);
     }   
