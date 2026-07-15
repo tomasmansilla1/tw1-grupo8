@@ -70,16 +70,33 @@
     </style>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container">
+    <div th:if="${acierto}">
+        <h2>✅ ¡Correcto!</h2>
+    </div>
+
+    <div th:if="${!acierto}">
+        <h2>❌ Incorrecto</h2>
+        <p>
+            La respuesta correcta era:
+            <strong th:text="${respuestaCorrecta}"></strong>
+        </p>
+    </div>
+
+    <h3>
+        Puntaje final:
+        <span th:text="${puntajeFinal}"></span>
+    </h3>
     <div class="emoji">👑</div>
     <h1>¡COMPLETADO!</h1>
     <p style="font-size: 1.3em; color: #666;">Respondiste todas las categorías</p>
 
     <div class="puntaje" th:text="'Puntaje Final: ' + ${puntajeFinal} + ' de ' + ${totalCategorias}"></div>
 
-    <a href="@{/categoria}">JUGAR DE NUEVO</a>
+    <a th:href="@{/categoria}">JUGAR DE NUEVO</a>
+
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
