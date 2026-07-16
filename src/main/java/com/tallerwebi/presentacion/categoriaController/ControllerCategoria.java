@@ -4,6 +4,9 @@ import com.tallerwebi.dominio.Categoria.Categoria;
 import com.tallerwebi.dominio.apiPregunta.ApiPregunta;
 import com.tallerwebi.dominio.categoriaDia.CategoriaHistorial;
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
+import com.tallerwebi.dominio.juego.Respuesta;
+import com.tallerwebi.dominio.juego.ServicioJuego;
+import com.tallerwebi.dominio.partida.Partida;
 import com.tallerwebi.dominio.servicioCategoria.ServicioCategoria;
 import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
 import com.tallerwebi.dominio.usuario.Usuario;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,9 @@ public class ControllerCategoria {
 
     @Autowired
     private ServicioCategoria servicioCategoria;
+
+    @Autowired
+    private ServicioJuego servicioJuego;
 
     @RequestMapping(path = "", method = RequestMethod.GET)
         public ModelAndView inicio(HttpServletRequest request) {
@@ -104,6 +112,20 @@ public class ControllerCategoria {
 
         // Obtener pregunta de la API
         List<ApiPregunta> preguntas = preguntaService.obtenerPreguntasPorCategoria(cantidad, categoria.getId());
+
+        Partida partida = new Partida();
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+        partida.setInicioPartida(LocalTime.now());
+        partida.setCategoria(categoriaHistorial.getNombre());
+        partida.setFecha(LocalDateTime.now());
+        partida.setUsuario(usuario);
+        partida.setPuntajeObtenido(0);
+
+        Respuesta respuesta = new Respuesta();
+        respuesta.setRespuestasUsuario(new ArrayList<>());
+
+        partida.setRespuesta(respuesta);
+        request.getSession().setAttribute("partida", partida);
 
         if (preguntas.isEmpty()) {
             categoriasUsadas.add(categoria.getId());
@@ -208,6 +230,12 @@ public class ControllerCategoria {
         List<Integer> categoriasUsadas = (List<Integer>) request.getSession().getAttribute("categoriasUsadas");
         String nombreUsuario = (String) request.getSession().getAttribute("nombreUsuario");
 
+        Partida partida = (Partida) request.getSession().getAttribute("partida");
+
+        Respuesta respuestas = partida.getRespuesta();
+
+        respuestas.getRespuestasUsuario().add(respuesta);
+
         // Validaciones
         if (preguntaActual == null || categoriaActualId == null || categoriaActualId != categoriaId) {
             return new ModelAndView("redirect:/categoria");
@@ -255,6 +283,18 @@ public class ControllerCategoria {
             model.put("categoria", categoria);
             model.put("nombreUsuario", nombreUsuario);
             model.put("totalCategorias", servicioCategoria.obtenerTotal());
+
+            Partida partidaFinal = (Partida) request.getSession().getAttribute("partida");
+            partidaFinal.setFinalPartida(LocalTime.now());
+            partidaFinal.setPuntajeObtenido(puntaje);
+
+            if (puntaje >= 30) {
+                partidaFinal.setEsVictoria(true);
+            }else {
+                partidaFinal.setEsVictoria(false);
+            }
+
+            servicioJuego.guardarPartida(partidaFinal);
 
             return new ModelAndView("categoria-final", model);
         }
