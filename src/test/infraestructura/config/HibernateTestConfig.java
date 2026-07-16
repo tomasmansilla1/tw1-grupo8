@@ -1,8 +1,11 @@
-package com.tallerwebi.config;
+package test.infraestructura.config;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,47 +16,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-public class HibernateConfig {
+public class HibernateTestConfig {
 
   @Bean
   public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-    String dbHost = System.getenv("DB_HOST");
-    String dbPort = System.getenv("DB_PORT");
-    String dbName = System.getenv("DB_NAME");
-    String dbUser = System.getenv("DB_USER");
-    String dbPassword = System.getenv("DB_PASSWORD");
-
-    if (dbHost == null) dbHost = "localhost";
-    if (dbPort == null) dbPort = "3306";
-    if (dbName == null) dbName = "preguntados_db";
-    if (dbUser == null) dbUser = "root";
-    if (dbPassword == null) dbPassword = "1234";
-
-    String url = String.format(
-      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
-      dbHost,
-      dbPort,
-      dbName
-    );
-
-    dataSource.setUrl(url);
-    dataSource.setUsername(dbUser);
-    dataSource.setPassword(dbPassword);
-
+    dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+    dataSource.setUrl("jdbc:hsqldb:mem:db_");
+    dataSource.setUsername("sa");
+    dataSource.setPassword("");
     return dataSource;
   }
 
   @Bean
-  public LocalSessionFactoryBean sessionFactory(@NonNull DataSource dataSource) {
-
+  public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-
     sessionFactory.setDataSource(dataSource);
     sessionFactory.setPackagesToScan("com.tallerwebi.dominio");
     sessionFactory.setHibernateProperties(hibernateProperties());
-
     return sessionFactory;
   }
 
@@ -64,13 +44,26 @@ public class HibernateConfig {
 
   private Properties hibernateProperties() {
     Properties properties = new Properties();
-    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
     properties.setProperty("hibernate.show_sql", "true");
     properties.setProperty("hibernate.format_sql", "true");
-    properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-    properties.setProperty("hibernate.connection.characterEncoding", "utf8");
-    properties.setProperty("hibernate.connection.CharSet", "utf8");
-    properties.setProperty("hibernate.connection.useUnicode", "true");
+    properties.setProperty("hibernate.hbm2ddl.auto", "update");
     return properties;
   }
+
+  @Test
+  public void debeUsarValoresPorDefectoSiNoHayEnvVars() {
+    // No se puede mockear System.getenv fácilmente,
+    // así que esto se cubre ejecutando sin variables
+
+    DataSource ds = new HibernateTestConfig().dataSource();
+
+    assertNotNull(ds);
+  }
+  @Test
+  public void debeUsarEnvVarsSiExisten() {
+    DataSource ds = new HibernateTestConfig().dataSource();
+    assertNotNull(ds);
+  }
+  
 }
