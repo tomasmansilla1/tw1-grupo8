@@ -66,6 +66,7 @@ public class ControllerCategoria {
         return new ModelAndView("categoria-inicio", model);
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(path = "/obtener", method = RequestMethod.POST)
     public ModelAndView obtenerCategoria(@RequestParam int cantidad, HttpServletRequest request) {
         ModelMap model = new ModelMap();
@@ -155,6 +156,7 @@ public class ControllerCategoria {
         return new ModelAndView( "categoria-pregunta", model);
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(path = "/siguiente", method = RequestMethod.POST)
     public ModelAndView siguientePregunta(HttpServletRequest request) {
         ModelMap model = new ModelMap();
@@ -217,6 +219,7 @@ public class ControllerCategoria {
         return new ModelAndView("categoria-pregunta", model);
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(path = "/responder", method = RequestMethod.POST)
     public ModelAndView responder(@RequestParam String respuesta, @RequestParam int categoriaId,
                             HttpServletRequest request) {
@@ -314,6 +317,7 @@ public class ControllerCategoria {
         return new ModelAndView("categoria-resultado", model);
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(path = "/siguiente-categoria", method = RequestMethod.POST)
     public ModelAndView siguienteCategoria(HttpServletRequest request) {
         ModelMap model = new ModelMap();

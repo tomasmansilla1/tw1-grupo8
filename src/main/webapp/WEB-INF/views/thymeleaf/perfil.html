@@ -1,201 +1,577 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Perfil</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/main.css}">
+
     <link rel="stylesheet" th:href="@{/css/perfil.css}">
 </head>
 
+
 <body class="home-body">
 
-  <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-  <main class="container py-5">
+    <!-- NAVBAR -->
 
-    <div class="quiz-card profile-card text-center">
+    <div th:replace="~{fragments/navbar :: navbar}">  </div>
 
-      <!-- Avatar -->
-      <div class="avatar-container">
+    <main class="container py-5">
 
-        <img id="avatarImg"
-          th:src="@{'https://robohash.org/' + ${usuario.username} + '.png'}"
-          alt="Avatar">
+      <div class="quiz-card profile-card text-center">
 
-        <div th:if="${session.usuario != null && session.usuario.id == usuario.id}" class="mt-3">
+        <div class="avatar-container">
 
-        <button type="button" class="btn-avatar" onclick="girarRuleta()">
-          Girar ruleta de avatares
-        </button>
-      </div>
 
-      </div>
-      <!-- Título -->
-      <h1 class="title"
-        th:text="${session.usuario != null && session.usuario.id == usuario.id}
-        ? 'Mi perfil'
-        : 'Perfil de ' + ${usuario.username}">
+          <img id="avatarImg" th:src="${usuario.avatarSeleccionado != null
+            and !usuario.avatarSeleccionado.isEmpty()
+            ? usuario.avatarSeleccionado
+            : 'https://robohash.org/' + usuario.username + '.png'}"
+            alt="Avatar del usuario"
+            class="profile-avatar">
+
+
+            <!-- La ruleta solamente aparece -->
+            <!-- en el propio perfil -->
+
+          <div th:if="${session.usuario != null and session.usuario.id == usuario.id}" class="mt-3">
+
+            <button type="button" class="btn-avatar" onclick="girarRuleta()">
+
+              🎲 Girar ruleta de avatares
+
+            </button>
+
+
+          </div>
+
+
+        </div>
+
+
+        <h1 class="title" th:text="${session.usuario != null
+        and session.usuario.id == usuario.id
+        ? 'Mi perfil' : 'Perfil de ' + usuario.username}">
+
           Perfil
-      </h1>
 
-      <div class="divider"></div>
+        </h1>
 
-      <p class="subtitle">
-        Información del jugador
-      </p>
+        <div class="divider"> </div>
 
-      <!-- Datos -->
+          <p class="subtitle"> Información del jugador </p>
 
-      <div class="profile-data-box">
+            <div class="profile-data-box">
 
-        <span class="data-label">Usuario</span>
-        <span class="data-value" th:text="${usuario.username}"></span>
-      </div>
 
-      <div class="profile-data-box">
+              <span class="data-label">
 
-        <span class="data-label">Email</span>
-        <span class="data-value" th:text="${usuario.email}"></span>
-      </div>
+                Usuario
 
-      <div class="profile-data-box">
-        <span class="data-label">Rol</span>
-        <span class="data-value" th:text="${usuario.rol}"></span>
-      </div>
+              </span>
 
-      <div class="profile-data-box custom-tooltip">
 
-        <span class="data-label">Máxima racha</span>
+              <span class="data-value" th:text="${usuario.username}">
 
-        <span class="tooltip-box">
-          Cantidad máxima de respuestas correctas consecutivas obtenidas.
-        </span>
+                usuario
 
-        <span class="data-value"
-          th:text="${usuario.respuestasAcertadasSeguidas != null ?
-          usuario.respuestasAcertadasSeguidas : 0}">
-        </span>
-      </div>
+              </span>
 
-      <div class="profile-data-box">
-        <span class="data-label">Puntaje total</span>
 
-        <span class="data-value score-highlight"
-          th:text="${usuario.puntajeTotal != null ?
-          usuario.puntajeTotal : 0}">
-        </span>
-      </div>
+            </div>
 
-      <div class="profile-data-box custom-tooltip">
+            <div class="profile-data-box">
 
-      <span class="data-label"> Nivel </span>
+              <span class="data-label">
+                Email
+              </span>
 
-      <span class="tooltip-box">
-        Novato: menos de 500 puntos<br>
-        Veterano: entre 500 y 1999 puntos<br>
-        Leyenda: 2000 puntos o más
-      </span>
+              <span class="data-value"  th:text="${usuario.email}">
+                email
+              </span>
 
-      <span class="badge-level"
-        th:classappend="${(usuario.puntajeTotal != null ?
-        usuario.puntajeTotal : 0) < 500  ? ' badge-novato'
-        : ((usuario.puntajeTotal != null ?
-        usuario.puntajeTotal : 0) < 2000 ? ' badge-veterano'
-        : ' badge-leyenda')}"
+            </div>
 
-        th:text="${(usuario.puntajeTotal != null ?
-        usuario.puntajeTotal : 0) < 500 ? 'Novato'
-        : ((usuario.puntajeTotal != null ?
-        usuario.puntajeTotal : 0) < 2000 ? 'Veterano'
-        : 'Leyenda')}">
-      </span>
+            <div class="profile-data-box">
 
-      </div>
-        <a th:href="@{/home}" class="btn-quiz mt-4">Volver al inicio</a>
-      </div>
+              <span class="data-label">
+                Rol
+              </span>
+
+              <span class="data-value" th:text="${usuario.rol}">
+                jugador
+              </span>
+
+            </div>
+
+            <div class="profile-data-box custom-tooltip">
+
+              <span class="data-label">
+                Máxima racha
+              </span>
+
+
+              <span class="tooltip-box">
+
+                Cantidad máxima de respuestas correctas
+                consecutivas obtenidas.
+
+              </span>
+
+
+              <span class="data-value"
+              th:text="${usuario.partidasGanadasSeguidas != null
+              ? usuario.partidasGanadasSeguidas
+              : 0}">
+               0
+
+              </span>
+
+
+            </div>
+
+            <div class="profile-data-box">
+
+
+              <span class="data-label">
+
+                Puntaje total
+
+              </span>
+
+
+                <span class="data-value score-highlight"
+
+
+                      th:text="${usuario.puntajeTotal != null
+
+                               ? usuario.puntajeTotal
+
+                               : 0}">
+
+                    0
+
+                </span>
+
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- NIVEL -->
+            <!-- ================================= -->
+
+
+            <div class="profile-data-box custom-tooltip">
+
+
+                <span class="data-label">
+
+                    Nivel
+
+                </span>
+
+
+                <span class="tooltip-box">
+
+                    Novato: menos de 500 puntos<br>
+
+                    Veterano: entre 500 y 1999 puntos<br>
+
+                    Leyenda: 2000 puntos o más
+
+                </span>
+
+
+                <!-- NOVATO -->
+
+                <span class="badge-level badge-novato"
+
+                      th:if="${usuario.puntajeTotal == null
+
+                              or usuario.puntajeTotal < 500}">
+
+                    Novato
+
+                </span>
+
+
+                <!-- VETERANO -->
+
+                <span class="badge-level badge-veterano"
+
+                      th:if="${usuario.puntajeTotal != null
+
+                              and usuario.puntajeTotal >= 500
+
+                              and usuario.puntajeTotal < 2000}">
+
+                    Veterano
+
+                </span>
+
+
+                <!-- LEYENDA -->
+
+                <span class="badge-level badge-leyenda"
+
+                      th:if="${usuario.puntajeTotal != null
+
+                              and usuario.puntajeTotal >= 2000}">
+
+                    Leyenda
+
+                </span>
+
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- BOTÓN VOLVER -->
+            <!-- ================================= -->
+
+
+            <a th:href="@{/home}"
+
+               class="btn-quiz mt-4">
+
+                Volver al inicio
+
+            </a>
+
+
+        </div>
+
 
     </main>
 
+
+    <!-- FOOTER -->
+
+
     <footer class="quiz-footer mt-5">
-      <div class="container small" style="color: #6c757d">
-        &copy; 2026 - Taller Web I - Universidad Nacional de La Matanza
-      </div>
+
+
+        <div class="container small"
+
+             style="color: #6c757d">
+
+
+            &copy; 2026 -
+
+            Taller Web I -
+
+            Universidad Nacional de La Matanza
+
+
+        </div>
+
+
     </footer>
+
+
+    <!-- ================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================= -->
+
 
     <script th:inline="javascript">
 
-        const username = [[$usuario.username]];
 
-        document.addEventListener("DOMContentLoaded", function () {
+        /*
+         * Usuario actual de la página
+         */
 
-            const savedUrl =
-                localStorage.getItem("avatarUrl_" + username);
+        const username =
+            /*[[${usuario.username}]]*/ "usuario";
 
-            if (savedUrl) {
-                document.getElementById("avatarImg").src = savedUrl;
+
+        /*
+         * ID del usuario
+         */
+
+        const usuarioId =
+            /*[[${usuario.id}]]*/ 0;
+
+
+        /*
+         * Saber si estoy viendo
+         * mi propio perfil
+         */
+
+        const esMiPerfil =
+            /*[[${session.usuario != null
+                  and session.usuario.id == usuario.id}]]*/ false;
+
+
+        /*
+         * Cuando carga la página
+         */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+
+            function () {
+
+
+                /*
+                 * Si no es mi perfil,
+                 * no cargar avatar local
+                 */
+
+                if (!esMiPerfil) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Buscar avatar guardado
+                 */
+
+                const savedUrl =
+
+                    localStorage.getItem(
+
+                        "avatarUrl_" + username
+
+                    );
+
+
+                /*
+                 * Si existe,
+                 * mostrarlo
+
+                 */
+
+                if (savedUrl) {
+
+
+                    document.getElementById(
+                        "avatarImg"
+                    ).src = savedUrl;
+
+
+                }
+
+
             }
-        });
+
+        );
+
+
+        /*
+         * =================================
+         * RULETA DE AVATARES
+         * =================================
+         */
 
         function girarRuleta() {
 
-            const img = document.getElementById("avatarImg");
 
-            img.classList.add("girar");
+            const img =
 
-            const sets = [
-                "set1",
-                "set2",
-                "set3",
-                "set4"
-            ];
-
-            const bgs = [
-                "bg1",
-                "bg2",
-                ""
-            ];
-
-            const randomSet =
-                sets[Math.floor(Math.random() * sets.length)];
-
-            const randomBg =
-                bgs[Math.floor(Math.random() * bgs.length)];
-
-            const seedAleatoria =
-                Math.floor(Math.random() * 99999);
-
-            let nuevaUrl =
-                "https://robohash.org/"
-                + encodeURIComponent(username)
-                + "-"
-                + seedAleatoria
-                + ".png?set="
-                + randomSet;
-
-            if (randomBg) {
-                nuevaUrl += "&bgset=" + randomBg;
-            }
-
-            setTimeout(function () {
-
-                img.src = nuevaUrl;
-
-                localStorage.setItem(
-                    "avatarUrl_" + username,
-                    nuevaUrl
+                document.getElementById(
+                    "avatarImg"
                 );
 
-                img.classList.remove("girar");
 
-            }, 500);
-    }
+            /*
+             * Animación
 
-  </script>
+             */
+
+            img.classList.add(
+                "girar"
+            );
+
+
+            /*
+             * Sets disponibles
+             */
+
+            const sets = [
+
+                "set1",
+
+                "set2",
+
+                "set3",
+
+                "set4"
+
+            ];
+
+
+            /*
+             * Fondos disponibles
+
+             */
+
+            const bgs = [
+
+                "bg1",
+
+                "bg2",
+
+                ""
+
+            ];
+
+
+            /*
+             * Elegir set aleatorio
+
+             */
+
+            const randomSet =
+
+                sets[
+
+                    Math.floor(
+
+                        Math.random()
+                        * sets.length
+
+                    )
+
+                ];
+
+
+            /*
+             * Elegir fondo aleatorio
+
+             */
+
+            const randomBg =
+
+                bgs[
+
+                    Math.floor(
+
+                        Math.random()
+                        * bgs.length
+
+                    )
+
+                ];
+
+
+            /*
+             * Semilla aleatoria
+
+             */
+
+            const seedAleatoria =
+
+                Math.floor(
+
+                    Math.random()
+                    * 99999
+
+                );
+
+            let nuevaUrl =
+
+                "https://robohash.org/"
+
+                + encodeURIComponent(username)
+
+                + "-"
+
+                + seedAleatoria
+
+                + ".png?set="
+
+                + randomSet;
+
+
+            /*
+             * Agregar fondo
+
+             */
+
+            if (randomBg) {
+
+
+                nuevaUrl +=
+
+                    "&bgset="
+
+                    + randomBg;
+
+
+            }
+
+
+            /*
+             * Esperar animación
+
+             */
+
+            setTimeout(
+
+                function () {
+
+
+                    /*
+                     * Cambiar imagen
+
+                     */
+
+                    img.src = nuevaUrl;
+
+
+                    /*
+                     * Guardar localmente
+
+                     */
+
+                    localStorage.setItem(
+
+                        "avatarUrl_" + username,
+
+                        nuevaUrl
+
+                    );
+
+
+                    /*
+                     * Sacar animación
+
+                     */
+
+                    img.classList.remove(
+
+                        "girar"
+
+                    );
+
+
+                },
+
+                500
+
+            );
+
+
+        }
+
+
+    </script>
+
 
 </body>
 

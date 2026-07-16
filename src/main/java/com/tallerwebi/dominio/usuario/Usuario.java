@@ -33,9 +33,11 @@ public class Usuario {
   
   private Boolean activo = false;
 
+  private String avatarSeleccionado;
+
   private Integer puntaje;
 
-  private Integer partidasGanadasSeguidas;
+  private Integer partidasGanadasSeguidas = 0;
 
   private Boolean baneado = false;
 
@@ -56,7 +58,6 @@ public class Usuario {
     this.password = password;
     this.activo = true;
     this.puntaje = 0;
-    this.partidasGanadasSeguidas = 0;
   }
 
   public Long getId() {
@@ -122,6 +123,7 @@ public class Usuario {
   public Integer getPartidasGanadasSeguidas() {
     return partidasGanadasSeguidas;
   }
+
   public void setPartidasGanadasSeguidas(Integer partidasGanadasSeguidas) {
     this.partidasGanadasSeguidas = partidasGanadasSeguidas;
   }
@@ -217,5 +219,13 @@ public class Usuario {
     baneado = false;
     fechaFinBan = null;
     motivoBan = null;
+  }
+
+  public String getAvatarSeleccionado() {
+    return avatarSeleccionado;
+  }
+
+  public void setAvatarSeleccionado(String avatarSeleccionado) {
+      this.avatarSeleccionado = avatarSeleccionado;
   }
 }

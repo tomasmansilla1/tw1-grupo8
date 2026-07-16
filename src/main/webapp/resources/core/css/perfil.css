@@ -9,7 +9,8 @@
     margin-bottom: 25px;
 }
 
-#avatarImg {
+#avatarImg,
+.profile-avatar {
     width: 140px;
     height: 140px;
     border-radius: 50%;
@@ -21,12 +22,14 @@
         box-shadow .3s ease;
 }
 
-#avatarImg:hover {
+#avatarImg:hover,
+.profile-avatar:hover {
     transform: scale(1.08);
     box-shadow: 0 10px 25px rgba(77,163,217,.25);
 }
 
-.girar {
+#avatarImg.girar,
+.profile-avatar.girar {
     transform: scale(.8) rotate(720deg) !important;
 }
 
@@ -35,7 +38,6 @@
 .profile-data-box {
     background: #ffffff;
     border: 2px solid #EAF6FF;
-
     border-radius: 16px;
 
     padding: 16px 20px;
@@ -50,7 +52,6 @@
 
 .profile-data-box:hover {
     transform: translateY(-2px);
-
     border-color: #A9D9FF;
 
     box-shadow:
@@ -171,6 +172,8 @@
     font-weight: bold;
 
     transition: .3s ease;
+
+    cursor: pointer;
 }
 
 .btn-avatar:hover {
@@ -185,4 +188,28 @@
 .score-highlight {
     color: #F8A8B8;
     font-size: 1.1rem;
+}
+
+
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
+
+@media (max-width: 600px) {
+
+    .profile-card {
+        max-width: 95%;
+        padding: 25px 15px;
+    }
+
+    .profile-data-box {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+
+    .tooltip-box {
+        width: 200px;
+    }
+
 }

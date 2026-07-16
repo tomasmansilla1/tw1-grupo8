@@ -51,6 +51,7 @@ public class CategoriaRepositoryImpl implements CategoriaRepository {
         session.save(categoria);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public CategoriaHistorial buscarIdApiPreguntaCategoriaDia() {
         return (CategoriaHistorial) sessionFactory.getCurrentSession().createCriteria(CategoriaHistorial.class)
