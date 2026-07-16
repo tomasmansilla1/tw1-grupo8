@@ -70,36 +70,143 @@
         }
     </style>
 </head>
+
+
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container resultado">
-    <div th:if="${acierto}">
-        <h2>✅ ¡Correcto!</h2>
+
+    <!-- NAVBAR -->
+
+    <div th:replace="~{fragments/navbar :: navbar}">
     </div>
 
-    <div th:if="${!acierto}">
-        <h2>❌ Incorrecto</h2>
-        <p>
-            La respuesta correcta era:
-            <strong th:text="${respuestaCorrecta}"></strong>
-        </p>
+
+    <!-- RESULTADO -->
+
+    <main class="resultado-container">
+
+
+        <div class="resultado-card">
+
+
+            <!-- RESPUESTA CORRECTA -->
+
+            <div th:if="${acierto}">
+
+
+                <div class="resultado-icon">
+
+                    ✅
+
+                </div>
+
+
+                <h1 class="resultado-titulo correcto">
+
+                    ¡Correcto!
+
+                </h1>
+
+
+                <div class="divider">
+                </div>
+
+
+                <p class="subtitle">
+
+                    ¡Muy bien! Sumaste puntos a tu partida.
+
+                </p>
+
+
+            </div>
+
+
+            <!-- RESPUESTA INCORRECTA -->
+
+            <div th:if="${!acierto}">
+
+
+                <div class="resultado-icon">
+
+                    ❌
+
+                </div>
+
+
+                <h1 class="resultado-titulo incorrecto">
+
+                    Incorrecto
+
+                </h1>
+
+
+                <div class="divider">
+                </div>
+
+
+                <div class="respuesta-correcta">
+
+
+                    La respuesta correcta era:
+
+
+                    <strong th:text="${respuestaCorrecta}">
+
+                    </strong>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- PUNTAJE -->
+
+            <div class="puntaje-box">
+
+
+                <div class="puntaje-label">
+
+                    Puntaje actual
+
+                </div>
+
+
+                <div class="puntaje"
+                     th:text="${puntajeFinal}">
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BOTÓN -->
+
+            <a th:href="@{/categoria}"
+               class="btn-resultado">
+
+
+                JUGAR DE NUEVO 🎮
+
+
+            </a>
+
+
+        </div>
+
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <div th:replace="~{fragments/footer :: footer}">
     </div>
 
-    <h3>
-        Puntaje final:
-        <span th:text="${puntajeFinal}"></span>
-    </h3>
-    <div class="emoji">👑</div>
-    <h1>¡COMPLETADO!</h1>
-    <p style="font-size: 1.3em; color: #666;">Respondiste todas las categorías</p>
 
-    <div class="puntaje" th:text="'Puntaje Final: ' + ${puntajeFinal} + ' de ' + ${totalCategorias}"></div>
-
-    <a th:href="@{/categoria}">JUGAR DE NUEVO</a>
-
-</div>
-
-<div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>

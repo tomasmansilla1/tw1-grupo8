@@ -14,7 +14,6 @@ import com.tallerwebi.config.SessionUtil;
 import com.tallerwebi.dominio.categoriaDia.CategoriaService;
 import com.tallerwebi.dominio.pregunta.PreguntaService;
 import com.tallerwebi.dominio.servicioPregunta.PreguntaApiService;
-import com.tallerwebi.dominio.usuario.RepositoryUsuario;
 import com.tallerwebi.dominio.usuario.ServicioUsuario;
 
 
@@ -30,13 +29,12 @@ public class ControllerAdmin {
 
     @Autowired
     public ControllerAdmin(
-        SessionUtil sessionUtil,
-        PreguntaService preguntaService,
-        PreguntaApiService preguntaApiService,
-        CategoriaService categoriaService,
-        RepositoryUsuario repositoryUsuario,
-        ServicioUsuario servicioUsuario)
-    {
+            SessionUtil sessionUtil,
+            PreguntaService preguntaService,
+            PreguntaApiService preguntaApiService,
+            CategoriaService categoriaService,
+            ServicioUsuario servicioUsuario) {
+
         this.sessionUtil = sessionUtil;
         this.preguntaApiService = preguntaApiService;
         this.preguntaService = preguntaService;

@@ -111,11 +111,18 @@ public class ControllerLogin {
   @RequestMapping(path = "/home", method = RequestMethod.GET)
   public ModelAndView irAHome(HttpSession session) {
 
-    if (session.getAttribute("usuario") == null) {
-      return new ModelAndView("redirect:/login");
-    }
+      if (session.getAttribute("usuario") == null) {
+          return new ModelAndView("redirect:/login");
+      }
 
-    return new ModelAndView("home");
+      ModelAndView mav = new ModelAndView("home");
+
+      mav.addObject(
+          "usuarios",
+          servicioUsuario.listarJugadores()
+      );
+
+      return mav;
   }
 
   @RequestMapping(path = "/", method = RequestMethod.GET)

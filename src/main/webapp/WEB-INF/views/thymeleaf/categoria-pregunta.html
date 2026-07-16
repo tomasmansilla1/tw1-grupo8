@@ -8,176 +8,557 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/main.css}">
-    <style>
+    
+<style>
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    html, body {
-        height: 100%;
+
+    html,
+    body {
+        min-height: 100%;
     }
+
 
     body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background:
+
+            linear-gradient(
+                -45deg,
+                #667eea,
+                #764ba2,
+                #8e6ac8,
+                #667eea
+            );
+
+        background-size: 400% 400%;
+
+        animation:
+            gradientMove 12s ease infinite;
+
         min-height: 100vh;
+
         display: flex;
+
         flex-direction: column;
+
     }
+
+
+    @keyframes gradientMove {
+
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+
+    }
+
+
+    /* CONTENIDO PRINCIPAL */
 
     .main-content {
+
         flex: 1;
+
         display: flex;
+
         justify-content: center;
+
         align-items: center;
+
         padding: 60px 20px;
+
     }
+
+
+    /* TARJETA DE PREGUNTA */
 
     .pregunta-container {
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        max-width: 700px;
+
+        background: rgba(255, 255, 255, .96);
+
+        backdrop-filter: blur(10px);
+
+        padding: 45px;
+
+        border-radius: 30px;
+
+        box-shadow:
+
+            0 20px 60px rgba(0, 0, 0, .25),
+
+            0 0 30px rgba(118, 75, 162, .25);
+
+        max-width: 750px;
+
         width: 100%;
+
+        animation:
+
+            aparecer .7s ease;
+
     }
+
+
+    @keyframes aparecer {
+
+        from {
+
+            opacity: 0;
+
+            transform: translateY(25px) scale(.98);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform: translateY(0) scale(1);
+
+        }
+
+    }
+
+
+    /* CABECERA */
 
     .pregunta-container .pregunta-header {
+
         display: flex;
+
         justify-content: space-between;
+
         align-items: center;
+
+        gap: 20px;
+
         margin-bottom: 30px;
+
         padding-bottom: 20px;
-        border-bottom: 2px solid #ddd;
+
+        border-bottom:
+
+            2px solid rgba(102, 126, 234, .2);
+
     }
+
+
+    /* PUNTAJE */
 
     .pregunta-container .puntaje {
+
         color: #667eea;
+
         font-weight: bold;
+
         font-size: 1.2em;
+
     }
+
+
+    /* CATEGORÍA */
 
     .pregunta-container .categoria-badge {
+
         display: inline-block;
-        background: #667eea;
+
+        background:
+
+            linear-gradient(
+
+                135deg,
+
+                #667eea,
+
+                #764ba2
+
+            );
+
         color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
+
+        padding: 10px 22px;
+
+        border-radius: 30px;
+
         font-weight: bold;
-        font-size: 1.1em;
+
+        font-size: 1em;
+
+        box-shadow:
+
+            0 5px 15px rgba(102, 126, 234, .3);
+
     }
+
+
+    /* PREGUNTA */
 
     .pregunta-container .pregunta-titulo {
-        color: #333;
+
+        color: #343a40;
+
         margin: 30px 0;
+
         line-height: 1.5;
-        font-size: 1.4em;
+
+        font-size: 1.45em;
+
+        font-weight: 700;
+
     }
+
+
+    /* FORMULARIO */
 
     .pregunta-container .form-respuesta {
+
         display: flex;
+
         flex-direction: column;
+
         gap: 15px;
+
     }
+
+
+    /* OPCIONES */
 
     .pregunta-container .opcion {
+
         position: relative;
+
     }
 
-    .pregunta-container .opcion input[type="radio"] {
+
+    .pregunta-container
+    .opcion
+    input[type="radio"] {
+
         display: none;
+
     }
 
-    .pregunta-container .opcion label {
+
+    .pregunta-container
+    .opcion
+    label {
+
         display: block;
-        padding: 15px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
+
+        padding: 17px 20px;
+
+        border:
+
+            2px solid #e0e0e0;
+
+        border-radius: 16px;
+
         cursor: pointer;
-        transition: all 0.3s;
-        background: #f9f9f9;
-        color: #333;
+
+        transition:
+
+            all .3s ease;
+
+        background:
+
+            linear-gradient(
+
+                135deg,
+
+                #fafafa,
+
+                #f5f5f5
+
+            );
+
+        color: #343a40;
+
+        font-size: 1.05em;
+
+        font-weight: 500;
+
     }
 
-    .pregunta-container .opcion input[type="radio"]:checked + label {
-        background: #667eea;
+
+    /* HOVER */
+
+    .pregunta-container
+    .opcion
+    label:hover {
+
+        border-color: #667eea;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+
+            0 5px 15px rgba(102, 126, 234, .15);
+
+    }
+
+
+    /* OPCIÓN SELECCIONADA */
+
+    .pregunta-container
+    .opcion
+    input[type="radio"]:checked
+    + label {
+
+        background:
+
+            linear-gradient(
+
+                135deg,
+
+                #667eea,
+
+                #764ba2
+
+            );
+
         color: white;
+
         border-color: #667eea;
+
+        box-shadow:
+
+            0 8px 20px rgba(102, 126, 234, .3);
+
+        transform: translateY(-2px);
+
     }
 
-    .pregunta-container .opcion label:hover {
-        border-color: #667eea;
-    }
+
+    /* BOTÓN */
 
     .pregunta-container .btn-responder {
-        padding: 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        padding: 16px;
+
+        background:
+
+            linear-gradient(
+
+                135deg,
+
+                #667eea,
+
+                #764ba2
+
+            );
+
         color: white;
+
         border: none;
-        border-radius: 8px;
+
+        border-radius: 30px;
+
         font-size: 1.1em;
+
         font-weight: bold;
+
         cursor: pointer;
+
         margin-top: 20px;
-        transition: all 0.3s;
+
+        transition:
+
+            all .3s ease;
+
     }
 
-    .pregunta-container .btn-responder:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+
+    .pregunta-container
+    .btn-responder:hover {
+
+        transform: translateY(-3px);
+
+        box-shadow:
+
+            0 10px 25px
+
+            rgba(102, 126, 234, .4);
+
     }
-    </style>
+
+
+    .pregunta-container
+    .btn-responder:active {
+
+        transform: translateY(0);
+
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 600px) {
+
+
+        .pregunta-container {
+
+            padding: 30px 20px;
+
+            border-radius: 25px;
+
+        }
+
+
+        .pregunta-container
+        .pregunta-header {
+
+            flex-direction: column;
+
+            align-items: stretch;
+
+            text-align: center;
+
+        }
+
+
+        .pregunta-container
+        .pregunta-titulo {
+
+            font-size: 1.25em;
+
+        }
+
+
+        .pregunta-container
+        .categoria-badge {
+
+            width: 100%;
+
+        }
+
+    }
+
+</style>
 </head>
+
+
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="main-content">
-    <div class="pregunta-container">
 
-        <div class="pregunta-header">
-            <div class="puntaje" th:text="'Puntaje: ' + ${puntaje}"></div>
+    <!-- NAVBAR -->
 
-            <div class="categoria-badge" th:text="${categoria.nombre}"></div>
-        </div>
+    <div th:replace="~{fragments/navbar :: navbar}">
+    </div>
 
-        <h2 class="pregunta-titulo"
-            th:text="${pregunta.preguntaDecodificada}">
-        </h2>
 
-        <form class="form-respuesta"
-              method="post"
-              th:action="@{/categoria/responder}">
+    <!-- PREGUNTA -->
 
-            <input type="hidden"
-                   name="categoriaId"
-                   th:value="${categoriaId}">
+    <main class="main-content">
 
-            <div th:each="opcion, stat : ${pregunta.opcionesDecodificadas}"
-                 class="opcion">
 
-                <input type="radio"
-                       th:id="'opcion_' + ${stat.index}"
-                       name="respuesta"
-                       th:value="${opcion}"
-                       required>
+        <div class="pregunta-container">
 
-                <label th:for="'opcion_' + ${stat.index}"
-                       th:text="${opcion}">
-                </label>
+
+            <div class="pregunta-header">
+
+
+                <div class="puntaje"
+                     th:text="'Puntaje: ' + ${puntaje}">
+
+                </div>
+
+
+                <div class="categoria-badge"
+                     th:text="${categoria.nombre}">
+
+                </div>
+
+
             </div>
 
-            <button type="submit" class="btn-responder">
-                RESPONDER
-            </button>
-        </form>
 
+            <h2 class="pregunta-titulo"
+                th:text="${pregunta.preguntaDecodificada}">
+
+            </h2>
+
+
+            <form class="form-respuesta"
+                  method="post"
+                  th:action="@{/categoria/responder}">
+
+
+                <input type="hidden"
+
+                       name="categoriaId"
+
+                       th:value="${categoriaId}">
+
+
+                <div th:each="opcion, stat :
+                             ${pregunta.opcionesDecodificadas}"
+
+                     class="opcion">
+
+
+                    <input type="radio"
+
+                           th:id="'opcion_' + ${stat.index}"
+
+                           name="respuesta"
+
+                           th:value="${opcion}"
+
+                           required>
+
+
+                    <label th:for="'opcion_' + ${stat.index}"
+
+                           th:text="${opcion}">
+
+                    </label>
+
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn-responder">
+
+                    RESPONDER 🎯
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <div th:replace="~{fragments/footer :: footer}">
     </div>
-</main>
 
-<div th:replace="fragments/footer :: footer"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

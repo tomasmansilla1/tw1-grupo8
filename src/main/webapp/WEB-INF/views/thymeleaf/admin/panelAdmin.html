@@ -24,24 +24,34 @@
     <main class="container my-5">
 
         <div class="row mb-4 text-center">
+
             <div class="col">
                 <div class="quiz-card">
-                    <h2 class="title" th:text="${totalPreguntas}">0</h2>
-                    <p class="subtitle">Preguntas</p>
+
+                    <h2 class="title"
+                        th:text="${cantidadPreguntas}">
+                        0
+                    </h2>
+
+                    <p class="subtitle">
+                        Preguntas
+                    </p>
                 </div>
             </div>
+
             <div class="col">
                 <div class="quiz-card">
-                    <h2 class="title" th:text="${totalUsuarios}">0</h2>
-                    <p class="subtitle">Usuarios</p>
+                    <h2 class="title"
+                        th:text="${cantidadUsuarios}">
+                        0
+                    </h2>
+
+                    <p class="subtitle">
+                        Usuarios
+                    </p>
                 </div>
             </div>
-            <div class="col">
-                <div class="quiz-card">
-                    <h2 class="title" th:text="${totalPartidas}">0</h2>
-                    <p class="subtitle">Partidas</p>
-                </div>
-            </div>
+
         </div>
 
         <div class="text-center mb-4">
