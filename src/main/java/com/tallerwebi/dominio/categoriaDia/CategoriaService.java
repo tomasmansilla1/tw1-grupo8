@@ -61,11 +61,11 @@ public class CategoriaService {
             case "Ciencia":
                 idApi = 17;
                 break;
-            case "Cultura":
-                idApi = 9;
+            case "Historia":
+                idApi = 23;
                 break;
             case "Entretenimiento":
-                idApi = 11;
+                idApi = 9;
                 break;
             default:
                 throw new RuntimeException("Categoría inválida");
